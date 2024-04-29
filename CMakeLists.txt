@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.28)
+project(UI_framework)
+
+set(CMAKE_CXX_STANDARD 17)
+add_subdirectory(raylib)
+
+add_executable(UI_framework src/main.cpp
+        src/widgets/WidgetManager.cpp
+        src/widgets/Widget.cpp
+        src/Globals.cpp
+        src/widgets/Button.cpp
+)
+target_link_libraries(UI_framework PRIVATE raylib)
