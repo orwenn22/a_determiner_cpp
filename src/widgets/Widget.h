@@ -12,6 +12,9 @@ enum WidgetAlignment {
     WidgetAlignment_VCenter = 0x10,
     WidgetAlignment_Bottom  = 0x20,
 
+    WidgetAlignment_RightCenter = WidgetAlignment_Right | WidgetAlignment_VCenter,
+    WidgetAlignment_MiddleBottom = WidgetAlignment_HCenter | WidgetAlignment_Bottom,
+
     WidgetAlignment_Center  = WidgetAlignment_HCenter | WidgetAlignment_VCenter,
     WidgetAlignment_BottomRight = WidgetAlignment_Bottom | WidgetAlignment_Right,
 };

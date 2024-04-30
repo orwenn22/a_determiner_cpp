@@ -1,28 +1,27 @@
 #ifndef UI_FRAMEWORK_BUTTON_H
 #define UI_FRAMEWORK_BUTTON_H
 
-#include "Widget.h"
+#include "Clickable.h"
 
 #include <functional>
+#include <raylib.h>
 #include <string>
 
 class Button;
 
-void DefaultButtonCallback(Button *button);
 
-class Button : public Widget {
+
+class Button : public Clickable {
 public:
-    Button(int x, int y, int w, int h, std::string label = "button", std::function<void(Button *)> callback = DefaultButtonCallback);
+    Button(int x, int y, int w, int h, std::string label = "button", std::function<void(Clickable *)> callback = DefaultClickableCallback);
 
-    void Update() override;
     void Draw() override;
 
     void SetLabel(std::string label);
-    void SetCallback(std::function<void(Button *)> callback);
 
 private:
     std::string m_label;
-    std::function<void(Button *)> m_callback;
+    int m_hover_offset;
 };
 
 

@@ -10,31 +10,19 @@ void DefaultButtonCallback(Button *button) {
     std::cout << "DefaultButtonCallback : button clicked !\n";
 }
 
-Button::Button(int x, int y, int w, int h, std::string label, std::function<void(Button *)> callback) : Widget(x, y, w, h) {
+Button::Button(int x, int y, int w, int h, std::string label, std::function<void(Clickable *)> callback) : Clickable(x, y, w, h, callback) {
     m_label = label;
-    m_callback = callback;
-}
-
-void Button::Update() {
-    if(IsMouseUsed() || !IsMouseHovering()) return;
-
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        m_callback(this);
-    }
-
-    UseMouse();
+    m_hover_offset = 2;
 }
 
 void Button::Draw() {
-    DrawRectangle(AbsoluteX(), AbsoluteY(), Width(), Height(), WHITE);
-    DrawRectangle(AbsoluteX()+1, AbsoluteY()+1, Width()-2, Height()-2, BLACK);
-    DrawText(m_label.c_str(), AbsoluteX()+2, AbsoluteY()+2, 10, WHITE);
+    int x = AbsoluteX();
+    int y = AbsoluteY() + m_hovered*m_hover_offset;
+    DrawRectangle(x, y, Width(), Height(), WHITE);
+    DrawRectangle(x+1, y+1, Width()-2, Height()-2, BLACK);
+    DrawText(m_label.c_str(), x+2, y+2, 10, WHITE);
 }
 
 void Button::SetLabel(std::string label) {
     m_label = label;
-}
-
-void Button::SetCallback(std::function<void(Button *)> callback) {
-    m_callback = callback;
 }

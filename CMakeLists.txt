@@ -9,5 +9,9 @@ add_executable(UI_framework src/main.cpp
         src/widgets/Widget.cpp
         src/Globals.cpp
         src/widgets/Button.cpp
+        src/widgets/Label.cpp
+        src/widgets/Clickable.cpp
+        src/windows/WindowManager.cpp
+        src/windows/Window.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
