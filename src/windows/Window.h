@@ -21,6 +21,7 @@ public:
 
     //Setters
     void SetPosition(int x, int y);
+    void SetSize(int w, int h);
 
     bool IsMouseHovering();
 

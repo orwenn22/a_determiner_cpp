@@ -27,10 +27,11 @@ Window::~Window() {
 }
 
 void Window::Update() {
-    HandleDrag();
+    HandleDrag();       //NOTE : this does not use the mouse
     m_widgets->Update();        //Update widgets even if the mouse is outside the window
 
     if(!IsMouseHovering()) return;
+    //If we get here then the window is hovered
     if(!IsMouseUsed()) UseMouse();      //Make sure the click can't pass through the window
 }
 
@@ -65,6 +66,15 @@ void Window::SetPosition(int x, int y) {
     m_y = y;
     m_widgets->SetPosition(m_x, m_y + TITLEBAR_HEIGHT);
 }
+
+void Window::SetSize(int w, int h) {
+    if(w < 1 || h < 1) return;
+
+    m_w = w;
+    m_h = h;
+    m_widgets->SetSize(m_w, m_h-TITLEBAR_HEIGHT);
+}
+
 
 bool Window::IsMouseHovering() {
     int mouse_x = GetMouseX();
