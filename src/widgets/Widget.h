@@ -27,7 +27,7 @@ public:
     virtual void Update();
     virtual void Draw();
 
-    void RecalculateAbsolutePosition();
+    virtual void RecalculateAbsolutePosition();
 
     bool IsMouseHovering();
 
@@ -47,14 +47,19 @@ public:
     inline int AbsoluteY() { return m_absolute_y; }
     inline int Width() { return m_w; }
     inline int Height() { return m_h; }
+    inline WidgetManager *GetManager() { return m_manager; }
 
-private:
-    friend WidgetManager;
-    void SetManager(WidgetManager *manager);
 
+protected:
+    //Only access these directly if a subclass have a custom RecalculateAbsolutePosition
     int m_relative_x, m_relative_y;
     int m_absolute_x, m_absolute_y;
     int m_w, m_h;
+
+private:
+    friend WidgetManager;
+
+    void SetManager(WidgetManager *manager);
     WidgetAlignment m_alignment;
     WidgetManager *m_manager;
 };

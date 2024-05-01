@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "widgets/Button.h"
+#include "widgets/HSplit.h"
 #include "widgets/Label.h"
 #include "widgets/WidgetManager.h"
 #include "windows/WindowManager.h"
@@ -36,9 +37,16 @@ int main() {
     label->SetAlignment(WidgetAlignment_RightCenter);
     win->GetWidgetManager()->AddWidget(label);
 
+
+    HSplit *hsplit = new HSplit;
+    widget_manager->AddWidget(hsplit);
+
+
     Button *button2 = new Button(0, 0, 42, 42, "Wow", [](){std::cout << "hello\n";});
     button2->SetAlignment(WidgetAlignment_Center);
-    widget_manager->AddWidget(button2);
+    hsplit->Left()->AddWidget(button2);
+
+
 
     while(!WindowShouldClose()) {
         ResetMouse();
