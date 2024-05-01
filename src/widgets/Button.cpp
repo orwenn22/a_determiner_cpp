@@ -10,7 +10,7 @@ void DefaultButtonCallback(Button *button) {
     std::cout << "DefaultButtonCallback : button clicked !\n";
 }
 
-Button::Button(int x, int y, int w, int h, std::string label, std::function<void(Clickable *)> callback) : Clickable(x, y, w, h, callback) {
+Button::Button(int x, int y, int w, int h, std::string label, std::function<void(void)> callback) : Clickable(x, y, w, h, callback) {
     m_label = label;
     m_hover_offset = 2;
 }

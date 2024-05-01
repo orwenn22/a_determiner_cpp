@@ -13,6 +13,8 @@ int main() {
     InitWindow(512, 512, "title");
     SetTargetFPS(120);
 
+    WidgetManager *widget_manager = new WidgetManager;
+
     WindowManager *window_manager = new WindowManager;
     Window *win = new Window(5, 5, 100, 100);
     window_manager->AddWindow(win);
@@ -24,7 +26,7 @@ int main() {
     Button *button = new Button(5, 5, 42, 42);
     button->SetAlignment(WidgetAlignment_BottomRight);
     button->SetLabel("wow");
-    button->SetCallback([](Clickable *) -> void {
+    button->SetCallback([]() -> void {
         std::cout << "Hello from custom callback !\n";
     });
     win->GetWidgetManager()->AddWidget(button);
@@ -34,17 +36,24 @@ int main() {
     label->SetAlignment(WidgetAlignment_RightCenter);
     win->GetWidgetManager()->AddWidget(label);
 
+    Button *button2 = new Button(0, 0, 42, 42, "Wow", [](){std::cout << "hello\n";});
+    button2->SetAlignment(WidgetAlignment_Center);
+    widget_manager->AddWidget(button2);
+
     while(!WindowShouldClose()) {
         ResetMouse();
         window_manager->Update();
+        widget_manager->Update();
 
         BeginDrawing();
         ClearBackground(BLACK);
+        widget_manager->Draw();
         window_manager->Draw();
         EndDrawing();
     }
 
     delete window_manager;
+    delete widget_manager;
     CloseWindow();
     return 0;
 }

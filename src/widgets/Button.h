@@ -13,7 +13,7 @@ class Button;
 
 class Button : public Clickable {
 public:
-    Button(int x, int y, int w, int h, std::string label = "button", std::function<void(Clickable *)> callback = DefaultClickableCallback);
+    Button(int x, int y, int w, int h, std::string label = "button", std::function<void(void)> callback = DefaultClickableCallback);
 
     void Draw() override;
 
