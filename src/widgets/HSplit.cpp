@@ -40,7 +40,7 @@ HSplit::HSplit() : Widget(0, 0, 10, 10) {
             Width() - (int)((float)Width() * (1.f-m_separator)),
             Height());
 
-    OccupyAllSpace(20, 20, 20, 20);     //THIS MUST BE DONE AFTER INITIALISING m_left AND m_right.
+    OccupyAllSpace(0, 0, 0, 0);     //THIS MUST BE DONE AFTER INITIALISING m_left AND m_right.
 }
 
 HSplit::~HSplit() {
