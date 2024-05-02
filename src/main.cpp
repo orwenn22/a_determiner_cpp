@@ -5,6 +5,7 @@
 #include "widgets/Button.h"
 #include "widgets/HSplit.h"
 #include "widgets/Label.h"
+#include "widgets/VSplit.h"
 #include "widgets/WidgetManager.h"
 #include "windows/WindowManager.h"
 #include "windows/Window.h"
@@ -12,7 +13,7 @@
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(512, 512, "title");
-    SetTargetFPS(120);
+    SetTargetFPS(1200000);
 
     WidgetManager *widget_manager = new WidgetManager;
 
@@ -20,8 +21,19 @@ int main() {
     Window *win = new Window(5, 5, 100, 100);
     window_manager->AddWindow(win);
 
-    Window *win2 = new Window(10, 10, 100, 100);
+    Window *win2 = new Window(10, 10, 200, 200);
     window_manager->AddWindow(win2);
+
+    HSplit *win2_hsplit = new HSplit;
+    win2->GetWidgetManager()->AddWidget(win2_hsplit);
+
+    Label *l_win2_l = new Label(0, 0, 10, "LEFT");
+    l_win2_l->SetAlignment(WidgetAlignment_Center);
+    win2_hsplit->Left()->AddWidget(l_win2_l);
+
+    Label *l_win2_r = new Label(0, 0, 10, "RIGHT");
+    l_win2_r->SetAlignment(WidgetAlignment_Center);
+    win2_hsplit->Right()->AddWidget(l_win2_r);
 
 
     Button *button = new Button(5, 5, 42, 42);
@@ -43,12 +55,20 @@ int main() {
 
 
     Button *button2 = new Button(0, 0, 42, 42, "Wow", [](){std::cout << "hello\n";});
-    button2->OccupyAllSpace(10, 10, 10, 10);
+    //button2->OccupyAllSpace(10, 10, 10, 10);
+    button2->SetAlignment(WidgetAlignment_Center);
     hsplit->Left()->AddWidget(button2);
 
-    Button *button3 = new Button(0, 0, 42, 42, "Wow", [](){std::cout << "hello\n";});
-    button3->OccupyAllSpace(10, 10, 10, 10);
-    hsplit->Right()->AddWidget(button3);
+    VSplit *vsplit = new VSplit;
+    hsplit->Right()->AddWidget(vsplit);
+
+    Label *ltop = new Label(0, 0, 20, "TOP");
+    ltop->SetAlignment(WidgetAlignment_Center);
+    vsplit->Top()->AddWidget(ltop);
+
+    Label *lbottom = new Label(0, 0, 20, "BOTTOM");
+    lbottom->SetAlignment(WidgetAlignment_Center);
+    vsplit->Bottom()->AddWidget(lbottom);
 
 
 
@@ -61,6 +81,7 @@ int main() {
         ClearBackground(BLACK);
         widget_manager->Draw();
         window_manager->Draw();
+        DrawFPS(2, 2);
         EndDrawing();
     }
 

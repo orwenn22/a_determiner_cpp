@@ -19,7 +19,7 @@ HSplit::HSplit(int x, int y, int w, int h) : Widget(x, y, w, h) {
     m_right = new WidgetManager(
             AbsoluteX() + (int)((float)Width()*m_separator),
             AbsoluteY(),
-            Width() - (int)((float)Width() * (1.f-m_separator)),
+            Width() - (int) ((float)Width() * m_separator),
             Height());
 }
 
@@ -37,7 +37,7 @@ HSplit::HSplit() : Widget(0, 0, 10, 10) {
     m_right = new WidgetManager(
             AbsoluteX() + (int)((float)Width()*m_separator),
             AbsoluteY(),
-            Width() - (int)((float)Width() * (1.f-m_separator)),
+            Width() - (int) ((float)Width() * m_separator),
             Height());
 
     OccupyAllSpace(0, 0, 0, 0);     //THIS MUST BE DONE AFTER INITIALISING m_left AND m_right.
@@ -127,7 +127,7 @@ void HSplit::RecalculateSubMangerGeometries() {
 
     if(m_right != nullptr) {
         m_right->SetPosition(AbsoluteX() + (int) ((float) Width() * m_separator), AbsoluteY());
-        m_right->SetSize(Width() - (int) ((float) Width() * m_separator), Height());
+        m_right->SetSize(Width() - (int) ((float)Width() * m_separator), Height());
     }
 }
 
