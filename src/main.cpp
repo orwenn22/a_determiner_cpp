@@ -43,8 +43,12 @@ int main() {
 
 
     Button *button2 = new Button(0, 0, 42, 42, "Wow", [](){std::cout << "hello\n";});
-    button2->SetAlignment(WidgetAlignment_Center);
+    button2->OccupyAllSpace(10, 10, 10, 10);
     hsplit->Left()->AddWidget(button2);
+
+    Button *button3 = new Button(0, 0, 42, 42, "Wow", [](){std::cout << "hello\n";});
+    button3->OccupyAllSpace(10, 10, 10, 10);
+    hsplit->Right()->AddWidget(button3);
 
 
 

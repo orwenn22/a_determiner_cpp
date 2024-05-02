@@ -12,6 +12,10 @@ Widget::Widget(int x, int y, int w, int h) {
     m_w = w;
     m_h = h;
     m_alignment = WidgetAlignment_None;
+
+    m_occupy_all_space = false;
+    m_full_size_offset_right = 0;
+    m_full_size_offset_bottom = 0;
 }
 
 Widget::~Widget() = default;
@@ -25,6 +29,76 @@ void Widget::Draw() {
 }
 
 void Widget::RecalculateAbsolutePosition() {
+    if(m_occupy_all_space) RecalculateAbsolutePosOccupyAll();
+    else RecalculateAbsolutePosDefault();
+}
+
+bool Widget::IsMouseHovering() {
+    int mouse_x = GetMouseX();
+    int mouse_y = GetMouseY();
+    return (mouse_x >= m_absolute_x && mouse_y >= m_absolute_y && mouse_x < m_absolute_x+m_w && mouse_y < m_absolute_y+m_h);
+}
+
+void Widget::SetX(int x) {
+    m_relative_x = x;
+    m_occupy_all_space = false;
+    RecalculateAbsolutePosition();
+}
+void Widget::SetY(int y) {
+    m_relative_y = y;
+    m_occupy_all_space = false;
+    RecalculateAbsolutePosition();
+}
+void Widget::SetPosition(int x, int y) {
+    m_relative_x = x;
+    m_relative_y = y;
+    m_occupy_all_space = false;
+    RecalculateAbsolutePosition();
+}
+
+void Widget::SetWidth(int w) {
+    m_w = w;
+    m_occupy_all_space = false;
+    RecalculateAbsolutePosition();
+}
+void Widget::SetHeight(int h) {
+    m_h = h;
+    m_occupy_all_space = false;
+    RecalculateAbsolutePosition();
+}
+void Widget::SetSize(int w, int h) {
+    m_w = w;
+    m_h = h;
+    m_occupy_all_space = false;
+    RecalculateAbsolutePosition();
+}
+
+void Widget::SetAlignment(WidgetAlignment alignment) {
+    m_alignment = alignment;
+    m_occupy_all_space = false;
+    RecalculateAbsolutePosition();
+}
+
+void Widget::OccupyAllSpace(int top, int left, int right, int bottom) {
+    m_occupy_all_space = true;
+    m_alignment = WidgetAlignment_None;
+    m_relative_x = left;
+    m_relative_y = top;
+    m_full_size_offset_right = right;
+    m_full_size_offset_bottom = bottom;
+    RecalculateAbsolutePosition();
+}
+
+
+/////////////////////////////////////////////////////////////////////////
+// PRIVATE
+
+void Widget::SetManager(WidgetManager *manager) {
+    m_manager = manager;
+    RecalculateAbsolutePosition();
+}
+
+void Widget::RecalculateAbsolutePosDefault() {
     int container_x, container_y, container_w, container_h;
     if(m_manager == nullptr) {
         container_x = 0;
@@ -76,50 +150,23 @@ void Widget::RecalculateAbsolutePosition() {
     }
 }
 
-bool Widget::IsMouseHovering() {
-    int mouse_x = GetMouseX();
-    int mouse_y = GetMouseY();
-    return (mouse_x >= m_absolute_x && mouse_y >= m_absolute_y && mouse_x < m_absolute_x+m_w && mouse_y < m_absolute_y+m_h);
-}
+void Widget::RecalculateAbsolutePosOccupyAll() {
+    int container_x, container_y, container_w, container_h;
+    if(m_manager == nullptr) {
+        container_x = 0;
+        container_y = 0;
+        container_w = GetScreenWidth();
+        container_h = GetScreenHeight();
+    }
+    else {
+        container_x = m_manager->X();
+        container_y = m_manager->Y();
+        container_w = m_manager->Width();
+        container_h = m_manager->Height();
+    }
 
-void Widget::SetX(int x) {
-    m_relative_x = x;
-    RecalculateAbsolutePosition();
-}
-void Widget::SetY(int y) {
-    m_relative_y = y;
-    RecalculateAbsolutePosition();
-}
-void Widget::SetPosition(int x, int y) {
-    m_relative_x = x;
-    m_relative_y = y;
-    RecalculateAbsolutePosition();
-}
-
-void Widget::SetWidth(int w) {
-    m_w = w;
-    RecalculateAbsolutePosition();
-}
-void Widget::SetHeight(int h) {
-    m_h = h;
-    RecalculateAbsolutePosition();
-}
-void Widget::SetSize(int w, int h) {
-    m_w = w;
-    m_h = h;
-    RecalculateAbsolutePosition();
-}
-
-void Widget::SetAlignment(WidgetAlignment alignment) {
-    m_alignment = alignment;
-    RecalculateAbsolutePosition();
-}
-
-
-//////////////////////////////////
-// PRIVATE
-
-void Widget::SetManager(WidgetManager *manager) {
-    m_manager = manager;
-    RecalculateAbsolutePosition();
+    m_absolute_x = container_x + m_relative_x;
+    m_absolute_y = container_y + m_relative_y;
+    m_w = container_w - m_relative_x - m_full_size_offset_right;
+    m_h = container_h - m_relative_y - m_full_size_offset_bottom;
 }

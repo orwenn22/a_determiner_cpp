@@ -39,6 +39,7 @@ public:
     void SetHeight(int h);
     void SetSize(int w, int h);
     void SetAlignment(WidgetAlignment alignment);
+    void OccupyAllSpace(int top, int left, int right, int bottom);
 
     //Getters
     inline int X() { return m_relative_x; }
@@ -50,17 +51,23 @@ public:
     inline WidgetManager *GetManager() { return m_manager; }
 
 
-protected:
+private:
+    void RecalculateAbsolutePosDefault();
+    void RecalculateAbsolutePosOccupyAll();
+
     //Only access these directly if a subclass have a custom RecalculateAbsolutePosition
-    int m_relative_x, m_relative_y;
+    int m_relative_x, m_relative_y;         //If m_occupy_all_space is set to occupy all the space, these acts as offset from the top left
     int m_absolute_x, m_absolute_y;
     int m_w, m_h;
-
-private:
-    friend WidgetManager;
-
-    void SetManager(WidgetManager *manager);
     WidgetAlignment m_alignment;
+
+    bool m_occupy_all_space;
+    int m_full_size_offset_right,
+        m_full_size_offset_bottom;
+
+
+    friend WidgetManager;
+    void SetManager(WidgetManager *manager);
     WidgetManager *m_manager;
 };
 
