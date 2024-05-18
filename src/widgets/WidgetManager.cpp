@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <iostream>
 
+#include "../util/Scissors.h"
 #include "Widget.h"
 
 WidgetManager::WidgetManager() {
@@ -46,7 +47,9 @@ void WidgetManager::Update() {
 }
 
 void WidgetManager::Draw() {
+    PushScissors((Rectangle){(float)m_x, (float)m_y, (float)m_w, (float)m_h});
     for(Widget *w : m_widgets) w->Draw();
+    PopScissors();
 }
 
 void WidgetManager::AddWidget(Widget *w) {

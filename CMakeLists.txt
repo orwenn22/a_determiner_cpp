@@ -15,5 +15,6 @@ add_executable(UI_framework src/main.cpp
         src/windows/Window.cpp
         src/widgets/HSplit.cpp
         src/widgets/VSplit.cpp
+        src/util/Scissors.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)

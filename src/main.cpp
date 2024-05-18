@@ -13,7 +13,7 @@
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(512, 512, "title");
-    SetTargetFPS(1200000);
+    SetTargetFPS(120);
 
     WidgetManager *widget_manager = new WidgetManager;
 
