@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "widgets/Button.h"
 #include "widgets/HSplit.h"
+#include "widgets/IntField.h"
 #include "widgets/Label.h"
 #include "widgets/VSplit.h"
 #include "widgets/WidgetManager.h"
@@ -14,6 +15,8 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(512, 512, "title");
     SetTargetFPS(120);
+
+    int some_value = 42;
 
     WidgetManager *widget_manager = new WidgetManager;
 
@@ -48,6 +51,11 @@ int main() {
     label->SetColor(RED);
     label->SetAlignment(WidgetAlignment_RightCenter);
     win->GetWidgetManager()->AddWidget(label);
+
+    IntField *int_field = new IntField(1, 1, 75, 10, &some_value);
+    int_field->SetMin(12);
+    int_field->SetMax(542);
+    win->GetWidgetManager()->AddWidget(int_field);
 
 
     HSplit *hsplit = new HSplit;
