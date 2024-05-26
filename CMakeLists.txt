@@ -20,5 +20,12 @@ add_executable(UI_framework src/main.cpp
         src/engine/util/Scissors.cpp
         src/engine/object/ObjectManager.cpp
         src/engine/object/EntityObject.cpp
+        src/engine/object/KinematicObject.cpp
+        src/engine/object/KinematicObject.h
+        src/engine/util/VectorOps.h
+        src/engine/metrics/MetricsCamera.cpp
+        src/engine/metrics/MetricsCamera.h
+        src/engine/metrics/Graphics.cpp
+        src/engine/metrics/Graphics.h
 )
 target_link_libraries(UI_framework PRIVATE raylib)

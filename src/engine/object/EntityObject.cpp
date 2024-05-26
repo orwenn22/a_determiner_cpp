@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "../metrics/Graphics.h"
 #include "BuiltinTypeIDs.h"
 
 
@@ -11,7 +12,7 @@ EntityObject::EntityObject(Vector2 position, float width, float height) {
 
     m_width = width;
     m_height = height;
-    m_types.push_back(TypeID_EntityObject);
+    RegisterType(TypeID_EntityObject);
     m_manager = nullptr;
 }
 
@@ -31,4 +32,24 @@ int EntityObject::GetMainType() {
 
 Rectangle EntityObject::GetRectangle() {
     return (Rectangle) {m_position.x - m_width/2, m_position.y - m_height/2, m_width, m_height};
+}
+
+void EntityObject::DrawHitbox() {
+    Metrics::DrawRectangle(GetRectangle(), RED, false);
+
+    //Cross at the center of the object
+    Metrics::DrawLine({m_position.x - m_width/4, m_position.y},
+                      {m_position.x + m_width/4, m_position.y},
+                      RED);
+    Metrics::DrawLine({m_position.x, m_position.y - m_height/4},
+                      {m_position.x, m_position.y + m_height/4},
+                      RED);
+}
+
+
+////////////////////////////////
+//// PROTECTED
+
+void EntityObject::RegisterType(int type_id) {
+    m_types.push_back(type_id);
 }

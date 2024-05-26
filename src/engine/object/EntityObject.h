@@ -11,6 +11,8 @@ public:
     EntityObject(Vector2 position, float width, float height);
     virtual ~EntityObject();
 
+    // These must be redefined by subclasses
+    // TODO : add defaults ?
     virtual void Update(float dt) = 0;
     virtual void Draw() = 0;
 
@@ -18,10 +20,17 @@ public:
     int GetMainType();
 
     Rectangle GetRectangle();
+    inline ObjectManager *Manager() { return m_manager; }
+
+    virtual void DrawHitbox();
+
 
 protected:
+    void RegisterType(int type_id);
+
     Vector2 m_position;
     float m_width, m_height;
+
 
 private:
     friend ObjectManager;

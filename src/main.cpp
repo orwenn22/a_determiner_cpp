@@ -1,100 +1,53 @@
-#include <iostream>
 #include <raylib.h>
 
-#include "engine/Globals.h"
-#include "engine/widgets/Button.h"
-#include "engine/widgets/HSplit.h"
-#include "engine/widgets/IntField.h"
-#include "engine/widgets/Label.h"
-#include "engine/widgets/VSplit.h"
-#include "engine/widgets/WidgetManager.h"
-#include "engine/windows/WindowManager.h"
-#include "engine/windows/Window.h"
+#include "engine/metrics/Graphics.h"
+#include "engine/metrics/MetricsCamera.h"
+
+void DrawDebugMenu(float dt) {
+    MetricsCamera *cam = Metrics::GetGraphicsCam();
+
+    int mouse_x = GetMouseX();
+    int mouse_y = GetMouseY();
+
+    DrawFPS(10, 10);
+    DrawText(TextFormat("DT : %f", dt), 10, 30, 20, RED);
+
+    if(cam == nullptr) {
+        DrawText("CAM : null", 10, 50, 20, WHITE);
+        DrawText(TextFormat("MOUSE POS : px : %i %i  |  m : [NO CAM]", mouse_x, mouse_y), 10, 70, 20, WHITE);
+    }
+    else {
+        Vector2 mouse_world_pos = cam->ConvertAbsoluteToMeters(mouse_x, mouse_y);
+
+        DrawText(TextFormat("CAM : [origin_x : %f , origin_y : %f , ppm : %i]", cam->origin_x, cam->origin_y, cam->PixelsPerMeter()),
+                 10, 50, 20, WHITE);
+        DrawText(TextFormat("MOUSE POS : px : %i %i  |  m : %f %f", mouse_x, mouse_y, mouse_world_pos.x, mouse_world_pos.y),
+                 10, 70, 20, WHITE);
+    }
+}
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(512, 512, "title");
-    SetTargetFPS(120);
+    InitWindow(512, 512, "À déterminer");
+    SetTargetFPS(240);
 
-    int some_value = 42;
-
-    WidgetManager *widget_manager = new WidgetManager;
-
-    WindowManager *window_manager = new WindowManager;
-    Window *win = new Window(5, 5, 100, 100);
-    window_manager->AddWindow(win);
-
-    Window *win2 = new Window(10, 10, 200, 200);
-    window_manager->AddWindow(win2);
-
-    HSplit *win2_hsplit = new HSplit;
-    win2->GetWidgetManager()->AddWidget(win2_hsplit);
-
-    Label *l_win2_l = new Label(0, 0, 10, "LEFT");
-    l_win2_l->SetAlignment(WidgetAlignment_Center);
-    win2_hsplit->Left()->AddWidget(l_win2_l);
-
-    Label *l_win2_r = new Label(0, 0, 10, "RIGHT");
-    l_win2_r->SetAlignment(WidgetAlignment_Center);
-    win2_hsplit->Right()->AddWidget(l_win2_r);
-
-
-    Button *button = new Button(5, 5, 42, 42);
-    button->SetAlignment(WidgetAlignment_BottomRight);
-    button->SetLabel("wow");
-    button->SetCallback([]() -> void {
-        std::cout << "Hello from custom callback !\n";
-    });
-    win->GetWidgetManager()->AddWidget(button);
-
-    Label *label = new Label(5, 0, 10, "Hello world !");
-    label->SetColor(RED);
-    label->SetAlignment(WidgetAlignment_RightCenter);
-    win->GetWidgetManager()->AddWidget(label);
-
-    IntField *int_field = new IntField(1, 1, 75, 10, &some_value);
-    int_field->SetMin(12);
-    int_field->SetMax(542);
-    win->GetWidgetManager()->AddWidget(int_field);
-
-
-    HSplit *hsplit = new HSplit;
-    widget_manager->AddWidget(hsplit);
-
-
-    Button *button2 = new Button(0, 0, 42, 42, "Wow", [](){std::cout << "hello\n";});
-    //button2->OccupyAllSpace(10, 10, 10, 10);
-    button2->SetAlignment(WidgetAlignment_Center);
-    hsplit->Left()->AddWidget(button2);
-
-    VSplit *vsplit = new VSplit;
-    hsplit->Right()->AddWidget(vsplit);
-
-    Label *ltop = new Label(0, 0, 20, "TOP");
-    ltop->SetAlignment(WidgetAlignment_Center);
-    vsplit->Top()->AddWidget(ltop);
-
-    Label *lbottom = new Label(0, 0, 20, "BOTTOM");
-    lbottom->SetAlignment(WidgetAlignment_Center);
-    vsplit->Bottom()->AddWidget(lbottom);
-
-
+    MetricsCamera metrics_camera(0, 0, 20);
+    Metrics::SetGraphicsCam(&metrics_camera);
 
     while(!WindowShouldClose()) {
-        ResetMouse();
-        window_manager->Update();
-        widget_manager->Update();
+        // UPDATE
+        float dt = GetFrameTime();
+        if(IsKeyDown(KEY_UP)) metrics_camera.origin_y += (int)100*dt;
 
+        //DRAW
         BeginDrawing();
         ClearBackground(BLACK);
-        widget_manager->Draw();
-        window_manager->Draw();
-        DrawFPS(2, 2);
+        Metrics::DrawGrid();
+        DrawDebugMenu(dt);
         EndDrawing();
+
     }
 
-    delete window_manager;
-    delete widget_manager;
     CloseWindow();
     return 0;
 }
