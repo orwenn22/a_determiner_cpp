@@ -27,5 +27,13 @@ add_executable(UI_framework src/main.cpp
         src/engine/metrics/MetricsCamera.h
         src/engine/metrics/Graphics.cpp
         src/engine/metrics/Graphics.h
+        src/engine/state/StateManager.cpp
+        src/engine/state/StateManager.h
+        src/engine/state/State.cpp
+        src/engine/state/State.h
+        src/engine/util/DebugOverlay.cpp
+        src/engine/util/DebugOverlay.h
+        src/GameplayState.cpp
+        src/GameplayState.h
 )
 target_link_libraries(UI_framework PRIVATE raylib)
