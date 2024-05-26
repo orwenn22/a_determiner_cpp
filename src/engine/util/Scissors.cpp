@@ -1,7 +1,7 @@
 #include "Scissors.h"
 
 #include <vector>
-#include <raylib.h>
+#include "raylib.h"
 
 static std::vector<Rectangle> s_scissors;
 

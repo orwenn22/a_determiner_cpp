@@ -1,15 +1,15 @@
 #include <iostream>
 #include <raylib.h>
 
-#include "Globals.h"
-#include "widgets/Button.h"
-#include "widgets/HSplit.h"
-#include "widgets/IntField.h"
-#include "widgets/Label.h"
-#include "widgets/VSplit.h"
-#include "widgets/WidgetManager.h"
-#include "windows/WindowManager.h"
-#include "windows/Window.h"
+#include "engine/Globals.h"
+#include "engine/widgets/Button.h"
+#include "engine/widgets/HSplit.h"
+#include "engine/widgets/IntField.h"
+#include "engine/widgets/Label.h"
+#include "engine/widgets/VSplit.h"
+#include "engine/widgets/WidgetManager.h"
+#include "engine/windows/WindowManager.h"
+#include "engine/windows/Window.h"
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);

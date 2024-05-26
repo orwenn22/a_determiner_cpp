@@ -1,7 +1,7 @@
 #include "Clickable.h"
 
 #include <iostream>
-#include <raylib.h>
+#include "raylib.h"
 
 #include "../Globals.h"
 

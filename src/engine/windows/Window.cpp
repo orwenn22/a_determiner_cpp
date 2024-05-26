@@ -1,6 +1,6 @@
 #include "Window.h"
 
-#include <raylib.h>
+#include "raylib.h"
 
 #include "WindowManager.h"
 #include "../Globals.h"

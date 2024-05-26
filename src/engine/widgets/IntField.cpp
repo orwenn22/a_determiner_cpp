@@ -1,6 +1,6 @@
 #include "IntField.h"
 
-#include <raylib.h>
+#include "raylib.h"
 
 #include "../Globals.h"
 

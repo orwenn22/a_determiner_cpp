@@ -1,6 +1,6 @@
 #include "Label.h"
 
-#include <raylib.h>
+#include "raylib.h"
 
 
 Label::Label(int x, int y, int font_size, std::string label) : Widget(x, y, 1, font_size) {

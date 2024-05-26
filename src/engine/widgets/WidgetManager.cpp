@@ -1,7 +1,7 @@
 #include "WidgetManager.h"
 
 #include <algorithm>
-#include <raylib.h>
+#include "raylib.h"
 #include <iostream>
 
 #include "../util/Scissors.h"

@@ -1,7 +1,7 @@
 #include "WindowManager.h"
 
 #include <algorithm>
-#include <raylib.h>
+#include "raylib.h"
 
 #include "Window.h"
 
