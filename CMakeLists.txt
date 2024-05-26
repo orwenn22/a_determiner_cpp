@@ -3,6 +3,7 @@ project(UI_framework)
 
 set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(raylib)
+file(COPY ./res DESTINATION .)
 
 add_executable(UI_framework src/main.cpp
         src/engine/widgets/WidgetManager.cpp
@@ -35,5 +36,7 @@ add_executable(UI_framework src/main.cpp
         src/engine/util/DebugOverlay.h
         src/GameplayState.cpp
         src/GameplayState.h
+        src/Terrain.cpp
+        src/Terrain.h
 )
 target_link_libraries(UI_framework PRIVATE raylib)

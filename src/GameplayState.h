@@ -7,6 +7,7 @@
 
 
 class MetricsCamera;
+class Terrain;
 
 class GameplayState : public State {
 public:
@@ -25,6 +26,8 @@ private:
     MetricsCamera *m_camera;
     bool m_cam_follow_mouse;
     Vector2 m_cam_mouse_offset;
+
+    Terrain *m_terrain;
 };
 
 

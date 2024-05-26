@@ -5,11 +5,14 @@
 #include "engine/Globals.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
+#include "Terrain.h"
 
 GameplayState::GameplayState() {
     m_camera = new MetricsCamera(0, 0, 20);
     m_cam_follow_mouse = false;
     m_cam_mouse_offset = {0.f, 0.f};
+
+    m_terrain = Terrain::construct("res/wowmap.png", {32.f, 22.f});
 }
 
 GameplayState::~GameplayState() {
@@ -26,12 +29,15 @@ void GameplayState::Update(float dt) {
 
     HandleDragCamera((float)mouse_x, (float)mouse_y);
 
+    Vector2 mouse_meters = m_camera->ConvertAbsoluteToMeters(mouse_x, mouse_y);
+    //m_terrain->DestroyCircle(mouse_meters, 1.f);
+
 }
 
 void GameplayState::Draw() {
     Metrics::SetGraphicsCam(m_camera);
-
     Metrics::DrawGrid();
+    m_terrain->Draw();
 }
 
 
