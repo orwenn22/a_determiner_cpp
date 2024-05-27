@@ -38,5 +38,9 @@ add_executable(UI_framework src/main.cpp
         src/GameplayState.h
         src/Terrain.cpp
         src/Terrain.h
+        src/objects/actors/Player.cpp
+        src/objects/actors/Player.h
+        src/engine/util/Math.h
 )
 target_link_libraries(UI_framework PRIVATE raylib)
+target_include_directories(UI_framework PRIVATE ./src)

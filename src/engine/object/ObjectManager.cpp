@@ -23,7 +23,7 @@ void ObjectManager::Update(float dt) {
     ClearTrashcan();
 }
 
-void ObjectManager::Draw(float dt) {
+void ObjectManager::Draw() {
     for(EntityObject *o : m_objects) {
         o->Draw();
     }

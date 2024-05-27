@@ -13,7 +13,7 @@ public:
     ~ObjectManager();
 
     void Update(float dt);
-    void Draw(float dt);
+    void Draw();
 
     void AddObject(EntityObject *object);
     //TODO : method to remove without de-allocation ?

@@ -7,6 +7,7 @@
 KinematicObject::KinematicObject(Vector2 position, float width, float height, float mass) : EntityObject(position, width, height) {
     RegisterType(TypeID_KinematicObject);
 
+    m_mass = mass;
     m_velocity = {0.f, 0.f};
     m_acceleration = {0.f, 0.f};
 
@@ -40,7 +41,7 @@ void KinematicObject::ProcessPhysicsX(float dt) {
     if(!m_enable_physics) return;
 
     if(m_enable_physics) {
-        ApplyForce({m_down_vector.x*m_mass, 0.f});
+        ApplyForce({m_down_vector.x*m_mass*m_gravity, 0.f});
     }
 
     m_velocity.x += m_acceleration.x * dt;
@@ -52,7 +53,7 @@ void KinematicObject::ProcessPhysicsY(float dt) {
     if(!m_enable_physics) return;
 
     if(m_enable_physics) {
-        ApplyForce({0.f, m_down_vector.y*m_mass});
+        ApplyForce({0.f, m_down_vector.y*m_mass*m_gravity});
     }
 
     m_velocity.y += m_acceleration.y * dt;
