@@ -7,7 +7,6 @@
 #include "GameplayState.h"
 #include "Terrain.h"
 
-#include <stdio.h>
 
 Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float mass) : KinematicObject(position, 1.f, 1.f, mass) {
     m_team = team;
@@ -17,6 +16,7 @@ Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float 
     m_throw_angle = 0.f;
 
     m_energy = 30;
+    //m_down_vector = {-1.f, 0.f};
 
     m_block_default_sprite = false;
     m_use_small_hitbox = false;
@@ -32,9 +32,16 @@ void Player::Update(float dt) {
 }
 
 void Player::Draw() {
-    Metrics::DrawRectangle(GetRectangle(), RED);
+    //Metrics::DrawRectangle(GetRectangle(), RED);
+    KinematicObject::DrawHitbox();
 }
 
+/**
+ * This is not reliable for when we need extremely accurate collisions.
+ * It is meant to be used to detect if the floor below the player was updated while its physics is disabled,
+ * so we can re-enable it.
+ * @return true if the player is grounded, false otherwise
+ */
 bool Player::Grounded() {
     float old_x = m_position.x;
     float old_y = m_position.y;
@@ -62,6 +69,19 @@ bool Player::IsPlaying() {
         return false;   // Maybe returning true is better for testing ?
     }
     return m_gameplay_state->GetCurrentPlayer() == this;
+}
+
+Rectangle Player::GetRectangle() {
+    if(!m_use_small_hitbox) return EntityObject::GetRectangle();
+
+    float old_w = m_width;
+    float old_h = m_height;
+    m_width *= 0.8f;
+    m_height *= 0.8f;
+    Rectangle r = EntityObject::GetRectangle();
+    m_width = old_w;
+    m_height = old_h;
+    return r;
 }
 
 

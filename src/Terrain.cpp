@@ -55,8 +55,8 @@ bool Terrain::CheckCollision(Vector2 position, bool outside_solid) {
 
 bool Terrain::CheckCollisionRec(Rectangle rec, bool outside_solid) {
     //Top left
-    int pixel_x = (int) (rec.x/m_size.x * (float)m_image.width);
-    int pixel_y = (int) (rec.y/m_size.y * (float)m_image.height);
+    int pixel_x = (int) (rec.x/m_size.x * (float)m_image.width) - (rec.x < 0);
+    int pixel_y = (int) (rec.y/m_size.y * (float)m_image.height) - (rec.y < 0);
 
     //Bottom right
     int pixel_x2 = (int) ((rec.x + rec.width)/m_size.x * (float)m_image.width);

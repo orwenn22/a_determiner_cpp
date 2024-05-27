@@ -19,6 +19,8 @@ public:
 
     bool IsPlaying();
 
+    Rectangle GetRectangle() override;
+
 private:
     void UpdatePhysics(float dt);
 

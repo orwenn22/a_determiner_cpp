@@ -19,7 +19,7 @@ public:
     bool IsOfType(int type_id);
     int GetMainType();
 
-    Rectangle GetRectangle();
+    virtual Rectangle GetRectangle();
     inline ObjectManager *Manager() { return m_manager; }
 
     virtual void DrawHitbox();
