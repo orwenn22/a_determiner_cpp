@@ -46,6 +46,8 @@ add_executable(UI_framework src/main.cpp
         src/actions/Action.h
         src/engine/object/KinematicPrediction.cpp
         src/engine/object/KinematicPrediction.h
+        src/actions/JumpAction.cpp
+        src/actions/JumpAction.h
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

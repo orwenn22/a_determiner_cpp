@@ -16,6 +16,7 @@ public:
     inline Vector2 GetVelocity() { return m_velocity; }
     inline float Mass() { return m_mass; }
     inline bool HaveGravityEnabled() { return m_enable_gravity; }
+    inline void EnablePhysics() { m_enable_physics = true; }
 
 protected:
     void ProcessPhysicsX(float dt);

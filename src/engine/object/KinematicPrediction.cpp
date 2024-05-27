@@ -9,6 +9,9 @@ KinematicPrediction::KinematicPrediction(Vector2 pos, float w, float h, float ma
     m_enable_physics = true;
 }
 
+void KinematicPrediction::Update(float dt) {}
+void KinematicPrediction::Draw() {}
+
 KinematicPrediction::KinematicPrediction(KinematicObject *other)
 : KinematicPrediction(other->GetPosition(), other->Width(), other->Height(), other->Mass(), other->GetVelocity(), other->GetAcceleration()) {
     m_enable_gravity = other->HaveGravityEnabled();

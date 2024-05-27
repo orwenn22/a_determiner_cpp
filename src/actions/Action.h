@@ -42,7 +42,7 @@ public:
 
     const char *GetName() { return m_action_name; }
 
-private:
+protected:
     const char *m_action_name;
     int m_action_cost;
     bool m_is_item;

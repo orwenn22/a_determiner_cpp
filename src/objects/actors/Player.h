@@ -30,6 +30,19 @@ public:
     inline void SetCurrentAction(int new_action) { m_current_action = new_action; }
     inline int GetCurrentAction() { return m_current_action; }
 
+    void SetThrowAngle(float a);
+    inline float GetThrowAngle() { return m_throw_angle; }
+
+    inline void SetEnergy(int e) { m_energy = e; }
+    inline int GetEnergy() { return m_energy; }
+
+    inline void SetStrength(float s) {m_strength = s; }
+    inline float GetStrength() { return m_strength; }
+
+    inline void SetUseSmallHitbox(bool b) { m_use_small_hitbox = b; }
+
+    inline GameplayState *GetGameplayState() { return m_gameplay_state; }
+
 private:
     void UpdatePhysics(float dt);
 

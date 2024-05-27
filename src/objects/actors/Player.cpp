@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include "actions/Action.h"
+#include "actions/JumpAction.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/object/ObjectManager.h"
 #include "engine/util/Math.h"
@@ -20,7 +21,8 @@ Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float 
     m_throw_angle = 0.f;
 
     m_energy = 30;
-    m_actions.push_back(new Action);        //TODO : put actual actions
+    m_current_action = -1;
+    m_actions.push_back(new JumpAction);        //TODO : put actual actions
 
     m_block_default_sprite = false;
     m_use_small_hitbox = false;
@@ -36,15 +38,16 @@ Player::~Player() {
 void Player::Update(float dt) {
     if(!Grounded()) m_enable_physics = true;
 
-    //TODO : update selected action
+    if(m_current_action >= 0 && m_current_action < m_actions.size()) m_actions[m_current_action]->OnUpdate(this, dt);
 
     if(m_enable_physics) UpdatePhysics(dt);
 
 }
 
 void Player::Draw() {
-    //Metrics::DrawRectangle(GetRectangle(), RED);
     KinematicObject::DrawHitbox();
+
+    if(m_current_action >= 0 && m_current_action < m_actions.size()) m_actions[m_current_action]->OnDraw(this);
 }
 
 /**
@@ -129,6 +132,18 @@ Rectangle Player::GetRectangle() {
 }
 
 
+void Player::SetThrowAngle(float a) {
+    m_throw_angle = a;
+
+    //TODO : do something with modulo instead of this ?
+    while(m_throw_angle > PI) {
+        m_throw_angle -= PI*2;
+    }
+    while(m_throw_angle < -PI) {
+        m_throw_angle += PI*2;
+    }
+}
+
 //////////////////////////////////
 //// PRIVATE
 
@@ -138,15 +153,17 @@ void Player::UpdatePhysics(float dt) {
 
     bool collided = false;
     bool going_down = (sign<float, int>(m_velocity.x) == sign<float, int>(m_down_vector.x)
-            && sign<float, int>(m_velocity.y) == sign<float, int>(m_down_vector.y));
+            || sign<float, int>(m_velocity.y) == sign<float, int>(m_down_vector.y));
 
     // Horizontal
     ProcessPhysicsX(dt);
     if(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {    // && m_velocity.x != 0.f ?
         m_use_small_hitbox = false;
         collided = true;
+        int safe_count = 0;
         while(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
             m_position.x -= 0.01f * sign<float,float>(m_velocity.x);
+            if(++safe_count > 255) break;
         }
         m_velocity.x = 0;
     }
@@ -156,8 +173,10 @@ void Player::UpdatePhysics(float dt) {
     if(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {    // && m_velocity.y != 0.f ?
         m_use_small_hitbox = false;
         collided = true;
+        int safe_count = 0;
         while(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
             m_position.y -= 0.01f * sign<float,float>(m_velocity.y);
+            if(++safe_count > 255) break;
         }
         m_velocity.y = 0;
     }
@@ -167,7 +186,7 @@ void Player::UpdatePhysics(float dt) {
         m_velocity.y = 0;
         m_enable_physics = false;
         if(IsPlaying()) {
-            //ShowActionWidgets();
+            m_gameplay_state->ShowActionWidgets();
         }
     }
 }

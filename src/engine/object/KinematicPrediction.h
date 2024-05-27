@@ -7,6 +7,10 @@ class KinematicPrediction : public KinematicObject{
 public:
     KinematicPrediction(Vector2 pos, float w, float h, float mass, Vector2 velocity = {0.f, 0.f}, Vector2 acceleration = {0.f, 0.f});
 
+    //These do nothing
+    void Update(float dt) override;
+    void Draw() override;
+
     /**
      * Call the constructor using another object as a base
      * NOTE : if we want to clear the acceleration, this should be done manually after the initialisation of the object
