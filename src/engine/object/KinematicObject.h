@@ -12,6 +12,11 @@ public:
 
     void DrawHitbox() override;
 
+    inline Vector2 GetAcceleration() { return m_acceleration; }
+    inline Vector2 GetVelocity() { return m_velocity; }
+    inline float Mass() { return m_mass; }
+    inline bool HaveGravityEnabled() { return m_enable_gravity; }
+
 protected:
     void ProcessPhysicsX(float dt);
     void ProcessPhysicsY(float dt);

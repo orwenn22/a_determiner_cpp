@@ -24,6 +24,10 @@ public:
 
     virtual void DrawHitbox();
 
+    inline Vector2 GetPosition() { return m_position; }
+    inline float Width() { return m_width; }
+    inline float Height() { return m_height; }
+
 
 protected:
     void RegisterType(int type_id);
