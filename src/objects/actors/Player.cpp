@@ -6,9 +6,11 @@
 #include "engine/util/VectorOps.h"
 #include "GameplayState.h"
 #include "Terrain.h"
-
+#include "../ObjectIDs.h"
 
 Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float mass) : KinematicObject(position, 1.f, 1.f, mass) {
+    RegisterType(TypeID_Player);
+
     m_team = team;
     m_gameplay_state = gameplay_state;
 
@@ -20,6 +22,8 @@ Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float 
 
     m_block_default_sprite = false;
     m_use_small_hitbox = false;
+
+    m_solid_types.push_back(TypeID_Wall);
 }
 
 void Player::Update(float dt) {

@@ -14,6 +14,8 @@ Terrain *Terrain::construct(const char *filepath, Vector2 size) {
 }
 
 Terrain::Terrain(const char *filepath, Vector2 size) {
+    m_origin = {0.f, 0.f};
+
     m_image = LoadImage(filepath);
     m_texture = LoadTextureFromImage(m_image);
     m_size = size;
@@ -39,15 +41,15 @@ Terrain::~Terrain() {
 
 
 void Terrain::Draw() {
-    Metrics::DrawSpriteScale(m_texture, {0.f, 0.f, m_size.x, m_size.y}, WHITE);
-    Metrics::DrawRectangle(0.f, 0.f, m_size.x, m_size.y, RED, false);
+    Metrics::DrawSpriteScale(m_texture, {m_origin.x, m_origin.y, m_size.x, m_size.y}, WHITE);
+    Metrics::DrawRectangle(m_origin.x, m_origin.y, m_size.x, m_size.y, RED, false);
 }
 
 
 bool Terrain::CheckCollision(Vector2 position, bool outside_solid) {
     //Compute the coordinates of the correct pixel on the image
-    int pixel_x = (int) (position.x/m_size.x * (float)m_image.width);
-    int pixel_y = (int) (position.y/m_size.y * (float)m_image.height);
+    int pixel_x = (int) ((position.x - m_origin.x)/m_size.x * (float)m_image.width) - (position.x < m_origin.x);
+    int pixel_y = (int) ((position.y - m_origin.y)/m_size.y * (float)m_image.height) - (position.y < m_origin.y);
 
     if(pixel_x < 0 || pixel_x >= m_image.width || pixel_y < 0 || pixel_y >= m_image.height) return outside_solid;
     return m_collision_mask[pixel_x + pixel_y*m_image.width];
@@ -55,12 +57,12 @@ bool Terrain::CheckCollision(Vector2 position, bool outside_solid) {
 
 bool Terrain::CheckCollisionRec(Rectangle rec, bool outside_solid) {
     //Top left
-    int pixel_x = (int) (rec.x/m_size.x * (float)m_image.width) - (rec.x < 0);
-    int pixel_y = (int) (rec.y/m_size.y * (float)m_image.height) - (rec.y < 0);
+    int pixel_x = (int) (rec.x/m_size.x * (float)m_image.width) - (rec.x < m_origin.x);
+    int pixel_y = (int) (rec.y/m_size.y * (float)m_image.height) - (rec.y < m_origin.y);
 
     //Bottom right
-    int pixel_x2 = (int) ((rec.x + rec.width)/m_size.x * (float)m_image.width);
-    int pixel_y2 = (int) ((rec.y + rec.height)/m_size.y * (float)m_image.height);
+    int pixel_x2 = (int) ((rec.x + rec.width - m_origin.x)/m_size.x * (float)m_image.width) - (rec.x + rec.width < m_origin.x);
+    int pixel_y2 = (int) ((rec.y + rec.height - m_origin.y)/m_size.y * (float)m_image.height) - (rec.y + rec.height < m_origin.y);
 
     if(outside_solid) {
         if(pixel_x < 0 || pixel_x2 >= m_image.width || pixel_y < 0 || pixel_y2 >= m_image.height) return true;
@@ -99,12 +101,12 @@ bool Terrain::CheckCollisionRec(Rectangle rec, bool outside_solid) {
 
 void Terrain::DestroyRectangle(Rectangle rec) {
     //Top left
-    int pixel_x = (int) (rec.x/m_size.x * (float)m_image.width);
-    int pixel_y = (int) (rec.y/m_size.y * (float)m_image.height);
+    int pixel_x = (int) (rec.x/m_size.x * (float)m_image.width) - (rec.x < m_origin.x);
+    int pixel_y = (int) (rec.y/m_size.y * (float)m_image.height) - (rec.y < m_origin.y);
 
     //Bottom right
-    int pixel_x2 = (int) ((rec.x + rec.width)/m_size.x * (float)m_image.width);
-    int pixel_y2 = (int) ((rec.y + rec.height)/m_size.y * (float)m_image.height);
+    int pixel_x2 = (int) ((rec.x + rec.width - m_origin.x)/m_size.x * (float)m_image.width) - (rec.x + rec.width < m_origin.x);
+    int pixel_y2 = (int) ((rec.y + rec.height - m_origin.y)/m_size.y * (float)m_image.height) - (rec.y + rec.height < m_origin.y);
 
     //Make sure we don't try to destroy outside
     if(pixel_x < 0) pixel_x = 0;
@@ -145,8 +147,8 @@ void Terrain::UnsafeDestroyPixel(int x, int y) {
  * @param radius_height height/2 (in pixels)
  */
 void Terrain::DestroyElispePixel(Vector2 center, int radius_width, int radius_height) {
-    int pixel_x = (int) (center.x/m_size.x * (float)m_image.width);
-    int pixel_y = (int) (center.y/m_size.y * (float)m_image.height);
+    int pixel_x = (int) ((center.x - m_origin.x)/m_size.x * (float)m_image.width) - (center.x < m_origin.x);
+    int pixel_y = (int) ((center.y - m_origin.y)/m_size.y * (float)m_image.height) - (center.y < m_origin.y);
 
     //Number of iterations we need to do in order to noit skip columns of pixels of the circle
     int step_count = (int)((float)radius_width * 3.14f);
