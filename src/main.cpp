@@ -6,13 +6,14 @@
 #include "engine/state/State.h"
 #include "engine/util/DebugOverlay.h"
 #include "GameplayState.h"
+#include "GlobalResources.h"
 
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(512, 512, "À déterminer");
     SetTargetFPS(240);
-
+    Res::LoadAll();
 
     StateManager *state_manager = new StateManager(new GameplayState);
 
@@ -32,6 +33,7 @@ int main() {
     }
 
     delete state_manager;
+    Res::UnloadAll();
     CloseWindow();
     return 0;
 }

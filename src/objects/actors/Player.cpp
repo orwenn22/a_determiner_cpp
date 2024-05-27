@@ -8,6 +8,7 @@
 #include "engine/util/VectorOps.h"
 #include "engine/widgets/Button.h"
 #include "GameplayState.h"
+#include "GlobalResources.h"
 #include "Terrain.h"
 #include "../ObjectIDs.h"
 
@@ -45,9 +46,24 @@ void Player::Update(float dt) {
 }
 
 void Player::Draw() {
-    KinematicObject::DrawHitbox();
-
+    m_block_default_sprite = false;
     if(m_current_action >= 0 && m_current_action < m_actions.size()) m_actions[m_current_action]->OnDraw(this);
+
+    if(!m_block_default_sprite) {
+        if(m_enable_physics) {
+            float flip_factor = (m_velocity.x < 0) ? (-1.f) : 1.f;
+            Metrics::DrawSpriteRotEx(Res::player_in_jump_sprite, {32.f * (float) m_team, 37.f, 32.f*flip_factor, 37.f},
+                                     {m_position.x, m_position.y+0.15625f/2.f}, {1.f, 1.15625f},       //37/32 * 1 = 1.15625
+                                     0.f, WHITE);
+        }
+        else {
+            Metrics::DrawSpriteRotEx(Res::player_sprite, {0.f, 32.f * (float) m_team, 32.f, 32.f},
+                                     m_position, {1.f, 1.f},
+                                     0.f, WHITE);
+        }
+    }
+
+    KinematicObject::DrawHitbox();
 }
 
 /**

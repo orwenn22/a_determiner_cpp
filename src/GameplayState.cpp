@@ -61,8 +61,8 @@ void GameplayState::Update(float dt) {
 void GameplayState::Draw() {
     Metrics::SetGraphicsCam(m_camera);
     Metrics::DrawGrid();
-    m_object_manager->Draw();
     m_terrain->Draw();
+    m_object_manager->Draw();
 
     if(m_show_action_widgets) m_action_widgets->Draw();
 }

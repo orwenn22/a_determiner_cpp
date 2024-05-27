@@ -39,7 +39,11 @@ public:
     inline void SetStrength(float s) {m_strength = s; }
     inline float GetStrength() { return m_strength; }
 
+    inline int GetTeam() { return m_team; }
+
     inline void SetUseSmallHitbox(bool b) { m_use_small_hitbox = b; }
+
+    inline void BlockDefaultSprite() { m_block_default_sprite = true; }
 
     inline GameplayState *GetGameplayState() { return m_gameplay_state; }
 

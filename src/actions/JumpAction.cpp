@@ -3,9 +3,11 @@
 #include <cmath>
 #include <cstdio>
 
+#include "engine/metrics/Graphics.h"
 #include "engine/object/KinematicPrediction.h"
 #include "engine/util/VectorOps.h"
 #include "GameplayState.h"
+#include "GlobalResources.h"
 #include "objects/actors/Player.h"
 
 JumpAction::JumpAction() : Action() {
@@ -44,8 +46,11 @@ void JumpAction::OnDraw(Player *player) {
     prediction->ApplyForce(force / 0.01f);      // 0.01 is the virtual daltatime
     prediction->DrawSimulation(10);
 
-    //TODO : draw player sprite jumping
-    //player->BlockDefaultSprite();
+    player->BlockDefaultSprite();
+    float flip_factor = (player->GetThrowAngle() > PI/2 or player->GetThrowAngle() < -PI/2) ? -1.f : 1.f;
+    Metrics::DrawSpriteRotEx(Res::player_jump_sprite, {0.f, 32.f * player->GetTeam(), 32.f*flip_factor, 32.f},
+                             player->GetPosition(), {player->Width(), player->Height()},
+                             0.f, WHITE);
 }
 
 
