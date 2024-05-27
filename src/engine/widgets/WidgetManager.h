@@ -16,6 +16,7 @@ public:
 
     void AddWidget(Widget *w);
     void RemoveWidget(Widget *w);
+    void Clear();
 
     //Getters
     inline int X() { return m_x; }

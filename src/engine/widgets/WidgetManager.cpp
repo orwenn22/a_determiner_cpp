@@ -26,10 +26,7 @@ WidgetManager::WidgetManager(int x, int y, int w, int h) {
 }
 
 WidgetManager::~WidgetManager() {
-    for(Widget *w : m_widgets) {
-        delete w;
-    }
-    m_widgets.clear();
+    Clear();
 }
 
 void WidgetManager::Update() {
@@ -66,6 +63,13 @@ void WidgetManager::RemoveWidget(Widget *w) {
     if(result == m_widgets.end()) return;
     m_widgets.erase(result);
     w->SetManager(nullptr);
+}
+
+void WidgetManager::Clear() {
+    for(Widget *w : m_widgets) {
+        delete w;
+    }
+    m_widgets.clear();
 }
 
 void WidgetManager::SetPosition(int x, int y) {

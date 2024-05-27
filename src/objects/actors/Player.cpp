@@ -1,9 +1,11 @@
 #include "Player.h"
 
+#include "actions/Action.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/object/ObjectManager.h"
 #include "engine/util/Math.h"
 #include "engine/util/VectorOps.h"
+#include "engine/widgets/Button.h"
 #include "GameplayState.h"
 #include "Terrain.h"
 #include "../ObjectIDs.h"
@@ -18,12 +20,17 @@ Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float 
     m_throw_angle = 0.f;
 
     m_energy = 30;
-    //m_down_vector = {-1.f, 0.f};
+    m_actions.push_back(new Action);        //TODO : put actual actions
 
     m_block_default_sprite = false;
     m_use_small_hitbox = false;
 
     m_solid_types.push_back(TypeID_Wall);
+}
+
+Player::~Player() {
+    for(Action *a : m_actions) delete a;
+    m_actions.clear();
 }
 
 void Player::Update(float dt) {
@@ -73,6 +80,39 @@ bool Player::IsPlaying() {
         return false;   // Maybe returning true is better for testing ?
     }
     return m_gameplay_state->GetCurrentPlayer() == this;
+}
+
+void Player::SkipTurn() {
+    // Actions are able to cancel passing the turn to the next player
+    bool cancel_next_player_turn = false;
+    for(Action *a : m_actions) {
+        if(a->OnSkip(this)) cancel_next_player_turn = true;
+    }
+
+    m_energy += 10;         // Increase points
+    m_current_action = -1;  // Cancel any action
+
+    if(!cancel_next_player_turn) {
+        m_gameplay_state->NextPlayerTurn(); //Give the turn to the next character (will clear action widgets)
+    }
+}
+
+std::vector<Widget *> Player::GetActionWidgets() {
+    std::vector<Widget *> r;
+
+    for(int i = 0; i < m_actions.size(); ++i) {
+        Action *a = m_actions[i];
+        Button *b = new Button(0, 0, 70, 70, a->GetName(), [=]() {
+            a->OnClick(this, i);
+        });
+        r.push_back(b);
+    }
+
+    Button *skip_button = new Button(0, 0, 70, 70, "Skip", [=]() {
+        SkipTurn();
+    });
+    r.push_back(skip_button);
+    return r;
 }
 
 Rectangle Player::GetRectangle() {

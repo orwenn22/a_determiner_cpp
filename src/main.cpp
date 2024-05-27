@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <stdio.h>
 
+#include "engine/Globals.h"
 #include "engine/state/StateManager.h"
 #include "engine/state/State.h"
 #include "engine/util/DebugOverlay.h"
@@ -18,8 +19,7 @@ int main() {
     while(!WindowShouldClose()) {
         // UPDATE
         float dt = GetFrameTime();
-
-
+        ResetMouse();
         state_manager->Update(dt);
 
         //DRAW

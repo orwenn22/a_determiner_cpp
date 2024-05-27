@@ -5,11 +5,14 @@
 
 #include <vector>
 
+class Action;
 class GameplayState;
+class Widget;
 
 class Player : public KinematicObject {
 public:
     Player(Vector2 position, int team, GameplayState *gameplay_state, float mass = 10.f);
+    ~Player() override;
 
     void Update(float dt) override;
     void Draw() override;
@@ -18,8 +21,14 @@ public:
     bool CollideWithSolidObject();
 
     bool IsPlaying();
+    void SkipTurn();
+
+    std::vector<Widget *> GetActionWidgets();
 
     Rectangle GetRectangle() override;
+
+    inline void SetCurrentAction(int new_action) { m_current_action = new_action; }
+    inline int GetCurrentAction() { return m_current_action; }
 
 private:
     void UpdatePhysics(float dt);
@@ -35,6 +44,8 @@ private:
 
     // Some actions cost points. The points are stored in this.
     int m_energy;
+    int m_current_action;
+    std::vector<Action *> m_actions;
 
     std::vector<int> m_solid_types;
 
