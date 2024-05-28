@@ -29,6 +29,8 @@ GameplayState::GameplayState() {
     m_current_player = -1;
     m_players_per_team = 3;
     m_team_count = 2;
+    m_start_regions.push_back({0.f, 0.f, 16.f, 22.f});
+    m_start_regions.push_back({16.f, 0.f, 16.f, 22.f});
 
     m_overlay = new WidgetManager;
     m_hotbar_text = new Label(0, 95, 20, "Hotbar text");
@@ -76,6 +78,12 @@ void GameplayState::Update(float dt) {
 void GameplayState::Draw() {
     Metrics::SetGraphicsCam(m_camera);
     Metrics::DrawGrid();
+
+    if(PlacingPlayers()) {
+        for(int i = 0; i < m_start_regions.size(); ++i) {
+            Metrics::DrawRectangle(m_start_regions[i], {s_team_colors[i].r, s_team_colors[i].g, s_team_colors[i].b, 100});
+        }
+    }
     m_terrain->Draw();
     m_object_manager->Draw();
 
@@ -92,7 +100,10 @@ void GameplayState::PlacePlayer(Vector2 pos, int team, bool check_start_pos) {
         return;
     }
 
-    //TODO : check collision with corresponding start location
+    if(check_start_pos && !CheckCollisionRecs(p->GetRectangle(), m_start_regions[team])) {
+        delete p;
+        return;
+    }
 
     m_players.push_back(p);
     m_object_manager->AddObject(p);

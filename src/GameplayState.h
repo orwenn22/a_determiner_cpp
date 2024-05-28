@@ -55,6 +55,7 @@ private:
     int m_current_player;
     int m_players_per_team;
     int m_team_count;
+    std::vector<Rectangle> m_start_regions;
 
     WidgetManager *m_overlay;
     Label *m_hotbar_text;
