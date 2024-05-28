@@ -35,6 +35,7 @@ public:
     inline const char *GetIdentifier() override { return "GameplayState"; }
     inline Terrain *GetTerrain() { return m_terrain; }
     inline bool PlacingPlayers() { return m_current_player == -1; }      //Return true if we are still placing players, false otherwise
+    inline bool IsShowingActions() { return m_show_action_widgets; }
 
 
 private:

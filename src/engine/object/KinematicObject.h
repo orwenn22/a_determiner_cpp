@@ -18,12 +18,15 @@ public:
     inline bool HaveGravityEnabled() { return m_enable_gravity; }
     inline void EnablePhysics() { m_enable_physics = true; }
 
+    //TODO : find a way to make this private while still being able to modify it from the outside without having a headache
+    Vector2 m_velocity;
+
+
 protected:
     void ProcessPhysicsX(float dt);
     void ProcessPhysicsY(float dt);
     void ProcessPhysics(float dt);
 
-    Vector2 m_velocity;
     Vector2 m_acceleration;
     float m_mass;
     bool m_enable_physics;

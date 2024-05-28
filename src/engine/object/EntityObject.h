@@ -28,11 +28,12 @@ public:
     inline float Width() { return m_width; }
     inline float Height() { return m_height; }
 
+    //TODO : find a way to make this private while still being able to modify it from the outside without having a headache
+    Vector2 m_position;
 
 protected:
     void RegisterType(int type_id);
 
-    Vector2 m_position;
     float m_width, m_height;
 
 

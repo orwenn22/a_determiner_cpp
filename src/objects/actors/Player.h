@@ -22,6 +22,8 @@ public:
 
     bool IsPlaying();
     void SkipTurn();
+    void AddAction(Action *action);
+    void RemoveAction(Action *action);
 
     std::vector<Widget *> GetActionWidgets();
 

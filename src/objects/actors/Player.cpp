@@ -3,6 +3,7 @@
 #include "actions/Action.h"
 #include "actions/JumpAction.h"
 #include "actions/ShootAction.h"
+#include "actions/WallAction.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/object/ObjectManager.h"
 #include "engine/util/Math.h"
@@ -27,6 +28,7 @@ Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float 
     m_current_action = -1;
     m_actions.push_back(new JumpAction);
     m_actions.push_back(new ShootAction);
+    m_actions.push_back(new WallAction);
 
     m_block_default_sprite = false;
     m_use_small_hitbox = false;
@@ -89,7 +91,7 @@ bool Player::Grounded() {
     m_position.x += m_down_vector.x * 0.02f;
     m_position.y += m_down_vector.y * 0.02f;
 
-    bool r = m_gameplay_state->GetTerrain()->CheckCollisionRec(GetRectangle(), true);       // || CollideWithSolidObject();
+    bool r = m_gameplay_state->GetTerrain()->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject();
 
     m_position = {old_x, old_y};
     return r;
@@ -123,6 +125,21 @@ void Player::SkipTurn() {
     if(!cancel_next_player_turn) {
         m_gameplay_state->NextPlayerTurn(); //Give the turn to the next character (will clear action widgets)
     }
+}
+
+void Player::AddAction(Action *action) {
+    if(action == nullptr) return;
+    m_actions.push_back(action);
+    if(m_gameplay_state->IsShowingActions() && IsPlaying()) m_gameplay_state->ShowActionWidgets();
+}
+
+void Player::RemoveAction(Action *action) {
+    auto result = std::find(m_actions.begin(), m_actions.end(), action);
+    if(result == m_actions.end()) return;
+
+    m_actions.erase(result);
+    delete action;
+    if(m_gameplay_state->IsShowingActions() && IsPlaying()) m_gameplay_state->ShowActionWidgets();
 }
 
 std::vector<Widget *> Player::GetActionWidgets() {
@@ -167,6 +184,7 @@ void Player::SetThrowAngle(float a) {
     while(m_throw_angle < -PI) {
         m_throw_angle += PI*2;
     }
+
 }
 
 //////////////////////////////////
@@ -188,7 +206,7 @@ void Player::UpdatePhysics(float dt) {
         int safe_count = 0;
         while(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
             m_position.x -= 0.01f * sign<float,float>(m_velocity.x);
-            if(++safe_count > 255) break;
+            if(++safe_count > 255) break;       //suffocation ?
         }
         m_velocity.x = 0;
     }
@@ -201,14 +219,13 @@ void Player::UpdatePhysics(float dt) {
         int safe_count = 0;
         while(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
             m_position.y -= 0.01f * sign<float,float>(m_velocity.y);
-            if(++safe_count > 255) break;
+            if(++safe_count > 255) break;       //suffocation ?
         }
         m_velocity.y = 0;
     }
 
     if(collided && going_down) {
-        m_velocity.x = 0;
-        m_velocity.y = 0;
+        m_velocity = {0.f, 0.f};
         m_enable_physics = false;
         if(IsPlaying()) {
             m_gameplay_state->ShowActionWidgets();
