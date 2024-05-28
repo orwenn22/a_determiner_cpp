@@ -8,6 +8,7 @@
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "objects/actors/Player.h"
+#include "Teams.h"
 
 JumpAction::JumpAction() : Action() {
     m_action_cost = 20;
@@ -45,9 +46,11 @@ void JumpAction::OnDraw(Player *player) {
 
     player->BlockDefaultSprite();
     float flip_factor = (player->GetThrowAngle() > PI/2 or player->GetThrowAngle() < -PI/2) ? -1.f : 1.f;
-    Metrics::DrawSpriteRotEx(Res::player_jump_sprite, {0.f, 32.f * player->GetTeam(), 32.f*flip_factor, 32.f},
+
+    Metrics::DrawSpriteRotEx(Res::player_jump_sprite, {0.f, 0.f, 32.f*flip_factor, 32.f},
                              player->GetPosition(), {player->Width(), player->Height()},
                              0.f, WHITE);
+    Metrics::DrawSpriteRotEx(Res::player_jump_sprite, {0.f, 32.f, 32.f*flip_factor, 32.f},
+                             player->GetPosition(), {player->Width(), player->Height()},
+                             0.f, s_team_colors[player->GetTeam()]);
 }
-
-

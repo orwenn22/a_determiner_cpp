@@ -19,7 +19,7 @@
 
 
 GameplayState::GameplayState() {
-    m_camera = new MetricsCamera(0, 0, 20);
+    m_camera = new MetricsCamera(0, 0, 16);
     m_cam_follow_mouse = false;
     m_cam_mouse_offset = {0.f, 0.f};
 
