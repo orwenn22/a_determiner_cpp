@@ -51,6 +51,12 @@ add_executable(UI_framework src/main.cpp
         src/GlobalResources.cpp
         src/GlobalResources.h
         src/Teams.h
+        src/objects/actors/Explosion.cpp
+        src/objects/actors/Explosion.h
+        src/objects/actors/Bullet.cpp
+        src/objects/actors/Bullet.h
+        src/actions/ShootAction.cpp
+        src/actions/ShootAction.h
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)
