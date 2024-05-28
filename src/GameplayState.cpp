@@ -7,9 +7,11 @@
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/object/ObjectManager.h"
+#include "engine/widgets/Label.h"
 #include "engine/widgets/WidgetManager.h"
 #include "engine/widgets/Widget.h"
 #include "objects/actors/Player.h"
+#include "Teams.h"
 #include "Terrain.h"
 
 
@@ -26,12 +28,19 @@ GameplayState::GameplayState() {
 
     m_current_player = -1;
     m_players_per_team = 3;
+    m_team_count = 2;
 
+    m_overlay = new WidgetManager;
+    m_hotbar_text = new Label(0, 95, 20, "Hotbar text");
+    m_hotbar_text->SetAlignment(WidgetAlignment_MiddleBottom);
+    m_hotbar_text->SetOutline(true);
+    m_overlay->AddWidget(m_hotbar_text);
     m_action_widgets = new WidgetManager;
     m_show_action_widgets = false;
 }
 
 GameplayState::~GameplayState() {
+    delete m_overlay;
     delete m_action_widgets;
     delete m_object_manager;
     delete m_terrain;
@@ -45,6 +54,7 @@ void GameplayState::Update(float dt) {
     int mouse_y = GetMouseY();
 
     //TODO : update widgets here
+    m_overlay->Update();
     if(m_show_action_widgets) m_action_widgets->Update();
 
     HandleDragCamera((float)mouse_x, (float)mouse_y);
@@ -53,9 +63,14 @@ void GameplayState::Update(float dt) {
     //m_terrain->DestroyCircle(mouse_meters, 1.f);
 
     m_object_manager->Update(dt);
-    if(PlacingPlayers()) PlacePlayer(mouse_meters, m_players.size()%2);
 
-    //TODO : update hotbar text
+    if(PlacingPlayers()) {
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !IsMouseUsed()) {
+            PlacePlayer(mouse_meters, m_players.size() % m_team_count);
+        }
+    }
+
+    UpdateHotbarText();
 }
 
 void GameplayState::Draw() {
@@ -65,13 +80,11 @@ void GameplayState::Draw() {
     m_object_manager->Draw();
 
     if(m_show_action_widgets) m_action_widgets->Draw();
+    m_overlay->Draw();
 }
 
 
 void GameplayState::PlacePlayer(Vector2 pos, int team, bool check_start_pos) {
-    //TODO : move this condition outside ?
-    if(!IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseUsed()) return;
-
     Player *p = new Player(pos, team, this, 10);
 
     if(m_terrain->CheckCollisionRec(p->GetRectangle(), true)) {
@@ -85,7 +98,7 @@ void GameplayState::PlacePlayer(Vector2 pos, int team, bool check_start_pos) {
     m_object_manager->AddObject(p);
     printf("GameplayState::PlacePlayer : Player spawned\n");    //TODO : display player pos
 
-    if(m_players.size() >= m_players_per_team*2) {
+    if(m_players.size() >= m_players_per_team*m_team_count) {
         NextPlayerTurn();
     }
 }
@@ -194,4 +207,22 @@ void GameplayState::HandleDragCamera(float mouse_x, float mouse_y) {
         if(mouse_wheel > 0) m_camera->SetPixelsPerMeter(m_camera->PixelsPerMeter() * 2);
         else if(mouse_wheel < 0) m_camera->SetPixelsPerMeter(m_camera->PixelsPerMeter() / 2);
     }
+}
+
+void GameplayState::UpdateHotbarText() {
+    if(PlacingPlayers()) {
+        int team_index = (int)m_players.size()%m_team_count;     //Find which team is currently placing
+        m_hotbar_text->SetLabel(TextFormat("Place %s player", s_team_names[team_index]));
+        m_hotbar_text->SetColor(s_team_colors[team_index]);
+        return;
+    }
+
+    Player *p = GetCurrentPlayer();
+    if(p == nullptr) {
+        m_hotbar_text->SetLabel("Error : player is null :^(");
+        return;
+    }
+
+    m_hotbar_text->SetLabel(TextFormat("Energy : %i", p->GetEnergy()));
+    m_hotbar_text->SetColor(s_team_colors[p->GetTeam()]);
 }

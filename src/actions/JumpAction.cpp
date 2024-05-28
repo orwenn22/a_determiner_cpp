@@ -1,7 +1,6 @@
 #include "JumpAction.h"
 
 #include <cmath>
-#include <cstdio>
 
 #include "engine/metrics/Graphics.h"
 #include "engine/object/KinematicPrediction.h"
@@ -18,8 +17,6 @@ JumpAction::JumpAction() : Action() {
 }
 
 void JumpAction::OnUpdate(Player *player, float dt) {
-    printf("aaa\n");
-
     //TODO : take into account rebindable controls
     float angle_variation = (float)(IsKeyDown(KEY_D) - IsKeyDown(KEY_A)) * dt;
     player->SetThrowAngle(player->GetThrowAngle() + angle_variation);

@@ -8,6 +8,7 @@
 
 
 class MetricsCamera;
+class Label;
 class ObjectManager;
 class Player;
 class Terrain;
@@ -38,6 +39,7 @@ public:
 
 private:
     void HandleDragCamera(float mouse_x, float mouse_y);        //Take mouse pos in pixel
+    void UpdateHotbarText();
 
 
     //static GameplayState *singleton;
@@ -52,7 +54,10 @@ private:
     std::vector<Player *> m_players;
     int m_current_player;
     int m_players_per_team;
+    int m_team_count;
 
+    WidgetManager *m_overlay;
+    Label *m_hotbar_text;
     WidgetManager *m_action_widgets;
     bool m_show_action_widgets;
 };
