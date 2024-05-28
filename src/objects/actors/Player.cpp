@@ -3,7 +3,6 @@
 #include "actions/Action.h"
 #include "actions/JumpAction.h"
 #include "actions/ShootAction.h"
-#include "actions/WallAction.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/object/ObjectManager.h"
 #include "engine/util/Math.h"
@@ -28,7 +27,6 @@ Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float 
     m_current_action = -1;
     m_actions.push_back(new JumpAction);
     m_actions.push_back(new ShootAction);
-    m_actions.push_back(new WallAction);
 
     m_block_default_sprite = false;
     m_use_small_hitbox = false;

@@ -11,6 +11,8 @@ Texture player_wall_sprite;
 Texture explosion_sprite;
 Texture wall_sprite;
 
+Texture trowel_sprite;
+
 
 void LoadAll() {
     player_sprite = LoadTexture("res/player.png");
@@ -21,9 +23,13 @@ void LoadAll() {
 
     explosion_sprite = LoadTexture("res/explosion-boom.png");
     wall_sprite = LoadTexture("res/wall.png");
+
+    trowel_sprite = LoadTexture("res/truelle.png");
 }
 
 void UnloadAll() {
+    UnloadTexture(trowel_sprite);
+
     UnloadTexture(wall_sprite);
     UnloadTexture(explosion_sprite);
 

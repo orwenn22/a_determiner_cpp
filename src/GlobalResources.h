@@ -13,6 +13,8 @@ namespace Res {
     extern Texture explosion_sprite;
     extern Texture wall_sprite;
 
+    extern Texture trowel_sprite;
+
 
     void LoadAll();
     void UnloadAll();

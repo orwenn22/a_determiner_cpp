@@ -16,7 +16,7 @@
 WallAction::WallAction() : Action() {
     m_action_name = "Wall";
     m_is_item = true;
-    //TODO : add icon
+    m_icon = &Res::trowel_sprite;
 
     m_animation_time = 0.f;
     m_animation_current_frame = 0;
