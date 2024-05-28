@@ -79,7 +79,7 @@ std::vector<EntityObject *> ObjectManager::GetCollisions(EntityObject *source_ob
 void ObjectManager::ClearTrashcan() {
     if(m_trashcan.empty()) return;
 
-    for(EntityObject *o : m_objects) {
+    for(EntityObject *o : m_trashcan) {
         delete o;
     }
 

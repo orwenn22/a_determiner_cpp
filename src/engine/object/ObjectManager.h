@@ -27,6 +27,8 @@ public:
      */
     std::vector<EntityObject *> GetCollisions(EntityObject *source_object, int type_id);
 
+    std::vector<EntityObject *> *RawVector() { return &m_objects; }
+
 private:
     void ClearTrashcan();
 
