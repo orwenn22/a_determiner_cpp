@@ -10,6 +10,7 @@
 
 
 Bullet::Bullet(Vector2 pos, GameplayState *gameplay_state, KinematicObject *thrower, bool enable_gravity) : KinematicObject(pos, .25f, .25f, 5.f) {
+    RegisterType(TypeID_Bullet);
     m_enable_physics = true;
     m_enable_gravity = enable_gravity;
     m_gameplay_state = gameplay_state;

@@ -55,6 +55,10 @@ void ObjectManager::DestroyObject(EntityObject *object) {
     m_trashcan.push_back(object);
 }
 
+bool ObjectManager::ObjectExist(EntityObject *object) {
+    return std::find(m_objects.begin(), m_objects.end(), object) != m_objects.end();
+}
+
 std::vector<EntityObject *> ObjectManager::GetCollisions(EntityObject *source_object, int type_id) {
     std::vector<EntityObject *> result;
     if(source_object == nullptr) return result;

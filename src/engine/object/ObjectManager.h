@@ -19,6 +19,8 @@ public:
     //TODO : method to remove without de-allocation ?
     void DestroyObject(EntityObject *object);
 
+    bool ObjectExist(EntityObject *object);
+
     /**
      * Check the collisions between an objects and all the others
      * @param source_object the object we want to check collision with the others

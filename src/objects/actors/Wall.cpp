@@ -80,23 +80,23 @@ void Wall::UpdatePhysics(float dt) {
         // After pushing the player, if we are on a slope, it is possible that it is clipping in the floor,
         // so move it up if it is the case
         it = 0;
-        while(m_gameplay_state->GetTerrain()->CheckCollisionRec(player->GetRectangle()) && it <= 150) {
+        while(t->CheckCollisionRec(player->GetRectangle()) && it <= 150) {
             player->m_position.y -= .01f;       //TODO : take into account down vector ?
             ++it;
         }
 
         // Crushed by wall and terrain
-        if(m_gameplay_state->GetTerrain()->CheckCollisionRec(player->GetRectangle()) || player->CollideWithSolidObject()) {
+        if(t->CheckCollisionRec(player->GetRectangle()) || player->CollideWithSolidObject()) {
             m_gameplay_state->KillPlayer(player);
             continue;       //In case we add more stuff after that in the future
         }
     }
 
     // If the wall itself if colliding with the terrain or another solid object then we shift it to the opposite direction
-    if(m_gameplay_state->GetTerrain()->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
+    if(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
         collided = true;
         int safe_count = 0;
-        while(m_gameplay_state->GetTerrain()->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
+        while(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
             m_position.x -= sign<float, float>(m_velocity.x) * .01f;
             if(++safe_count >= 250) break;      //suffocation ?
         }
@@ -122,10 +122,10 @@ void Wall::UpdatePhysics(float dt) {
     }
 
     // If the wall is clipping with the terrain then we make it go in the opposite direction of its velocity
-    if(m_gameplay_state->GetTerrain()->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
+    if(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
         collided = true;
         int safe_count = 0;
-        while(m_gameplay_state->GetTerrain()->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
+        while(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
             m_position.y -= sign<float, float>(m_velocity.y) * .01f;
             if(++safe_count >= 250) break;      //suffocation ?
         }

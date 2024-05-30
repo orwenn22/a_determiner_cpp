@@ -11,6 +11,7 @@
 #include "engine/widgets/WidgetManager.h"
 #include "engine/widgets/Widget.h"
 #include "objects/actors/Player.h"
+#include "objects/collectibles/Portalgun.h"
 #include "objects/collectibles/Trowel.h"
 #include "Teams.h"
 #include "Terrain.h"
@@ -64,6 +65,7 @@ void GameplayState::Update(float dt) {
 
     Vector2 mouse_meters = m_camera->ConvertAbsoluteToMeters(mouse_x, mouse_y);
     if(IsKeyPressed(KEY_T)) m_object_manager->AddObject(new Trowel(mouse_meters));
+    if(IsKeyPressed(KEY_P)) m_object_manager->AddObject(new Portalgun(mouse_meters));
     //m_terrain->DestroyCircle(mouse_meters, 1.f);
 
     m_object_manager->Update(dt);

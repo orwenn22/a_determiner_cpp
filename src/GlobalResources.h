@@ -9,11 +9,14 @@ namespace Res {
     extern Texture player_jump_sprite;
     extern Texture player_shooting_sprite;
     extern Texture player_wall_sprite;
+    extern Texture player_portal_sprite;
 
     extern Texture explosion_sprite;
     extern Texture wall_sprite;
+    extern Texture portal_sprite;
 
     extern Texture trowel_sprite;
+    extern Texture portalgun_sprite;
 
 
     void LoadAll();
