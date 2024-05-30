@@ -10,8 +10,10 @@
 
 #ifdef __FILE_NAME__
 #define TRACE(...) printf("\033[3;90m%s %s L%d\033[0m ", __func__, __FILE_NAME__, __LINE__); printf(__VA_ARGS__)
+//#define TRACE printf("\033[3;90m%s %s L%d\033[0m ", __func__, __FILE_NAME__, __LINE__); printf
 #else
 #define TRACE(...) printf("\033[3;90m%s L%d\033[0m ", __func__, __LINE__); printf(__VA_ARGS__)
+//#define TRACE printf("\033[3;90m%s L%d\033[0m ", __func__, __LINE__); printf
 #endif
 
 #endif //UI_FRAMEWORK_TRACE_H
