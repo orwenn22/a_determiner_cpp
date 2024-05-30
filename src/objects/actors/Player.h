@@ -29,6 +29,7 @@ public:
 
     Rectangle GetRectangle() override;
 
+    Action *GetAction(int index);
     inline void SetCurrentAction(int new_action) { m_current_action = new_action; }
     inline int GetCurrentAction() { return m_current_action; }
 

@@ -16,7 +16,7 @@
 ShootAction::ShootAction() : Action() {
     m_action_cost = 25;
     m_action_name = "Shoot";
-    //TODO : add icon
+    m_icon = &Res::shoot_icon_sprite;
 }
 
 void ShootAction::OnUpdate(Player *player, float dt) {

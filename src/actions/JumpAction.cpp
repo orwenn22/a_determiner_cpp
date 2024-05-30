@@ -8,13 +8,14 @@
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "objects/actors/Player.h"
+#include "GlobalResources.h"
 #include "Teams.h"
 
 JumpAction::JumpAction() : Action() {
     m_action_cost = 20;
     m_action_name = "Jump";
     m_is_item = false;
-    //TODO : put icon
+    m_icon = &Res::jump_icon_sprite;
 }
 
 void JumpAction::OnUpdate(Player *player, float dt) {

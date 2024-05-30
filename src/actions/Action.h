@@ -41,6 +41,9 @@ public:
     virtual void OnDraw(Player *player);
 
     const char *GetName() { return m_action_name; }
+    inline bool IsItem() { return m_is_item; }
+    inline int Cost() { return m_action_cost; }
+    Texture *GetIcon() { return m_icon; }
 
 protected:
     const char *m_action_name;

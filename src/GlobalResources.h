@@ -15,8 +15,12 @@ namespace Res {
     extern Texture wall_sprite;
     extern Texture portal_sprite;
 
+    extern Texture jump_icon_sprite;
+    extern Texture shoot_icon_sprite;
     extern Texture trowel_sprite;
     extern Texture portalgun_sprite;
+
+    extern Texture tiled_button_sprite;
 
 
     void LoadAll();

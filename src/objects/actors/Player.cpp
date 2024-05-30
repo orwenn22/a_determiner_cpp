@@ -7,7 +7,9 @@
 #include "engine/object/ObjectManager.h"
 #include "engine/util/Math.h"
 #include "engine/util/VectorOps.h"
-#include "engine/widgets/Button.h"
+#include "engine/widgets/TiledButton.h"
+#include "widgets/ActionWidget.h"
+#include "widgets/FakeActionWidget.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "Teams.h"
@@ -145,13 +147,12 @@ std::vector<Widget *> Player::GetActionWidgets() {
 
     for(int i = 0; i < m_actions.size(); ++i) {
         Action *a = m_actions[i];
-        Button *b = new Button(0, 0, 70, 70, a->GetName(), [=]() {
-            a->OnClick(this, i);
-        });
-        r.push_back(b);
+        //Button *b = new Button(0, 0, 70, 70, a->GetName(), [=]() {
+        ActionWidget *action_button = new ActionWidget(this, i);
+        r.push_back(action_button);
     }
 
-    Button *skip_button = new Button(0, 0, 70, 70, "Skip", [=]() {
+    FakeActionWidget *skip_button = new FakeActionWidget("Skip", "(+10)", [=]() {
         SkipTurn();
     });
     r.push_back(skip_button);
@@ -169,6 +170,12 @@ Rectangle Player::GetRectangle() {
     m_width = old_w;
     m_height = old_h;
     return r;
+}
+
+
+Action *Player::GetAction(int index) {
+    if(index < 0 || index >= m_actions.size()) return nullptr;
+    return m_actions[index];
 }
 
 
