@@ -31,6 +31,8 @@ public:
     void ShowActionWidgets();
     void HideActionWidgets();
 
+    void SpawnRandomItem();
+
     Player *GetCurrentPlayer();
     inline const char *GetIdentifier() override { return "GameplayState"; }
     inline Terrain *GetTerrain() { return m_terrain; }

@@ -18,6 +18,9 @@ public:
     void DestroyRectangle(Rectangle rec);
     void DestroyCircle(Vector2 center, float radius);       //Take in meters
 
+    inline float Width() { return m_size.x; }
+    inline float Height() { return m_size.y; }
+
 private:
     Terrain(const char *filepath, Vector2 size);
 

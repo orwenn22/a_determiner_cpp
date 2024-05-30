@@ -1,5 +1,6 @@
+#include <random>
 #include <raylib.h>
-#include <stdio.h>
+#include <time.h>
 
 #include "engine/Globals.h"
 #include "engine/state/StateManager.h"
@@ -10,6 +11,7 @@
 
 
 int main() {
+    srand(time(nullptr));
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(512, 512, "À déterminer");
     SetTargetFPS(240);

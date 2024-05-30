@@ -1,10 +1,10 @@
 #include "Terrain.h"
 
-#include <cstdio>
 #include <cmath>
 #include <malloc.h>
 
 #include "engine/metrics/Graphics.h"
+#include "engine/util/Trace.h"
 
 Terrain *Terrain::construct(const char *filepath, Vector2 size) {
     FILE *in_file = fopen(filepath, "r");
@@ -23,14 +23,14 @@ Terrain::Terrain(const char *filepath, Vector2 size) {
     m_collision_mask = (uint8_t *) malloc(sizeof(uint8_t) * m_image.width * m_image.height);
 
     Color *image_colors =LoadImageColors(m_image);
-    printf("Terrain::Terrain : calculating terrain mash...\n");
+    TRACE("calculating terrain mash...\n");
     for(size_t y = 0; y < m_image.height; ++y) {
         for(size_t x = 0; x < m_image.width; ++x) {
             m_collision_mask[x + y*m_image.width] = (image_colors[x + y*m_image.width].a != 0);
         }
     }
     UnloadImageColors(image_colors);
-    printf("Terrain::Terrain : Done ! :D\n");
+    TRACE("Done ! :D\n");
 }
 
 Terrain::~Terrain() {

@@ -1,5 +1,6 @@
 #include "GameplayState.h"
 
+#include <random>
 #include <raylib.h>
 #include <stdio.h>
 
@@ -7,6 +8,7 @@
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/object/ObjectManager.h"
+#include "engine/util/Trace.h"
 #include "engine/widgets/Label.h"
 #include "engine/widgets/WidgetManager.h"
 #include "engine/widgets/Widget.h"
@@ -66,6 +68,7 @@ void GameplayState::Update(float dt) {
     Vector2 mouse_meters = m_camera->ConvertAbsoluteToMeters(mouse_x, mouse_y);
     if(IsKeyPressed(KEY_T)) m_object_manager->AddObject(new Trowel(mouse_meters));
     if(IsKeyPressed(KEY_P)) m_object_manager->AddObject(new Portalgun(mouse_meters));
+    if(IsKeyPressed(KEY_R)) SpawnRandomItem();
     //m_terrain->DestroyCircle(mouse_meters, 1.f);
 
     m_object_manager->Update(dt);
@@ -111,7 +114,7 @@ void GameplayState::PlacePlayer(Vector2 pos, int team, bool check_start_pos) {
 
     m_players.push_back(p);
     m_object_manager->AddObject(p);
-    printf("GameplayState::PlacePlayer : Player spawned\n");    //TODO : display player pos
+    TRACE("Player spawned\n");
 
     if(m_players.size() >= m_players_per_team*m_team_count) {
         NextPlayerTurn();
@@ -128,10 +131,14 @@ void GameplayState::NextPlayerTurn() {
         m_current_player %= (int) m_players.size();
     }
 
-    printf("GameplayState::NextPlayerTurn : player %i's turn\n", m_current_player);
+    TRACE("player %i's turn\n", m_current_player);
     ShowActionWidgets();
 
     //TODO : spawn random items here
+    if(rand()%10000 < 2000) {
+        int item_count = rand()%5 + 1;      //[1; 5]
+        for(int i = 0; i < item_count; ++i) SpawnRandomItem();
+    }
 }
 
 /**
@@ -150,7 +157,7 @@ void GameplayState::KillPlayer(Player *p) {
 
     if(p_index == -1) return;
 
-    printf("GameplayState::KillPlayer : killing player %i\n", p_index);
+    TRACE("killing player %i\n", p_index);
     m_players[p_index] = nullptr;
     m_object_manager->DestroyObject(p);
 
@@ -188,6 +195,60 @@ void GameplayState::ShowActionWidgets() {
 void GameplayState::HideActionWidgets() {
     m_show_action_widgets = false;
     m_action_widgets->Clear();
+}
+
+
+void GameplayState::SpawnRandomItem() {
+    static const CollectibleConstructor item_constructors[] = {
+            Trowel::construct,
+            Portalgun::construct
+    };
+    static const size_t item_count = sizeof(item_constructors) / sizeof(CollectibleConstructor);
+
+    float x = ((float)(rand()%100000) / 100000.f) * m_terrain->Width();
+    float y = ((float)(rand()%100000) / 100000.f) * m_terrain->Height();
+    size_t item_index = rand()%item_count;
+
+    TRACE("item index %zu at %f %f\n", item_index, x, y);
+    Collectible *item = item_constructors[item_index]({x, y});
+
+    if(m_terrain->CheckCollisionRec(item->GetRectangle(), true)) {
+        //Make the item go up util we are no longer clipping with the terrain
+        int safe_count = 0;
+        do {
+            item->m_position.y -= .05f;
+            ++safe_count;
+        } while(m_terrain->CheckCollisionRec(item->GetRectangle(), true) && safe_count < 250);
+
+        if(safe_count == 250) {
+            TRACE("item clipped too much with terrain, cancelling\n");
+            delete item;
+            return;
+        }
+    }
+    else {
+        //Make the item go down util we are clipping with the terrain
+        int safe_count = 0;
+        do {
+            item->m_position.y += .05f;
+            ++safe_count;
+        } while(!m_terrain->CheckCollisionRec(item->GetRectangle(), true) && safe_count < 250);
+
+        if(safe_count == 250) {
+            TRACE("item clipped too much with terrain, cancelling\n");
+            delete item;
+            return;
+        }
+    }
+
+    if(!m_object_manager->GetCollisions(item, 0).empty()) {
+        TRACE("item spawned on other object, cancelling\n");
+        delete item;
+        return;
+    }
+
+    item->m_position.y -= .2f;
+    m_object_manager->AddObject(item);
 }
 
 

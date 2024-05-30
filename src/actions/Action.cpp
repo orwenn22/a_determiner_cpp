@@ -1,7 +1,6 @@
 #include "Action.h"
 
-#include <stdio.h>
-
+#include "engine/util/Trace.h"
 #include "objects/actors/Player.h"
 
 
@@ -16,7 +15,7 @@ Action::~Action() = default;
 
 void Action::OnClick(Player *player, int action_index) {
     player->SetCurrentAction(action_index);
-    printf("Action::OnClick : Clicked action %i\n", action_index);
+    TRACE("Action::OnClick : Clicked action %i\n", action_index);
 }
 
 bool Action::OnSkip(Player *player) {

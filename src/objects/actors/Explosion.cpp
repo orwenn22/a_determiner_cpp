@@ -1,13 +1,13 @@
 #include "Explosion.h"
 
 #include <cmath>
-#include <cstdio>
 #include <raymath.h>
 
 #include "engine/metrics/Graphics.h"
 #include "engine/object/BuiltinTypeIDs.h"
 #include "engine/object/KinematicObject.h"
 #include "engine/object/ObjectManager.h"
+#include "engine/util/Trace.h"
 #include "engine/util/VectorOps.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
@@ -89,12 +89,10 @@ void Explosion::ApplyForceToOther(KinematicObject *obj, float dt) {
     Vector2 normalised_vector = Vector2Normalize(relative_position);
     Vector2 total_force = normalised_vector * (total_coefficient/dt);
 
-    printf("Explosion::ApplyForceToOther : Applying force %f %f", total_force.x, total_force.y);
+    TRACE("Explosion::ApplyForceToOther : Applying force %f %f", total_force.x, total_force.y);
     obj->ApplyForce(total_force);
 
     // If the player is grounded, then its physics is disabled, which mean that if we don't enable it again,
     // the force will be processed when the ground is destroyed, which would cause the player to make a huuuge jump.
     obj->EnablePhysics();   // TODO ? : only do this for the player ??? idk
 }
-
-
