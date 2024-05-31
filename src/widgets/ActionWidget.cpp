@@ -1,19 +1,32 @@
 #include "ActionWidget.h"
 
 #include "actions/Action.h"
+#include "engine/util/Trace.h"
 #include "objects/actors/Player.h"
 
+
 ActionWidget::ActionWidget(Player *p, int action_index)
-: FakeActionWidget(p->GetAction(action_index)->GetName()) {
-    //TODO : null safety ?
+: FakeActionWidget("Action") {
     m_player = p;
     m_index = action_index;
+    if(m_player == nullptr) {
+        TRACE("player is null\n");
+        return;
+    }
 
-    if(p->GetAction(action_index)->IsItem()) {
+    Action *a = p->GetAction(action_index);
+    if(a == nullptr) {
+        TRACE("action is null\n");
+        return;
+    }
+
+    m_saved_price = a->Cost();
+
+    if(a->IsItem()) {
         m_price_label = "(item)";
     }
     else {
-        m_price_label = TextFormat("(-%i)", p->GetAction(action_index)->Cost());
+        m_price_label = TextFormat("(-%i)", a->Cost());
     }
 
     SetCallback([=]() {
@@ -22,10 +35,16 @@ ActionWidget::ActionWidget(Player *p, int action_index)
 }
 
 void ActionWidget::Draw() {
+    Action *a = m_player->GetAction(m_index);
+
     m_color = (m_index == m_player->GetCurrentAction()) ? RED : WHITE;
+
+    if(a != nullptr && a->Cost() != m_saved_price && !a->IsItem()) {
+        m_price_label = TextFormat("(-%i)", a->Cost());
+    }
+
     FakeActionWidget::Draw();
 
-    Action *a = m_player->GetAction(m_index);
     if(a == nullptr) return;
 
     Texture *icon = a->GetIcon();
