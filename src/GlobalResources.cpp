@@ -20,6 +20,8 @@ Texture portalgun_sprite;
 
 Texture tiled_button_sprite;
 
+Texture menubg_sprite;
+
 
 void LoadAll() {
     player_sprite = LoadTexture("res/player.png");
@@ -39,9 +41,13 @@ void LoadAll() {
     portalgun_sprite = LoadTexture("res/portal_gun.png");
 
     tiled_button_sprite = LoadTexture("res/tiled_button.png");
+
+    menubg_sprite = LoadTexture("res/menubg.png");
 }
 
 void UnloadAll() {
+    UnloadTexture(menubg_sprite);
+
     UnloadTexture(tiled_button_sprite);
 
     UnloadTexture(portalgun_sprite);

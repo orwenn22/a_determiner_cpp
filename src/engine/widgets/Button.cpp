@@ -46,3 +46,11 @@ void Button::SetFontSize(int font_size) {
     if(font_size < 1) return;
     m_font_size = font_size;
 }
+
+void Button::SetColor(Color c) {
+    m_color = c;
+}
+
+void Button::SetHoverColor(Color c) {
+    m_hover_color = c;
+}

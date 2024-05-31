@@ -13,7 +13,7 @@ public:
     void Update(float dt);
     void Draw();
 
-    void SetState(bool dealloc_previous = true);
+    void SetState(State *state, bool dealloc_previous = true);
     inline State *GetState() { return m_state; }
 
 

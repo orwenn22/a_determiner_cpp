@@ -4,6 +4,9 @@
 
 StateManager::StateManager(State *state) {
     m_state = state;
+    if(m_state == nullptr) return;
+    //TODO : check if the state already have a manager ?
+    m_state->m_manager = this;
 }
 
 StateManager::~StateManager() {
@@ -21,6 +24,21 @@ void StateManager::Update(float dt) {
 void StateManager::Draw() {
     if(m_state != nullptr) m_state->Draw();
 }
+
+void StateManager::SetState(State *state, bool dealloc_previous) {
+    if(dealloc_previous && m_state != nullptr) {
+        m_trashcan.push_back(m_state);
+    }
+
+    m_state = state;
+    if(m_state == nullptr) return;
+    //TODO : check if the state already have a manager ?
+    m_state->m_manager = this;
+}
+
+
+///////////////////////////////////
+//// PRIVATE
 
 void StateManager::ClearTrashcan() {
     if(m_trashcan.empty()) return;

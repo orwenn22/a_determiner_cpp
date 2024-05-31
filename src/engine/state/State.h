@@ -11,6 +11,7 @@ public:
     virtual void Update(float dt) = 0;
     virtual void Draw() = 0;
 
+    inline StateManager *Manager() { return m_manager; }
     virtual inline const char *GetIdentifier() { return "NO IDENTIFIER"; }
 
 private:

@@ -5,4 +5,7 @@ bool IsMouseUsed();
 void UseMouse();
 void ResetMouse();
 
+void RequestQuit();
+bool QuitRequested();
+
 #endif //UI_FRAMEWORK_GLOBALS_H

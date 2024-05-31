@@ -21,6 +21,8 @@ public:
     void SetLabelPosition(int x, int y);
     void CenterLabel();
     void SetFontSize(int font_size);
+    void SetColor(Color c);
+    void SetHoverColor(Color c);
 
 protected:
     std::string m_label;

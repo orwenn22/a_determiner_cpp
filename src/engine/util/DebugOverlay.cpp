@@ -1,5 +1,7 @@
 #include "DebugOverlay.h"
 
+//#include <typeinfo>
+
 #include "../metrics/Graphics.h"
 #include "../metrics/MetricsCamera.h"
 #include "../state/StateManager.h"
@@ -42,6 +44,8 @@ void DrawDebugOverlay(float dt, StateManager *sm) {
             DrawText("STATE : null", 10, painter_y, 20, WHITE);
         }
         else {
+            //TODO : consider using typeid here ?
+            //like this : DrawText(TextFormat("STATE : %s", typeid(*state).name()), 10, painter_y, 20, WHITE);
             DrawText(TextFormat("STATE : %s", state->GetIdentifier()), 10, painter_y, 20, WHITE);
         }
         painter_y += 20;

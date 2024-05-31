@@ -5,6 +5,21 @@ set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(raylib)
 file(COPY ./res DESTINATION .)
 
+# Get current branch
+execute_process(
+        COMMAND git rev-parse --abbrev-ref HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_BRANCH
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+# Get current commit
+execute_process(
+        COMMAND git rev-parse HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_COMMIT_HASH
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+
 add_executable(UI_framework src/main.cpp
         src/engine/widgets/WidgetManager.cpp
         src/engine/widgets/Widget.cpp
@@ -78,6 +93,17 @@ add_executable(UI_framework src/main.cpp
         src/widgets/FakeActionWidget.h
         src/widgets/ActionWidget.cpp
         src/widgets/ActionWidget.h
+        src/utils/TiledBackground.cpp
+        src/utils/TiledBackground.h
+        src/menus/MainMenu.cpp
+        src/menus/MainMenu.h
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)
+
+# Expose branch and commit as #DEFINED preprocessor things
+target_compile_definitions(UI_framework PRIVATE
+        "-DGIT_COMMIT_HASH=\"${GIT_COMMIT_HASH}\"")
+target_compile_definitions(UI_framework PRIVATE
+        "-DGIT_BRANCH=\"${GIT_BRANCH}\"")
+

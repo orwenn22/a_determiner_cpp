@@ -22,6 +22,8 @@ namespace Res {
 
     extern Texture tiled_button_sprite;
 
+    extern Texture menubg_sprite;
+
 
     void LoadAll();
     void UnloadAll();
