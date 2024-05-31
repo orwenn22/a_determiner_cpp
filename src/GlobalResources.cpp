@@ -19,8 +19,11 @@ Texture trowel_sprite;
 Texture portalgun_sprite;
 
 Texture tiled_button_sprite;
+Texture tiled_button_left_sprite;
+Texture tiled_button_right_sprite;
 
 Texture menubg_sprite;
+Texture menubg_options_sprite;
 
 
 void LoadAll() {
@@ -41,13 +44,19 @@ void LoadAll() {
     portalgun_sprite = LoadTexture("res/portal_gun.png");
 
     tiled_button_sprite = LoadTexture("res/tiled_button.png");
+    tiled_button_left_sprite = LoadTexture("res/tiled_button_left.png");
+    tiled_button_right_sprite = LoadTexture("res/tiled_button_right.png");
 
     menubg_sprite = LoadTexture("res/menubg.png");
+    menubg_options_sprite = LoadTexture("res/menubg_option.png");
 }
 
 void UnloadAll() {
+    UnloadTexture(menubg_options_sprite);
     UnloadTexture(menubg_sprite);
 
+    UnloadTexture(tiled_button_right_sprite);
+    UnloadTexture(tiled_button_left_sprite);
     UnloadTexture(tiled_button_sprite);
 
     UnloadTexture(portalgun_sprite);

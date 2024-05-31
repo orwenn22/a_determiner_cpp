@@ -97,6 +97,12 @@ add_executable(UI_framework src/main.cpp
         src/utils/TiledBackground.h
         src/menus/MainMenu.cpp
         src/menus/MainMenu.h
+        src/menus/OptionsMenu.cpp
+        src/menus/OptionsMenu.h
+        src/KeyBinds.cpp
+        src/KeyBinds.h
+        src/KeyLookup.h
+        src/KeyLookup.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

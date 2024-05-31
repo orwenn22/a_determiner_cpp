@@ -21,8 +21,11 @@ namespace Res {
     extern Texture portalgun_sprite;
 
     extern Texture tiled_button_sprite;
+    extern Texture tiled_button_left_sprite;
+    extern Texture tiled_button_right_sprite;
 
     extern Texture menubg_sprite;
+    extern Texture menubg_options_sprite;
 
 
     void LoadAll();

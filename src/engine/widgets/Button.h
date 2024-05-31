@@ -20,6 +20,7 @@ public:
     void SetLabel(std::string label);
     void SetLabelPosition(int x, int y);
     void CenterLabel();
+    void SetLabelColor(Color c);
     void SetFontSize(int font_size);
     void SetColor(Color c);
     void SetHoverColor(Color c);
@@ -30,6 +31,7 @@ protected:
     int m_hover_offset;
     int m_label_inner_x;
     int m_label_inner_y;
+    Color m_label_color;
     Color m_color;
     Color m_hover_color;
 };
