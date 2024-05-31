@@ -9,6 +9,8 @@
 #include "utils/TiledBackground.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
+#include "OptionsMenu.h"
+
 
 #ifdef GIT_COMMIT_HASH
 static const char *s_git_commit_hash = GIT_COMMIT_HASH;
@@ -23,7 +25,7 @@ static const char *s_git_branch = "Unknown";
 #endif
 
 
-MainMenu::MainMenu() {
+MainMenu::MainMenu() : State() {
     m_bg = new TiledBackground(&Res::menubg_sprite);
     m_widgets = new WidgetManager;
 
@@ -61,7 +63,7 @@ MainMenu::MainMenu() {
     option_button->CenterLabel();
     option_button->SetAlignment(WidgetAlignment_Center);
     option_button->SetCallback([=]() {
-        TRACE("TODO : options\n");
+        this->Manager()->SetState(new OptionsMenu);
     });
     m_widgets->AddWidget(option_button);
 

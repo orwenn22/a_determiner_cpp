@@ -10,6 +10,7 @@
 #include "objects/actors/Bullet.h"
 #include "objects/actors/Player.h"
 #include "GlobalResources.h"
+#include "KeyBinds.h"
 #include "Teams.h"
 
 
@@ -20,11 +21,11 @@ ShootAction::ShootAction() : Action() {
 }
 
 void ShootAction::OnUpdate(Player *player, float dt) {
-    //TODO : take into account rebindable controls
-    float angle_variation = (float)(IsKeyDown(KEY_D) - IsKeyDown(KEY_A)) * dt;
+    KeyBinds *kb = KeyBinds::The();
+    float angle_variation = (float)(kb->IsKeyDown(KeyBind_Right) - kb->IsKeyDown(KeyBind_Left)) * dt;
     player->SetThrowAngle(player->GetThrowAngle() + angle_variation);
 
-    if(IsKeyPressed(KEY_SPACE) && player->GetEnergy() >= m_action_cost) {
+    if(kb->IsKeyDown(KeyBind_Action) && player->GetEnergy() >= m_action_cost) {
         Bullet *b = new Bullet(player->GetPosition(), player->GetGameplayState(), player, true);
 
         Vector2 direction = {(float)cos((double)player->GetThrowAngle()), (float)sin((double)player->GetThrowAngle())};

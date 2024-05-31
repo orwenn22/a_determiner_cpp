@@ -8,6 +8,7 @@
 #include "GameplayState.h"
 #include "menus/MainMenu.h"
 #include "GlobalResources.h"
+#include "KeyBinds.h"
 
 
 int main() {
@@ -15,6 +16,7 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(960, 540, "À déterminer");
     SetTargetFPS(240);
+    KeyBinds::Init();
     Res::LoadAll();
 
     StateManager *state_manager = new StateManager(new MainMenu);
@@ -37,6 +39,7 @@ int main() {
 
     delete state_manager;
     Res::UnloadAll();
+    KeyBinds::Finit();
     CloseWindow();
     return 0;
 }

@@ -9,6 +9,7 @@
 #include "objects/actors/Wall.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
+#include "KeyBinds.h"
 #include "Teams.h"
 #include "Terrain.h"
 
@@ -35,10 +36,10 @@ void WallAction::OnUpdate(Player *player, float dt) {
     m_animation_time = (float) fmod((double)m_animation_time, (double)m_animation_duration);
     m_animation_current_frame = (int)((m_animation_time/m_animation_duration) * (float)m_animation_frame_count);
 
-    //TODO : take into account key rebinding
-    if(IsKeyPressed(KEY_D)) player->SetThrowAngle(0.f);
-    if(IsKeyPressed(KEY_A)) player->SetThrowAngle(PI);
-    if(IsKeyPressed(KEY_SPACE))PlaceWall(player);
+    KeyBinds *kb = KeyBinds::The();
+    if(kb->IsKeyPressed(KeyBind_Right))  player->SetThrowAngle(0.f);
+    if(kb->IsKeyPressed(KeyBind_Left))   player->SetThrowAngle(PI);
+    if(kb->IsKeyPressed(KeyBind_Action)) PlaceWall(player);
 }
 
 void WallAction::OnDraw(Player *player) {
@@ -88,5 +89,4 @@ void WallAction::PlaceWall(Player *player) {
 
     player->Manager()->AddObject(w);
     player->RemoveAction(this);
-    //TODO : update game stats
 }

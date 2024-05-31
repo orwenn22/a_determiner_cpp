@@ -19,7 +19,7 @@ void TiledButton::Draw() {
 
     int x = AbsoluteX();
     int y = AbsoluteY() + m_hovered*m_hover_offset;
-    DrawText(m_label.c_str(), x+m_label_inner_x, y+m_label_inner_y, m_font_size, WHITE);
+    DrawText(m_label.c_str(), x+m_label_inner_x, y+m_label_inner_y, m_font_size, m_label_color);
 }
 
 
