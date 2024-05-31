@@ -20,6 +20,7 @@ ActionWidget::ActionWidget(Player *p, int action_index)
         return;
     }
 
+    m_label = a->GetName();
     m_saved_price = a->Cost();
 
     if(a->IsItem()) {

@@ -11,7 +11,7 @@
 #include "engine/windows/WindowManager.h"
 #include "engine/windows/Window.h"
 
-int main() {
+int old_main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(512, 512, "title");
     SetTargetFPS(120);

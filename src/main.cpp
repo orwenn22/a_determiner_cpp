@@ -21,7 +21,7 @@ int main() {
 
     StateManager *state_manager = new StateManager(new MainMenu);
 
-    bool display_debug_overlay = false;
+    bool display_debug_overlay = true;
     while(!WindowShouldClose() && !QuitRequested()) {
         // UPDATE
         float dt = GetFrameTime();
