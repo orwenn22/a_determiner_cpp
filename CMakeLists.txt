@@ -105,6 +105,7 @@ add_executable(UI_framework src/main.cpp
         src/KeyLookup.c
         src/menus/CreditsMenu.cpp
         src/menus/CreditsMenu.h
+        src/menus/PauseMenu.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

@@ -8,10 +8,12 @@
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/object/ObjectManager.h"
+#include "engine/state/StateManager.h"
 #include "engine/util/Trace.h"
 #include "engine/widgets/Label.h"
 #include "engine/widgets/WidgetManager.h"
 #include "engine/widgets/Widget.h"
+#include "menus/PauseMenu.h"
 #include "objects/actors/Player.h"
 #include "objects/collectibles/Portalgun.h"
 #include "objects/collectibles/Trowel.h"
@@ -54,6 +56,7 @@ GameplayState::~GameplayState() {
 }
 
 void GameplayState::Update(float dt) {
+    if(IsKeyPressed(KEY_ESCAPE)) Manager()->SetState(new PauseMenu(this), false);
     if(IsKeyDown(KEY_UP)) m_camera->origin_y += (int)100*dt;
 
     int mouse_x = GetMouseX();

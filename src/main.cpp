@@ -15,6 +15,7 @@ int main() {
     srand(time(nullptr));
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(960, 540, "À déterminer");
+    SetExitKey(KEY_NULL);
     SetTargetFPS(240);
     KeyBinds::Init();
     Res::LoadAll();
