@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 
-const char *g_key_lookup[] {
+const char *g_key_lookup[] = {
         [KEY_NULL] = "NULL",
         [KEY_SPACE] = "SPACE",
         [KEY_APOSTROPHE] = "'",

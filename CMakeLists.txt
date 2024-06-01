@@ -102,7 +102,7 @@ add_executable(UI_framework src/main.cpp
         src/KeyBinds.cpp
         src/KeyBinds.h
         src/KeyLookup.h
-        src/KeyLookup.cpp
+        src/KeyLookup.c
         src/menus/CreditsMenu.cpp
         src/menus/CreditsMenu.h
 )

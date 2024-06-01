@@ -1,5 +1,7 @@
 #include "Player.h"
 
+#include <algorithm>
+
 #include "actions/Action.h"
 #include "actions/JumpAction.h"
 #include "actions/ShootAction.h"
