@@ -7,6 +7,7 @@
 #include "engine/widgets/TiledButton.h"
 #include "engine/widgets/WidgetManager.h"
 #include "utils/TiledBackground.h"
+#include "CreditsMenu.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "OptionsMenu.h"
@@ -74,7 +75,7 @@ MainMenu::MainMenu() : State() {
     credits_button->CenterLabel();
     credits_button->SetAlignment(WidgetAlignment_Center);
     credits_button->SetCallback([=]() {
-        TRACE("TODO : credits\n");
+        this->Manager()->SetState(new CreditsMenu);
     });
     m_widgets->AddWidget(credits_button);
 

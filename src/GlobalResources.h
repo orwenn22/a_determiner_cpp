@@ -26,6 +26,7 @@ namespace Res {
 
     extern Texture menubg_sprite;
     extern Texture menubg_options_sprite;
+    extern Texture menubg_credits_sprite;
 
 
     void LoadAll();
