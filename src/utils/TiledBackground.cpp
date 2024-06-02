@@ -6,6 +6,7 @@
 TiledBackground::TiledBackground(Texture *texture) {
     m_texture = texture;
     m_scroll_speed = 16.f;
+    m_color = WHITE;
     if(m_texture == nullptr) {
         TRACE("texture is null\n");
     }
@@ -42,6 +43,10 @@ void TiledBackground::Draw() {
     float h = (float)GetScreenHeight();
     DrawTexturePro(*m_texture, {m_scroll.x, m_scroll.y, w, h}, //TODO : don't hardcode screen size ?
                    {0.f, 0.f, w, h},
-                   {0.f, 0.f}, 0.f, WHITE);
+                   {0.f, 0.f}, 0.f, m_color);
 #endif
+}
+
+void TiledBackground::SetColor(Color c) {
+    m_color = c;
 }

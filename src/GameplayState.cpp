@@ -14,6 +14,7 @@
 #include "engine/widgets/WidgetManager.h"
 #include "engine/widgets/Widget.h"
 #include "menus/PauseMenu.h"
+#include "menus/PostGameMenu.h"
 #include "objects/actors/Player.h"
 #include "objects/collectibles/Portalgun.h"
 #include "objects/collectibles/Trowel.h"
@@ -164,7 +165,7 @@ void GameplayState::KillPlayer(Player *p) {
     m_players[p_index] = nullptr;
     m_object_manager->DestroyObject(p);
 
-    //TODO : check victory here
+    CheckForVictory();
 
     if(p_index == m_current_player) NextPlayerTurn();   // This is in the case the current player died :(
 }
@@ -198,6 +199,11 @@ void GameplayState::ShowActionWidgets() {
 void GameplayState::HideActionWidgets() {
     m_show_action_widgets = false;
     m_action_widgets->Clear();
+}
+
+void GameplayState::ForceUpdateWidgets() {
+    m_overlay->Update();
+    if(m_show_action_widgets) m_action_widgets->Update();
 }
 
 
@@ -304,4 +310,27 @@ void GameplayState::UpdateHotbarText() {
 
     m_hotbar_text->SetLabel(TextFormat("Energy : %i", p->GetEnergy()));
     m_hotbar_text->SetColor(s_team_colors[p->GetTeam()]);
+}
+
+void GameplayState::CheckForVictory() {
+    std::vector<int> remaining_players;
+    for(int i = 0; i < m_team_count; ++i) remaining_players.push_back(0);
+    for(Player *p : m_players) {
+        if(p == nullptr) continue;
+        ++remaining_players[p->GetTeam()];
+    }
+
+    int winning_team = -1;
+    for(int i = 0; i < m_team_count; ++i) {
+        TRACE("Checking if there are player remaining in team %s\n", s_team_names[i]);
+        if(remaining_players[i] != 0) {
+            TRACE("YES\n");
+            if(winning_team != -1) return;
+            winning_team = i;
+        }
+    }
+    if(winning_team == -1) return;
+
+    TRACE("team %s won\n", s_team_names[winning_team]);
+    Manager()->SetState(new PostGameMenu(winning_team), true);
 }

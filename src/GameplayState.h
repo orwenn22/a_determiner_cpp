@@ -30,6 +30,7 @@ public:
 
     void ShowActionWidgets();
     void HideActionWidgets();
+    void ForceUpdateWidgets();
 
     void SpawnRandomItem();
 
@@ -44,6 +45,8 @@ public:
 private:
     void HandleDragCamera(float mouse_x, float mouse_y);        //Take mouse pos in pixel
     void UpdateHotbarText();
+
+    void CheckForVictory();
 
 
     //static GameplayState *singleton;

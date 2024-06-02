@@ -25,6 +25,7 @@ Texture tiled_button_right_sprite;
 Texture menubg_sprite;
 Texture menubg_options_sprite;
 Texture menubg_credits_sprite;
+Texture menubg_grayscale;
 
 
 void LoadAll() {
@@ -51,9 +52,11 @@ void LoadAll() {
     menubg_sprite = LoadTexture("res/menubg.png");
     menubg_options_sprite = LoadTexture("res/menubg_option.png");
     menubg_credits_sprite = LoadTexture("res/menubg_credits_alt.png");
+    menubg_grayscale = LoadTexture("res/menubg_grayscale.png");
 }
 
 void UnloadAll() {
+    UnloadTexture(menubg_grayscale);
     UnloadTexture(menubg_credits_sprite);
     UnloadTexture(menubg_options_sprite);
     UnloadTexture(menubg_sprite);

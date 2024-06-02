@@ -4,6 +4,7 @@
 #include "engine/state/State.h"
 
 class GameplayState;
+class TiledBackground;
 class WidgetManager;
 
 class PauseMenu : public State {
@@ -20,6 +21,7 @@ private:
     void ExitPause();
 
     GameplayState *m_gameplay_state;
+    TiledBackground *m_bg;
     WidgetManager *m_widgets;
 };
 

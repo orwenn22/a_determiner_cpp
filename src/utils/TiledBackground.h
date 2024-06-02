@@ -10,10 +10,13 @@ public:
     void Update(float dt);
     void Draw();
 
+    void SetColor(Color c);
+
 private:
     Texture *m_texture;
     Vector2 m_scroll;
     float m_scroll_speed;
+    Color m_color;
 };
 
 

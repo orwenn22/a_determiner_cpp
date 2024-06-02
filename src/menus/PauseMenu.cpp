@@ -7,6 +7,7 @@
 #include "engine/widgets/Label.h"
 #include "engine/widgets/TiledButton.h"
 #include "engine/widgets/WidgetManager.h"
+#include "utils/TiledBackground.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "MainMenu.h"
@@ -14,6 +15,8 @@
 
 PauseMenu::PauseMenu(GameplayState *gameplay_state) {
     m_gameplay_state = gameplay_state;
+    m_bg = new TiledBackground(&Res::menubg_grayscale);
+    m_bg->SetColor({45, 45, 45, 100});
     m_widgets = new WidgetManager;
 
     Label *pause_text = new Label(0, -55, 20, "== PAUSE ==");
@@ -39,6 +42,7 @@ PauseMenu::PauseMenu(GameplayState *gameplay_state) {
 
 PauseMenu::~PauseMenu() {
     delete m_widgets;
+    delete m_bg;
     delete m_gameplay_state;
 }
 
@@ -49,12 +53,18 @@ void PauseMenu::Update(float dt) {
     }
 
     m_widgets->Update();
+    m_bg->Update(dt);
+
+    //Do this so the widgets of the gameplay stay centered even if the window is resized
     if(!IsMouseUsed()) UseMouse();
+    if(m_gameplay_state == nullptr) return;
+    m_gameplay_state->ForceUpdateWidgets();
 }
 
 void PauseMenu::Draw() {
     m_gameplay_state->Draw();
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), {0, 0, 0, 100});
+    //DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), {0, 0, 0, 100});
+    m_bg->Draw();
     m_widgets->Draw();
 }
 
