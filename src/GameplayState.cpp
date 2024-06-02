@@ -17,6 +17,7 @@
 #include "menus/PostGameMenu.h"
 #include "objects/actors/Player.h"
 #include "objects/collectibles/Portalgun.h"
+#include "objects/collectibles/StrengthModifier.h"
 #include "objects/collectibles/Trowel.h"
 #include "widgets/PlayerIndicator.h"
 #include "Teams.h"
@@ -74,6 +75,7 @@ void GameplayState::Update(float dt) {
     Vector2 mouse_meters = m_camera->ConvertAbsoluteToMeters(mouse_x, mouse_y);
     if(IsKeyPressed(KEY_T)) m_object_manager->AddObject(new Trowel(mouse_meters));
     if(IsKeyPressed(KEY_P)) m_object_manager->AddObject(new Portalgun(mouse_meters));
+    if(IsKeyPressed(KEY_U)) m_object_manager->AddObject(StrengthModifier::construct_upgrade(mouse_meters));
     if(IsKeyPressed(KEY_R)) SpawnRandomItem();
     //m_terrain->DestroyCircle(mouse_meters, 1.f);
 
@@ -225,7 +227,9 @@ void GameplayState::ForceUpdateWidgets() {
 void GameplayState::SpawnRandomItem() {
     static const CollectibleConstructor item_constructors[] = {
             Trowel::construct,
-            Portalgun::construct
+            Portalgun::construct,
+            StrengthModifier::construct_upgrade,
+            StrengthModifier::construct_downgrade
     };
     static const size_t item_count = sizeof(item_constructors) / sizeof(CollectibleConstructor);
 

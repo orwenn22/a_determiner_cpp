@@ -23,6 +23,8 @@ namespace Res {
     extern Texture shoot_icon_sprite;
     extern Texture trowel_sprite;
     extern Texture portalgun_sprite;
+    extern Texture strength_upgrade_sprite;
+    extern Texture strength_downgrade_sprite;
 
     extern Texture tiled_button_sprite;
     extern Texture tiled_button_left_sprite;

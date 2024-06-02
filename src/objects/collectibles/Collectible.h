@@ -9,7 +9,7 @@ class Collectible : public EntityObject {
 public:
     Collectible(Vector2 pos, float w, float h);
 
-    void Update(float dt) final;
+    void Update(float dt) override;
 
     /**
      * Should be redefined by subclasses. Can return False to cancel the collecting.
