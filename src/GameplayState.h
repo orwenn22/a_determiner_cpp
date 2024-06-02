@@ -24,6 +24,9 @@ public:
     void Update(float dt) override;
     void Draw() override;
 
+    Player *GetCurrentPlayer();
+    int GetPlayerCount();
+    Player *GetPlayer(int index);
     void PlacePlayer(Vector2 pos, int team, bool check_start_pos = true);
     void NextPlayerTurn();
     void KillPlayer(Player *p);
@@ -34,7 +37,6 @@ public:
 
     void SpawnRandomItem();
 
-    Player *GetCurrentPlayer();
     inline const char *GetIdentifier() override { return "GameplayState"; }
     inline Terrain *GetTerrain() { return m_terrain; }
     inline MetricsCamera *GetCamera() { return m_camera; }

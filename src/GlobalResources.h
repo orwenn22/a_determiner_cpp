@@ -4,12 +4,16 @@
 #include <raylib.h>
 
 namespace Res {
+    extern Texture player_mini_sprite;
+    extern Texture player_mini_ded_sprite;
     extern Texture player_sprite;
     extern Texture player_in_jump_sprite;
     extern Texture player_jump_sprite;
     extern Texture player_shooting_sprite;
     extern Texture player_wall_sprite;
     extern Texture player_portal_sprite;
+
+    extern Texture green_marker_sprite;
 
     extern Texture explosion_sprite;
     extern Texture wall_sprite;

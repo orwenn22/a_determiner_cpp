@@ -142,6 +142,7 @@ void Player::RemoveAction(Action *action) {
     m_actions.erase(result);
     delete action;
     if(m_gameplay_state->IsShowingActions() && IsPlaying()) m_gameplay_state->ShowActionWidgets();
+    m_current_action = -1;
 }
 
 std::vector<Widget *> Player::GetActionWidgets() {
@@ -178,6 +179,10 @@ Rectangle Player::GetRectangle() {
 Action *Player::GetAction(int index) {
     if(index < 0 || index >= m_actions.size()) return nullptr;
     return m_actions[index];
+}
+
+int Player::GetActionCount() {
+    return (int) m_actions.size();
 }
 
 

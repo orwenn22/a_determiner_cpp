@@ -2,12 +2,16 @@
 
 namespace Res {
 
+Texture player_mini_sprite;
+Texture player_mini_ded_sprite;
 Texture player_sprite;
 Texture player_in_jump_sprite;
 Texture player_jump_sprite;
 Texture player_shooting_sprite;
 Texture player_wall_sprite;
 Texture player_portal_sprite;
+
+Texture green_marker_sprite;;
 
 Texture explosion_sprite;
 Texture wall_sprite;
@@ -29,12 +33,16 @@ Texture menubg_grayscale;
 
 
 void LoadAll() {
+    player_mini_sprite = LoadTexture("res/mini.png");
+    player_mini_ded_sprite = LoadTexture("res/mini_ded.png");
     player_sprite = LoadTexture("res/player.png");
     player_in_jump_sprite = LoadTexture("res/player_injump.png");
     player_jump_sprite = LoadTexture("res/player_jump.png");
     player_shooting_sprite = LoadTexture("res/player_shooting.png");
     player_wall_sprite = LoadTexture("res/player_wall.png");
     player_portal_sprite = LoadTexture("res/player_portal.png");
+
+    green_marker_sprite = LoadTexture("res/green_marker.png");
 
     jump_icon_sprite = LoadTexture("res/jumping_sprite.png");
     shoot_icon_sprite = LoadTexture("res/cannon_sprite.png");
@@ -74,12 +82,16 @@ void UnloadAll() {
     UnloadTexture(shoot_icon_sprite);
     UnloadTexture(jump_icon_sprite);
 
+    UnloadTexture(green_marker_sprite);
+
     UnloadTexture(player_portal_sprite);
     UnloadTexture(player_wall_sprite);
     UnloadTexture(player_shooting_sprite);
     UnloadTexture(player_jump_sprite);
     UnloadTexture(player_in_jump_sprite);
     UnloadTexture(player_sprite);
+    UnloadTexture(player_mini_ded_sprite);
+    UnloadTexture(player_mini_sprite);
 }
 
 };  //namespace Res

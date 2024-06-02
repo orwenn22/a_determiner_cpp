@@ -18,6 +18,7 @@
 #include "objects/actors/Player.h"
 #include "objects/collectibles/Portalgun.h"
 #include "objects/collectibles/Trowel.h"
+#include "widgets/PlayerIndicator.h"
 #include "Teams.h"
 #include "Terrain.h"
 
@@ -44,6 +45,7 @@ GameplayState::GameplayState() {
     m_hotbar_text->SetAlignment(WidgetAlignment_MiddleBottom);
     m_hotbar_text->SetOutline(true);
     m_overlay->AddWidget(m_hotbar_text);
+    m_overlay->AddWidget(new PlayerIndicator(this));
     m_action_widgets = new WidgetManager;
     m_show_action_widgets = false;
 }
@@ -102,6 +104,19 @@ void GameplayState::Draw() {
     m_overlay->Draw();
 }
 
+
+Player *GameplayState::GetCurrentPlayer() {
+    if(m_current_player < 0 || m_current_player >= m_players.size()) return nullptr;
+    return m_players[m_current_player];
+}
+
+int GameplayState::GetPlayerCount() {
+    return (int) m_players.size();
+}
+Player *GameplayState::GetPlayer(int index) {
+    if(index < 0 || index >= m_players.size()) return nullptr;
+    return m_players[index];
+}
 
 void GameplayState::PlacePlayer(Vector2 pos, int team, bool check_start_pos) {
     Player *p = new Player(pos, team, this, 10);
@@ -259,13 +274,6 @@ void GameplayState::SpawnRandomItem() {
     item->m_position.y -= .2f;
     m_object_manager->AddObject(item);
 }
-
-
-Player *GameplayState::GetCurrentPlayer() {
-    if(m_current_player < 0 || m_current_player >= m_players.size()) return nullptr;
-    return m_players[m_current_player];
-}
-
 
 
 ////////////////////////////////
