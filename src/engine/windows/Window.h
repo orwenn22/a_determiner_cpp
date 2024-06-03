@@ -1,6 +1,9 @@
 #ifndef UI_FRAMEWORK_WINDOW_H
 #define UI_FRAMEWORK_WINDOW_H
 
+#include <raylib.h>
+#include <string>
+
 class WindowManager;
 class WidgetManager;
 
@@ -22,8 +25,16 @@ public:
     //Setters
     void SetPosition(int x, int y);
     void SetSize(int w, int h);
+    void SetTitle(std::string title);
 
     bool IsMouseHovering();
+
+
+protected:
+    //Customisation
+    Color m_background_color;
+    Color m_titlebar_color;
+    Color m_title_color;
 
 private:
     friend WindowManager;
@@ -32,6 +43,7 @@ private:
     void HandleDrag();
 
     int m_x, m_y, m_w, m_h;     //The position is absolute
+    std::string m_title;
     WindowManager *m_manager;
     WidgetManager *m_widgets;
 

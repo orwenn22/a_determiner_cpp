@@ -25,6 +25,7 @@ namespace Res {
     extern Texture portalgun_sprite;
     extern Texture strength_upgrade_sprite;
     extern Texture strength_downgrade_sprite;
+    extern Texture battery_sprite;
 
     extern Texture tiled_button_sprite;
     extern Texture tiled_button_left_sprite;

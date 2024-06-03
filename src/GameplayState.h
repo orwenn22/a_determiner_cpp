@@ -7,12 +7,14 @@
 #include <vector>
 
 
+class EntityObject;
 class MetricsCamera;
 class Label;
 class ObjectManager;
 class Player;
 class Terrain;
 class WidgetManager;
+class WindowManager;
 
 class GameplayState : public State {
 public:
@@ -43,6 +45,9 @@ public:
     inline bool PlacingPlayers() { return m_current_player == -1; }      //Return true if we are still placing players, false otherwise
     inline bool IsShowingActions() { return m_show_action_widgets; }
 
+    void SetSpawnedObject(EntityObject *spawned_object);
+    void UpdateSpawnedObject(Vector2 mouse_pos_meter);
+
 
 private:
     void HandleDragCamera(float mouse_x, float mouse_y);        //Take mouse pos in pixel
@@ -70,6 +75,10 @@ private:
     Label *m_hotbar_text;
     WidgetManager *m_action_widgets;
     bool m_show_action_widgets;
+
+    WindowManager *m_windows;
+    EntityObject *m_spawned_object;
+    bool m_preview_spawned_object;
 };
 
 

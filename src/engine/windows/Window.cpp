@@ -4,9 +4,11 @@
 
 #include "WindowManager.h"
 #include "../Globals.h"
+#include "../util/Trace.h"
 #include "../widgets/WidgetManager.h"
 
 #define TITLEBAR_HEIGHT 12
+#define CLOSE_WIDTH TITLEBAR_HEIGHT
 
 
 Window::Window(int x, int y, int w, int h) {
@@ -14,12 +16,17 @@ Window::Window(int x, int y, int w, int h) {
     m_y = y;
     m_w = w;
     m_h = h;
+    m_title = "window";
     m_manager = nullptr;
     m_widgets = new WidgetManager(x, y + TITLEBAR_HEIGHT, w, h - TITLEBAR_HEIGHT);
 
     m_follow_mouse = false;
     m_follow_offset_x = 0;
     m_follow_offset_y = 0;
+
+    m_background_color = {0x11, 0x11, 0x11, 0xff};
+    m_titlebar_color = BLUE;
+    m_title_color = WHITE;
 }
 
 Window::~Window() {
@@ -36,8 +43,10 @@ void Window::Update() {
 }
 
 void Window::Draw() {
-    DrawRectangle(m_x, m_y, m_w, m_h, {0x11, 0x11, 0x11, 0xff});        //bg
-    DrawRectangle(m_x, m_y, m_w, TITLEBAR_HEIGHT, BLUE);        //title bar
+    DrawRectangle(m_x, m_y, m_w, m_h, m_background_color);        //bg
+    DrawRectangle(m_x, m_y, m_w, TITLEBAR_HEIGHT, m_titlebar_color);        //title bar
+    DrawText(m_title.c_str(), m_x+2, m_y+2, 10, m_title_color);             //title
+    DrawRectangle(m_x+m_w-CLOSE_WIDTH, m_y, CLOSE_WIDTH, TITLEBAR_HEIGHT, RED);     //close button
     m_widgets->Draw();
     DrawRectangleLines(m_x, m_y, m_w, m_h, WHITE);      //outline
 }
@@ -75,6 +84,10 @@ void Window::SetSize(int w, int h) {
     m_widgets->SetSize(m_w, m_h-TITLEBAR_HEIGHT);
 }
 
+void Window::SetTitle(std::string title) {
+    m_title = title;
+}
+
 
 bool Window::IsMouseHovering() {
     int mouse_x = GetMouseX();
@@ -100,9 +113,18 @@ void Window::HandleDrag() {
     int relative_mouse_y = GetMouseY() - m_y;
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && relative_mouse_y < TITLEBAR_HEIGHT) {
-        m_follow_mouse = true;
-        m_follow_offset_x = relative_mouse_x;
-        m_follow_offset_y = relative_mouse_y;
+        if(relative_mouse_x < m_w - CLOSE_WIDTH) {      //On title bar (not close button)
+            m_follow_mouse = true;
+            m_follow_offset_x = relative_mouse_x;
+            m_follow_offset_y = relative_mouse_y;
+        }
+        else {      //On close button
+            if(m_manager == nullptr) {
+                TRACE("Can't close a window that is not in a manager\n");
+                return;
+            }
+            m_manager->CloseWindowByPtr(this);
+        }
     }
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && m_manager != nullptr) {

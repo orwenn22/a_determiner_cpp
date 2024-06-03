@@ -23,6 +23,7 @@ Texture trowel_sprite;
 Texture portalgun_sprite;
 Texture strength_upgrade_sprite;
 Texture strength_downgrade_sprite;
+Texture battery_sprite;
 
 Texture tiled_button_sprite;
 Texture tiled_button_left_sprite;
@@ -53,6 +54,7 @@ void LoadAll() {
     portal_sprite = LoadTexture("res/portal_anim.png");
     strength_upgrade_sprite = LoadTexture("res/strength_upgrade.png");
     strength_downgrade_sprite = LoadTexture("res/strength_downgrade.png");
+    battery_sprite = LoadTexture("res/battery.png");
 
     trowel_sprite = LoadTexture("res/truelle.png");
     portalgun_sprite = LoadTexture("res/portal_gun.png");
@@ -80,6 +82,7 @@ void UnloadAll() {
     UnloadTexture(portalgun_sprite);
     UnloadTexture(trowel_sprite);
 
+    UnloadTexture(battery_sprite);
     UnloadTexture(strength_downgrade_sprite);
     UnloadTexture(strength_upgrade_sprite);
     UnloadTexture(portal_sprite);

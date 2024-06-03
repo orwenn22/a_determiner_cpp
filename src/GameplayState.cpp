@@ -13,13 +13,13 @@
 #include "engine/widgets/Label.h"
 #include "engine/widgets/WidgetManager.h"
 #include "engine/widgets/Widget.h"
+#include "engine/windows/WindowManager.h"
 #include "menus/PauseMenu.h"
 #include "menus/PostGameMenu.h"
 #include "objects/actors/Player.h"
-#include "objects/collectibles/Portalgun.h"
-#include "objects/collectibles/StrengthModifier.h"
-#include "objects/collectibles/Trowel.h"
+#include "objects/collectibles/Constructors.h"
 #include "widgets/PlayerIndicator.h"
+#include "windows/CollectibleSpawnWindow.h"
 #include "Teams.h"
 #include "Terrain.h"
 
@@ -49,9 +49,17 @@ GameplayState::GameplayState() {
     m_overlay->AddWidget(new PlayerIndicator(this));
     m_action_widgets = new WidgetManager;
     m_show_action_widgets = false;
+
+    m_windows = new WindowManager;
+    m_spawned_object = nullptr;
+    m_preview_spawned_object = false;
 }
 
 GameplayState::~GameplayState() {
+    delete m_spawned_object;
+    m_spawned_object = nullptr;
+
+    delete m_windows;
     delete m_overlay;
     delete m_action_widgets;
     delete m_object_manager;
@@ -60,23 +68,22 @@ GameplayState::~GameplayState() {
 }
 
 void GameplayState::Update(float dt) {
+    if(IsKeyPressed(KEY_F1)) m_windows->AddWindow(new CollectibleSpawnWindow(10, 10, this));
     if(IsKeyPressed(KEY_ESCAPE)) Manager()->SetState(new PauseMenu(this), false);
     if(IsKeyDown(KEY_UP)) m_camera->origin_y += (int)100*dt;
 
     int mouse_x = GetMouseX();
     int mouse_y = GetMouseY();
 
-    //TODO : update widgets here
+    m_windows->Update();
+
     m_overlay->Update();
     if(m_show_action_widgets) m_action_widgets->Update();
 
     HandleDragCamera((float)mouse_x, (float)mouse_y);
 
     Vector2 mouse_meters = m_camera->ConvertAbsoluteToMeters(mouse_x, mouse_y);
-    if(IsKeyPressed(KEY_T)) m_object_manager->AddObject(new Trowel(mouse_meters));
-    if(IsKeyPressed(KEY_P)) m_object_manager->AddObject(new Portalgun(mouse_meters));
-    if(IsKeyPressed(KEY_U)) m_object_manager->AddObject(StrengthModifier::construct_upgrade(mouse_meters));
-    if(IsKeyPressed(KEY_R)) SpawnRandomItem();
+    UpdateSpawnedObject(mouse_meters);
     //m_terrain->DestroyCircle(mouse_meters, 1.f);
 
     m_object_manager->Update(dt);
@@ -101,9 +108,12 @@ void GameplayState::Draw() {
     }
     m_terrain->Draw();
     m_object_manager->Draw();
+    if(m_preview_spawned_object && m_spawned_object != nullptr) m_spawned_object->Draw();
 
     if(m_show_action_widgets) m_action_widgets->Draw();
     m_overlay->Draw();
+
+    m_windows->Draw();
 }
 
 
@@ -225,20 +235,12 @@ void GameplayState::ForceUpdateWidgets() {
 
 
 void GameplayState::SpawnRandomItem() {
-    static const CollectibleConstructor item_constructors[] = {
-            Trowel::construct,
-            Portalgun::construct,
-            StrengthModifier::construct_upgrade,
-            StrengthModifier::construct_downgrade
-    };
-    static const size_t item_count = sizeof(item_constructors) / sizeof(CollectibleConstructor);
-
     float x = ((float)(rand()%100000) / 100000.f) * m_terrain->Width();
     float y = ((float)(rand()%100000) / 100000.f) * m_terrain->Height();
-    size_t item_index = rand()%item_count;
+    size_t item_index = rand()%s_item_count;
 
     TRACE("item index %zu at %f %f\n", item_index, x, y);
-    Collectible *item = item_constructors[item_index]({x, y});
+    Collectible *item = s_item_constructors[item_index]({x, y});
 
     if(m_terrain->CheckCollisionRec(item->GetRectangle(), true)) {
         //Make the item go up util we are no longer clipping with the terrain
@@ -277,6 +279,29 @@ void GameplayState::SpawnRandomItem() {
 
     item->m_position.y -= .2f;
     m_object_manager->AddObject(item);
+}
+
+void GameplayState::SetSpawnedObject(EntityObject *spawned_object) {
+    delete m_spawned_object;
+    m_spawned_object = spawned_object;
+}
+
+void GameplayState::UpdateSpawnedObject(Vector2 mouse_pos_meter) {
+    if(m_spawned_object == nullptr || IsMouseUsed()) {
+        m_preview_spawned_object = false;
+        return;
+    }
+
+    m_preview_spawned_object = true;
+    m_spawned_object->m_position = mouse_pos_meter;
+
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        m_object_manager->AddObject(m_spawned_object);
+        m_spawned_object = nullptr;
+        m_preview_spawned_object = false;
+    }
+
+    UseMouse();
 }
 
 
