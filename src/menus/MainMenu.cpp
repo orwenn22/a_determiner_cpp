@@ -11,6 +11,7 @@
 #include "CreditsMenu.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
+#include "MapSelectMenu.h"
 #include "OptionsMenu.h"
 
 
@@ -54,14 +55,14 @@ MainMenu::MainMenu() : State() {
     play_button->CenterLabel();
     play_button->SetAlignment(WidgetAlignment_Center);
     play_button->SetCallback([=]() {
-        //this->Manager()->SetState(new GameplayState);
-        LegacyMapLoader loader;
-        GameplayState *gs = loader.LoadMap("maps/Big.txt");
-        if(gs == nullptr) {
-            TRACE("failed to load map\n");
-            return;
-        }
-        this->Manager()->SetState(gs, true);
+        //LegacyMapLoader loader;
+        //GameplayState *gs = loader.LoadMap("maps/Big.txt");
+        //if(gs == nullptr) {
+        //    TRACE("failed to load map\n");
+        //    return;
+        //}
+        //this->Manager()->SetState(gs, true);
+        this->Manager()->SetState(new MapSelectMenu, true);
     });
     m_widgets->AddWidget(play_button);
 
