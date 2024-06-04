@@ -111,6 +111,8 @@ add_executable(UI_framework src/main.cpp
         src/objects/collectibles/StrengthModifier.cpp
         src/objects/collectibles/EnergyBoost.cpp
         src/windows/CollectibleSpawnWindow.cpp
+        src/actions/PotatoAction.cpp
+        src/objects/collectibles/Potato.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

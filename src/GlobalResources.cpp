@@ -24,6 +24,7 @@ Texture portalgun_sprite;
 Texture strength_upgrade_sprite;
 Texture strength_downgrade_sprite;
 Texture battery_sprite;
+Texture potato_sprite;
 
 Texture tiled_button_sprite;
 Texture tiled_button_left_sprite;
@@ -55,6 +56,7 @@ void LoadAll() {
     strength_upgrade_sprite = LoadTexture("res/strength_upgrade.png");
     strength_downgrade_sprite = LoadTexture("res/strength_downgrade.png");
     battery_sprite = LoadTexture("res/battery.png");
+    potato_sprite = LoadTexture("res/potato.png");
 
     trowel_sprite = LoadTexture("res/truelle.png");
     portalgun_sprite = LoadTexture("res/portal_gun.png");
@@ -82,6 +84,7 @@ void UnloadAll() {
     UnloadTexture(portalgun_sprite);
     UnloadTexture(trowel_sprite);
 
+    UnloadTexture(potato_sprite);
     UnloadTexture(battery_sprite);
     UnloadTexture(strength_downgrade_sprite);
     UnloadTexture(strength_upgrade_sprite);

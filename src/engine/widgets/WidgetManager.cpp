@@ -40,7 +40,8 @@ void WidgetManager::Update() {
         }
     }
 
-    for(Widget *w : m_widgets) w->Update();
+    //Despite what clion is telling, we should NOT use range based loop here, in the case a widget self-destruct itself
+    for(size_t i = 0; i < m_widgets.size(); ++i) m_widgets[i]->Update();
 }
 
 void WidgetManager::Draw() {
