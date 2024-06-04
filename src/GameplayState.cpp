@@ -32,7 +32,8 @@ GameplayState::GameplayState() {
     m_cam_follow_mouse = false;
     m_cam_mouse_offset = {0.f, 0.f};
 
-    m_terrain = Terrain::construct("res/wowmap.png", {32.f, 22.f});
+    //m_terrain = Terrain::construct("res/wowmap.png", {32.f, 22.f});
+    m_terrain = nullptr;
     m_object_manager = new ObjectManager;
 
     m_current_player = -1;
@@ -66,6 +67,27 @@ GameplayState::~GameplayState() {
     delete m_terrain;
     delete m_camera;
 }
+
+
+
+void GameplayState::InitTerrain(const char *filepath, float terrain_width, float terrain_height) {
+    if(m_terrain != nullptr) {
+        TRACE("Trying to initialise a new terrain, but there is already one.\n");
+        delete m_terrain;
+    }
+
+    m_terrain = Terrain::construct(filepath, {terrain_width, terrain_height});
+}
+
+void GameplayState::InitSpawnRegion(int team, Rectangle rec) {
+    TRACE("team %i {%f %f %f %f}\n", team, rec.x, rec.y, rec.width, rec.height);
+    if(team < 0) return;
+    while(m_start_regions.size() < team+1) m_start_regions.push_back({0.f, 0.f, 10.f, 10.f});
+    m_start_regions[team] = rec;
+    m_team_count = (int) m_start_regions.size();
+}
+
+
 
 void GameplayState::Update(float dt) {
     if(IsKeyPressed(KEY_F1)) m_windows->AddWindow(new CollectibleSpawnWindow(10, 10, this));

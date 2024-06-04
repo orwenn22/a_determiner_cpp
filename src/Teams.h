@@ -6,12 +6,16 @@
 static Color s_team_colors[] = {
         BLUE,
         RED,
+        GREEN,
+        YELLOW,
         //Add more color if we have more teams in the future
 };
 
 static const char *s_team_names[] = {
     "blue",
     "red",
+    "green",
+    "yellow",
         //Add more names if we have more teams in the future
 };
 

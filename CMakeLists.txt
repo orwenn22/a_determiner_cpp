@@ -4,6 +4,7 @@ project(UI_framework)
 set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(raylib)
 file(COPY ./res DESTINATION .)
+file(COPY ./maps DESTINATION .)
 
 # Get current branch
 execute_process(
@@ -113,6 +114,8 @@ add_executable(UI_framework src/main.cpp
         src/windows/CollectibleSpawnWindow.cpp
         src/actions/PotatoAction.cpp
         src/objects/collectibles/Potato.cpp
+        src/maploaders/MapLoader.cpp
+        src/maploaders/LegacyMapLoader.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)
