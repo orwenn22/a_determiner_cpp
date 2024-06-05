@@ -8,6 +8,7 @@
 
 
 class Label;
+class MapLoader;
 class TiledBackground;
 class WidgetManager;
 
@@ -33,10 +34,12 @@ private:
     std::vector<std::string> m_map_names;
     int m_page;     //current page index
     int m_page_count;
+    std::vector<MapLoader *> m_loaders;
 
     //We need to keep a reference to these in order to update them
     Label *m_current_page_label;
     Label *m_page_count_label;
+    Label *m_cwd_label;
 };
 
 

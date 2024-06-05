@@ -12,6 +12,8 @@ LegacyMapLoader::LegacyMapLoader() = default;
 LegacyMapLoader::~LegacyMapLoader() = default;
 
 bool LegacyMapLoader::IsCorrectFormat(std::string path) {
+    if(path.length() < 5) return false;
+    if(path.substr(path.length()-4, 4) != ".leg") return false;
     FILE *in_file = fopen(path.c_str(), "r");
     if(in_file == nullptr) return false;
 

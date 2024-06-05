@@ -3,6 +3,8 @@
 
 #include "Button.h"
 
+
+//TODO : inherit from TiledDivision ?
 class TiledButton : public Button {
 public:
     TiledButton(int x, int y, int w, int h,

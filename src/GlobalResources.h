@@ -31,6 +31,7 @@ namespace Res {
     extern Texture tiled_button_sprite;
     extern Texture tiled_button_left_sprite;
     extern Texture tiled_button_right_sprite;
+    extern Texture empty_outline_sprite;
 
     extern Texture menubg_sprite;
     extern Texture menubg_options_sprite;
