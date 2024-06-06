@@ -120,6 +120,11 @@ add_executable(UI_framework src/main.cpp
         src/menus/MapSelectMenu.cpp
         src/engine/widgets/TiledDivision.cpp
         src/engine/util/CWD.cpp
+        src/engine/tooltip/Tooltip.cpp
+        src/engine/tooltip/TooltipElement.cpp
+        src/engine/tooltip/TooltipHorizontalAlignment.cpp
+        src/engine/tooltip/TooltipImage.cpp
+        src/engine/tooltip/TooltipText.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

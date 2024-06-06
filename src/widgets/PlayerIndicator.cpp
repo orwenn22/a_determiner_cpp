@@ -19,14 +19,17 @@ PlayerIndicator::~PlayerIndicator() = default;
 void PlayerIndicator::Update() {
     SetWidth(32*m_gameplay_state->GetPlayerCount());
 
-    if(IsMouseUsed() || !IsMouseHovering()) return;
+    if(IsMouseUsed() || !IsMouseHovering()) return;         //Check if we are hovering the widget
 
     int relative_mouse_x = GetMouseX() - AbsoluteX();
-    int player_index = relative_mouse_x / 32;
+    int player_index = relative_mouse_x / 32;               //index of the hovered player
     Player *p = m_gameplay_state->GetPlayer(player_index);
-    //TODO : give tooltip
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        if(p != nullptr) m_gameplay_state->GetCamera()->SetCameraCenter(p->m_position);
+
+    if(p != nullptr) {
+        p->GetTooltipElements(m_gameplay_state->GetTooltip());
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            m_gameplay_state->GetCamera()->SetCameraCenter(p->m_position);
+        }
     }
 
     UseMouse();

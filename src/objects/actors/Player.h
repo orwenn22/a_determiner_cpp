@@ -7,6 +7,7 @@
 
 class Action;
 class GameplayState;
+class Tooltip;
 class Widget;
 
 class Player : public KinematicObject {
@@ -28,6 +29,8 @@ public:
     std::vector<Widget *> GetActionWidgets();
 
     Rectangle GetRectangle() override;
+
+    void GetTooltipElements(Tooltip *tooltip);
 
     Action *GetAction(int index);
     int GetActionCount();

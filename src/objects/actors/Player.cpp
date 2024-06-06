@@ -7,9 +7,12 @@
 #include "actions/ShootAction.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/object/ObjectManager.h"
+#include "engine/tooltip/Tooltip.h"
+#include "engine/tooltip/TooltipText.h"
 #include "engine/util/Math.h"
 #include "engine/util/VectorOps.h"
 #include "engine/widgets/TiledButton.h"
+#include "engine/Globals.h"
 #include "widgets/ActionWidget.h"
 #include "widgets/FakeActionWidget.h"
 #include "GameplayState.h"
@@ -44,6 +47,10 @@ Player::~Player() {
 }
 
 void Player::Update(float dt) {
+    if(!IsMouseUsed() && CheckCollisionPointRec(m_gameplay_state->GetCamera()->ConvertAbsoluteToMeters(GetMouseX(), GetMouseY()), GetRectangle())) {
+        GetTooltipElements(m_gameplay_state->GetTooltip());
+        UseMouse();
+    }
     if(!Grounded()) m_enable_physics = true;
 
     if(m_current_action >= 0 && m_current_action < m_actions.size()) m_actions[m_current_action]->OnUpdate(this, dt);
@@ -173,6 +180,19 @@ Rectangle Player::GetRectangle() {
     m_width = old_w;
     m_height = old_h;
     return r;
+}
+
+
+void Player::GetTooltipElements(Tooltip *tooltip) {
+    if(tooltip == nullptr) return;
+
+    std::string team = s_team_names[m_team];
+    team[0] += 32;
+    tooltip->AddElement(new TooltipText(team + " player", 20, s_team_colors[m_team]));
+
+    tooltip->AddElement(new TooltipText("Energy : " + std::to_string(m_energy), 20, GREEN));
+    tooltip->AddElement(new TooltipText("Strength : " + std::to_string(m_strength), 10, WHITE));
+    tooltip->AddElement(new TooltipText("Mass : " + std::to_string(m_mass), 10, WHITE));
 }
 
 

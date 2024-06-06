@@ -13,6 +13,7 @@ class Label;
 class ObjectManager;
 class Player;
 class Terrain;
+class Tooltip;
 class WidgetManager;
 class WindowManager;
 
@@ -45,6 +46,7 @@ public:
     inline const char *GetIdentifier() override { return "GameplayState"; }
     inline Terrain *GetTerrain() { return m_terrain; }
     inline MetricsCamera *GetCamera() { return m_camera; }
+    inline Tooltip *GetTooltip() { return m_tooltip; }
     inline bool PlacingPlayers() { return m_current_player == -1; }      //Return true if we are still placing players, false otherwise
     inline bool IsShowingActions() { return m_show_action_widgets; }
 
@@ -82,6 +84,8 @@ private:
     WindowManager *m_windows;
     EntityObject *m_spawned_object;
     bool m_preview_spawned_object;
+
+    Tooltip *m_tooltip;
 };
 
 

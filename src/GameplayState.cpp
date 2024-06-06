@@ -9,6 +9,7 @@
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/object/ObjectManager.h"
 #include "engine/state/StateManager.h"
+#include "engine/tooltip/Tooltip.h"
 #include "engine/util/Trace.h"
 #include "engine/widgets/Label.h"
 #include "engine/widgets/WidgetManager.h"
@@ -54,9 +55,13 @@ GameplayState::GameplayState() {
     m_windows = new WindowManager;
     m_spawned_object = nullptr;
     m_preview_spawned_object = false;
+
+    m_tooltip = new Tooltip;
 }
 
 GameplayState::~GameplayState() {
+    delete m_tooltip;
+
     delete m_spawned_object;
     m_spawned_object = nullptr;
 
@@ -90,6 +95,8 @@ void GameplayState::InitSpawnRegion(int team, Rectangle rec) {
 
 
 void GameplayState::Update(float dt) {
+    m_tooltip->ClearElements();
+
     if(IsKeyPressed(KEY_F1)) m_windows->AddWindow(new CollectibleSpawnWindow(10, 10, this));
     if(IsKeyPressed(KEY_ESCAPE)) Manager()->SetState(new PauseMenu(this), false);
     if(IsKeyDown(KEY_UP)) m_camera->origin_y += (int)100*dt;
@@ -136,6 +143,8 @@ void GameplayState::Draw() {
     m_overlay->Draw();
 
     m_windows->Draw();
+
+    m_tooltip->Draw(GetMouseX(), GetMouseY());
 }
 
 
