@@ -3,6 +3,8 @@
 #include "actions/Action.h"
 #include "engine/Globals.h"
 #include "engine/metrics/MetricsCamera.h"
+#include "engine/tooltip/TooltipText.h"
+#include "engine/tooltip/Tooltip.h"
 #include "objects/actors/Player.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
@@ -30,6 +32,9 @@ void PlayerIndicator::Update() {
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             m_gameplay_state->GetCamera()->SetCameraCenter(p->m_position);
         }
+    }
+    else {
+        m_gameplay_state->GetTooltip()->AddElement(new TooltipText("Dead :^(", 20, WHITE));
     }
 
     UseMouse();

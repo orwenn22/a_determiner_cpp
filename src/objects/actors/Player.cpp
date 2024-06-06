@@ -187,7 +187,7 @@ void Player::GetTooltipElements(Tooltip *tooltip) {
     if(tooltip == nullptr) return;
 
     std::string team = s_team_names[m_team];
-    team[0] += 32;
+    team[0] -= 32;
     tooltip->AddElement(new TooltipText(team + " player", 20, s_team_colors[m_team]));
 
     tooltip->AddElement(new TooltipText("Energy : " + std::to_string(m_energy), 20, GREEN));

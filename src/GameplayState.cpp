@@ -144,7 +144,7 @@ void GameplayState::Draw() {
 
     m_windows->Draw();
 
-    m_tooltip->Draw(GetMouseX(), GetMouseY());
+    m_tooltip->Draw(GetMouseX()+10, GetMouseY()+10);
 }
 
 
