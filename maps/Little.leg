@@ -1,0 +1,10 @@
+legacy
+camera_center 10 8
+background None
+bitmap res/littlewowmap.png 18 12
+team_start 0 0 2.5 8 9.5
+team_start 1 10 2.5 8 9.5
+portal 6 1 13 8
+portal 12 1 5 8
+portal_gun 9 1.2
+trowel 9 3.5

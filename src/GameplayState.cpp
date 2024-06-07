@@ -75,13 +75,14 @@ GameplayState::~GameplayState() {
 
 
 
-void GameplayState::InitTerrain(const char *filepath, float terrain_width, float terrain_height) {
+void GameplayState::InitTerrain(Terrain *terrain) {
+    if(terrain == nullptr) return;
     if(m_terrain != nullptr) {
         TRACE("Trying to initialise a new terrain, but there is already one.\n");
         delete m_terrain;
     }
 
-    m_terrain = Terrain::construct(filepath, {terrain_width, terrain_height});
+    m_terrain = terrain;
 }
 
 void GameplayState::InitSpawnRegion(int team, Rectangle rec) {
@@ -135,7 +136,7 @@ void GameplayState::Draw() {
             Metrics::DrawRectangle(m_start_regions[i], {s_team_colors[i].r, s_team_colors[i].g, s_team_colors[i].b, 100});
         }
     }
-    m_terrain->Draw();
+    if(m_terrain != nullptr) m_terrain->Draw();
     m_object_manager->Draw();
     if(m_preview_spawned_object && m_spawned_object != nullptr) m_spawned_object->Draw();
 

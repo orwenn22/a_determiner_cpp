@@ -24,7 +24,7 @@ public:
 
     //static inline GameplayState *The() { return singleton; }
 
-    void InitTerrain(const char *filepath, float terrain_width, float terrain_height);
+    void InitTerrain(Terrain *terrain);
     void InitSpawnRegion(int team, Rectangle rec);
 
     void Update(float dt) override;

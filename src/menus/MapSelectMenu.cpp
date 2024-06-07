@@ -201,6 +201,7 @@ void MapSelectMenu::LoadMap(int index) {
     GameplayState *gs = m_loaders[loader_to_use]->LoadMap(m_map_names[index]);
     if(gs == nullptr) {
         TRACE("failed to load map for index %i (%s)", index, m_map_names[index].c_str());
+        return;
     }
 
     Manager()->SetState(gs, true);

@@ -6,6 +6,7 @@
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/util/Trace.h"
 #include "GameplayState.h"
+#include "Terrain.h"
 
 
 LegacyMapLoader::LegacyMapLoader() = default;
@@ -29,6 +30,7 @@ GameplayState *LegacyMapLoader::LoadMap(std::string path) {
     if(in_file == nullptr) return nullptr;
 
     GameplayState *result = new GameplayState;
+    bool terrain_initialised = false;
 
     char buf[512] = {0};
     while(!feof(in_file)) {
@@ -73,7 +75,12 @@ GameplayState *LegacyMapLoader::LoadMap(std::string path) {
             }
             float w = std::stof(tokens[2]);
             float h = std::stof(tokens[3]);
-            result->InitTerrain(tokens[1].c_str(), w, h);
+            Terrain *t = Terrain::construct(tokens[1].c_str(), {w, h});
+            result->InitTerrain(t);
+            if(t != nullptr) {
+                TRACE("Loading terrain from bitmap %s failed\n", tokens[1].c_str());
+                terrain_initialised = true;
+            }
         }
         else if(tokens[0] == "team_start") {
             if(tokens.size() != 6) {
@@ -93,5 +100,8 @@ GameplayState *LegacyMapLoader::LoadMap(std::string path) {
     }
 
     fclose(in_file);
-    return result;
+    if(terrain_initialised) return result;
+
+    delete result;
+    return nullptr;
 }
