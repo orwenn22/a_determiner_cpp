@@ -70,8 +70,11 @@ bool Terrain::CheckCollisionRec(Rectangle rec, bool outside_solid) {
     else {
         if(pixel_x < 0) pixel_x = 0;
         if(pixel_x2 >= m_image.width) pixel_x2 = m_image.width - 1;
+        else if(pixel_x2 < 0) pixel_x2 = 0;     //Necessary because the "for" loops use size_t (unsigned)
+
         if(pixel_y < 0) pixel_y = 0;
         if(pixel_y2 >= m_image.height) pixel_y2 = m_image.height - 1;
+        else if(pixel_y2 < 0) pixel_y2 = 0;     //Necessary because the "for" loops use size_t (unsigned)
     }
 
     //Check left and right edges

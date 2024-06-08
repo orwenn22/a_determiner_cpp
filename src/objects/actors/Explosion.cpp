@@ -89,7 +89,7 @@ void Explosion::ApplyForceToOther(KinematicObject *obj, float dt) {
     Vector2 normalised_vector = Vector2Normalize(relative_position);
     Vector2 total_force = normalised_vector * (total_coefficient/dt);
 
-    TRACE("Explosion::ApplyForceToOther : Applying force %f %f", total_force.x, total_force.y);
+    TRACE("Explosion::ApplyForceToOther : Applying force %f %f\n", total_force.x, total_force.y);
     obj->ApplyForce(total_force);
 
     // If the player is grounded, then its physics is disabled, which mean that if we don't enable it again,
