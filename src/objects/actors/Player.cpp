@@ -66,10 +66,10 @@ void Player::Draw() {
     if(!m_block_default_sprite) {
         if(m_enable_physics) {
             float flip_factor = (m_velocity.x < 0) ? (-1.f) : 1.f;
-            Metrics::DrawSpriteRotEx(Res::player_in_jump_sprite, {0.f, 37.f, 32.f*flip_factor, 37.f},
+            Metrics::DrawSpriteRotEx(Res::player_in_jump_sprite, {0.f, 0.f, 32.f*flip_factor, 37.f},
                                      {m_position.x, m_position.y+0.15625f/2.f}, {1.f, 1.15625f},       //37/32 * 1 = 1.15625
                                      0.f, WHITE);
-            Metrics::DrawSpriteRotEx(Res::player_in_jump_sprite, {32.f, 37.f, 32.f*flip_factor, 37.f},
+            Metrics::DrawSpriteRotEx(Res::player_in_jump_sprite, {32.f, 0.f, 32.f*flip_factor, 37.f},
                                      {m_position.x, m_position.y+0.15625f/2.f}, {1.f, 1.15625f},       //37/32 * 1 = 1.15625
                                      0.f, s_team_colors[m_team]);
         }

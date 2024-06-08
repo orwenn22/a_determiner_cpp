@@ -39,6 +39,7 @@ int OpenWithDefault(const char *path) {
 
 int OpenWithDefault(const char *path) {
     TRACE("Not implemented for current platform :(\n");
+    return 0;
 }
 
 #endif

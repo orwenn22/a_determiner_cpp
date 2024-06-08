@@ -35,7 +35,7 @@ void TiledBackground::Draw() {
         for(int x = 0; x < x_stop; ++x) {
             DrawTexturePro(*m_texture, {0.f, 0.f, w, h},
                            {-m_scroll.x + (float)x * w, -m_scroll.y + (float)y * h, w, h},
-                           {0.f, 0.f}, 0.f, WHITE);
+                           {0.f, 0.f}, 0.f, m_color);
         }
     }
 #else

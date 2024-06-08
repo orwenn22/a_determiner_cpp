@@ -1,0 +1,6 @@
+build_wasm
+wasm_auto.Makefile
+adeterminer.data
+adeterminer.html
+adeterminer.js
+adeterminer.wasm
