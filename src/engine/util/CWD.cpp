@@ -1,6 +1,6 @@
 #include "CWD.h"
 
-#if defined(linux)
+#if defined(linux) or defined(__EMSCRIPTEN__)
 
 #include <unistd.h>
 
