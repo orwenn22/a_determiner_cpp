@@ -6,10 +6,11 @@
 #include "engine/widgets/Label.h"
 #include "engine/widgets/TiledButton.h"
 #include "engine/widgets/WidgetManager.h"
+#include "engine/KeyBinds.h"
+#include "engine/KeyLookup.h"
 #include "utils/TiledBackground.h"
+#include "Config.h"
 #include "GlobalResources.h"
-#include "KeyBinds.h"
-#include "KeyLookup.h"
 #include "MainMenu.h"
 
 
@@ -75,6 +76,7 @@ void OptionsMenu::Update(float dt) {
             KeyBinds::The()->RegisterKey((KeyBindID)m_currently_rebinding, (KeyboardKey)i);
             m_currently_rebinding = -1;
             UpdateKeyButtonLabels();
+            KeyBinds::The()->Save(Config::GetKeybindConfigPath());
             break;
         }
     }

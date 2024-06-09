@@ -100,10 +100,10 @@ add_executable(UI_framework src/main.cpp
         src/menus/MainMenu.h
         src/menus/OptionsMenu.cpp
         src/menus/OptionsMenu.h
-        src/KeyBinds.cpp
-        src/KeyBinds.h
-        src/KeyLookup.h
-        src/KeyLookup.c
+        src/engine/KeyBinds.cpp
+        src/engine/KeyBinds.h
+        src/engine/KeyLookup.h
+        src/engine/KeyLookup.c
         src/menus/CreditsMenu.cpp
         src/menus/CreditsMenu.h
         src/menus/PauseMenu.cpp
@@ -125,6 +125,9 @@ add_executable(UI_framework src/main.cpp
         src/engine/tooltip/TooltipHorizontalAlignment.cpp
         src/engine/tooltip/TooltipImage.cpp
         src/engine/tooltip/TooltipText.cpp
+        src/Config.cpp
+        src/engine/util/IDBFS.cpp
+        src/engine/util/String.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

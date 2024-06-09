@@ -1,6 +1,6 @@
 #include "KeyLookup.h"
 
-#include <raylib.h>
+#include "raylib.h"
 
 const char *g_key_lookup[] = {
         [KEY_NULL] = "NULL",

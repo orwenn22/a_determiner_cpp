@@ -7,10 +7,10 @@
 #include "engine/object/KinematicPrediction.h"
 #include "engine/object/ObjectManager.h"
 #include "engine/util/VectorOps.h"
+#include "engine/KeyBinds.h"
 #include "objects/actors/Bullet.h"
 #include "objects/actors/Player.h"
 #include "GlobalResources.h"
-#include "KeyBinds.h"
 #include "Teams.h"
 
 

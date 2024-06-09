@@ -5,11 +5,11 @@
 #include "engine/metrics/Graphics.h"
 #include "engine/object/KinematicPrediction.h"
 #include "engine/object/ObjectManager.h"
+#include "engine/KeyBinds.h"
 #include "objects/actors/Player.h"
 #include "objects/actors/Wall.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
-#include "KeyBinds.h"
 #include "Teams.h"
 #include "Terrain.h"
 

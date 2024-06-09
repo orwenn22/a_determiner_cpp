@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "engine/metrics/MetricsCamera.h"
+#include "engine/util/String.h"
 #include "engine/util/Trace.h"
 #include "GameplayState.h"
 #include "Terrain.h"
@@ -44,18 +45,7 @@ GameplayState *LegacyMapLoader::LoadMap(std::string path) {
         }
         if(line_len == 0) continue;
 
-        //Cut the line into tokens
-        std::vector<std::string> tokens;
-        std::string current_token = "";
-        for(size_t i = 0; i < line_len; ++i) {
-            if(buf[i] == ' ') {
-                tokens.push_back(current_token);
-                current_token = "";
-                continue;
-            }
-            current_token.push_back(buf[i]);
-        }
-        if(!current_token.empty()) tokens.push_back(current_token);
+        std::vector<std::string> tokens = SplitTokens(buf);
 
         //Proceed to token identification
         if(tokens[0] == "camera_center") {

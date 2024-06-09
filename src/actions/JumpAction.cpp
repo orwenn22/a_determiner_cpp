@@ -5,11 +5,11 @@
 #include "engine/metrics/Graphics.h"
 #include "engine/object/KinematicPrediction.h"
 #include "engine/util/VectorOps.h"
+#include "engine/KeyBinds.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "objects/actors/Player.h"
 #include "GlobalResources.h"
-#include "KeyBinds.h"
 #include "Teams.h"
 
 JumpAction::JumpAction() : Action() {
