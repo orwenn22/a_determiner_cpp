@@ -30,16 +30,15 @@ void KeyBinds::Finit() {
     singleton = nullptr;
 }
 
+
+///////////////////////////////////////
+// METHODS
+
 void KeyBinds::Load(std::string path) {
     FILE *in_file = fopen(path.c_str(), "r");
     if(in_file == nullptr) return;
 
-    if(singleton != nullptr) {
-        TRACE("Replacing singleton\n");
-        delete singleton;
-    }
-
-    singleton = new KeyBinds;
+    m_keybinds.clear();     //TODO : maybe we shouldn't clear it ?
 
     while(!feof(in_file)) {
         char buf[512] = { 0 };
@@ -54,15 +53,11 @@ void KeyBinds::Load(std::string path) {
         int keybind_id = std::stoi(tokens[0]);
         int key_code = std::stoi(tokens[1]);
         TRACE("Registering %i as %i\n", key_code, keybind_id);
-        singleton->RegisterKey((KeyBindID) keybind_id, (KeyboardKey) key_code);
+        RegisterKey((KeyBindID) keybind_id, (KeyboardKey) key_code);
     }
 
     fclose(in_file);
 }
-
-
-///////////////////////////////////////
-// METHODS
 
 void KeyBinds::Save(std::string path) {
     TRACE("Trying to save keybinds to %s\n", path.c_str());

@@ -16,10 +16,10 @@ public:
     // Static stuff
     static void Init();
     static void Finit();
-    static void Load(std::string path);
     static inline KeyBinds *The() { return singleton; }
 
     // Methods
+    void Load(std::string path);
     void Save(std::string path);
     void RegisterKey(KeyBindID keybind_id, KeyboardKey new_keycode);
     bool IsKeyRegistered(KeyBindID keybind_id);

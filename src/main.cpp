@@ -51,8 +51,8 @@ bool CorrectCWD(std::string argv0) {
 
 //Try to load keybindings from config file, and initialise them if they are not set.
 void InitKeybinds() {
-    KeyBinds::Load(Config::GetKeybindConfigPath());
-    if(KeyBinds::The() == nullptr) KeyBinds::Init();
+    KeyBinds::Init();
+    KeyBinds::The()->Load(Config::GetKeybindConfigPath());
 
     //If the keys are not in the config file then put the default
     if(!KeyBinds::The()->IsKeyRegistered(KeyBind_Action)) KeyBinds::The()->RegisterKey(KeyBind_Action, KEY_SPACE);
