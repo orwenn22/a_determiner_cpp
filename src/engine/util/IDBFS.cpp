@@ -21,9 +21,21 @@ void MountIDBFS() {
     );
 }
 
+void SyncIDBFS() {
+    EM_ASM(
+        FS.syncfs(function (err) {
+            // Error
+        });
+    );
+}
+
 #else
 
 void MountIDBFS() {
+    //Nothing to do if we are not using emscripten
+}
+
+void SyncIDBFS() {
     //Nothing to do if we are not using emscripten
 }
 

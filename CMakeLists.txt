@@ -119,7 +119,7 @@ add_executable(UI_framework src/main.cpp
         src/engine/util/Open.cpp
         src/menus/MapSelectMenu.cpp
         src/engine/widgets/TiledDivision.cpp
-        src/engine/util/CWD.cpp
+        src/engine/util/Paths.cpp
         src/engine/tooltip/Tooltip.cpp
         src/engine/tooltip/TooltipElement.cpp
         src/engine/tooltip/TooltipHorizontalAlignment.cpp

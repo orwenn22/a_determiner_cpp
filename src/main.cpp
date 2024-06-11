@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <random>
 #include <raylib.h>
 #include <time.h>
@@ -6,11 +7,46 @@
 #include "engine/state/StateManager.h"
 #include "engine/util/DebugOverlay.h"
 #include "engine/util/IDBFS.h"
+#include "engine/util/Paths.h"
 #include "engine/KeyBinds.h"
 #include "menus/MainMenu.h"
 #include "Config.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
+#include "engine/util/Trace.h"
+
+#if !defined(__EMSCRIPTEN__)
+
+// Relative paths are used in a lot of places, like for map loading, resources, etc...
+// Therefore, we need to make sure we are in the correct directory before launching the game.
+// (this is only required for the desktop build, because in emscripten every embedded files is at the root directory)
+
+bool IsCWDCorrect(std::string exec_name) {
+    bool r = false;
+    for(auto f : std::filesystem::current_path()) {     //TODO : this is not available in old compilers
+        if(is_regular_file(f) && f.filename() == exec_name) {
+            r = true;
+        }
+    }
+    return r;
+}
+
+bool CorrectCWD(std::string argv0) {
+    std::string executable_name = GetFileFromPath(argv0);
+    if(IsCWDCorrect(executable_name)) return true;
+
+    std::string executable_path = RemoveFileFromPath(argv0);
+    TRACE("CWD incorrect, attempting to CHDIR into '%s'\n", executable_path.c_str());
+    if(executable_path.empty()) return false;
+
+    std::filesystem::current_path(executable_path);     //TODO : this is not available in old compilers
+    if(IsCWDCorrect(executable_name)) return true;
+
+    TRACE("Invalid launch directory, exiting\n");
+    return false;
+}
+
+#endif
 
 
 //Try to load keybindings from config file, and initialise them if they are not set.
@@ -28,12 +64,13 @@ void InitKeybinds() {
 }
 
 
-int main() {
+int main(int argc, const char *argv[]) {
 #ifdef __EMSCRIPTEN__
     MountIDBFS();
+#else
+    if(!CorrectCWD(argv[0])) return 1;
 #endif
 
-    //TODO : set cwd to the path of the executable when not using emscripten ?
     srand(time(nullptr));
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(960, 540, "À déterminer");

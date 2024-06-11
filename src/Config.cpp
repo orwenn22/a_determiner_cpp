@@ -1,6 +1,6 @@
 #include "Config.h"
 
-#include "engine/util/CWD.h"
+#include "engine/util/Paths.h"
 
 namespace Config {
 

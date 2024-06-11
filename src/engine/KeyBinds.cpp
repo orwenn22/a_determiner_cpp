@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 
+#include "util/IDBFS.h"
 #include "util/String.h"
 #include "util/Trace.h"
 
@@ -73,6 +74,9 @@ void KeyBinds::Save(std::string path) {
     }
 
     fclose(out_file);
+#ifdef __EMSCRIPTEN__
+    SyncIDBFS();
+#endif
     TRACE("Done\n");
 }
 
