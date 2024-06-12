@@ -9,7 +9,7 @@ public:
     ~LegacyMapLoader() override;
 
     bool IsCorrectFormat(std::string path) override;
-    GameplayState *LoadMap(std::string path) override;
+    ErrorOr<GameplayState *> LoadMap(std::string path) override;
 };
 
 

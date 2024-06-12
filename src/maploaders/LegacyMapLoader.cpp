@@ -26,9 +26,9 @@ bool LegacyMapLoader::IsCorrectFormat(std::string path) {
     return (strcmp(buf, "legacy") == 0);
 }
 
-GameplayState *LegacyMapLoader::LoadMap(std::string path) {
+ErrorOr<GameplayState *> LegacyMapLoader::LoadMap(std::string path) {
     FILE *in_file = fopen(path.c_str(), "r");
-    if(in_file == nullptr) return nullptr;
+    if(in_file == nullptr) return Error("The file don't exist");
 
     GameplayState *result = new GameplayState;
     bool terrain_initialised = false;
@@ -93,5 +93,5 @@ GameplayState *LegacyMapLoader::LoadMap(std::string path) {
     if(terrain_initialised) return result;
 
     delete result;
-    return nullptr;
+    return Error("Terrain not initialised by map");
 }

@@ -198,11 +198,13 @@ void MapSelectMenu::LoadMap(int index) {
 
     TRACE("using map loader %i\n", loader_to_use);
 
-    GameplayState *gs = m_loaders[loader_to_use]->LoadMap(m_map_names[index]);
-    if(gs == nullptr) {
-        TRACE("failed to load map for index %i (%s)", index, m_map_names[index].c_str());
+    ErrorOr<GameplayState *> gs = m_loaders[loader_to_use]->LoadMap(m_map_names[index]);
+    if(gs.GetError() != nullptr) {
+        TRACE("failed to load map for index %i (%s)\n", index, m_map_names[index].c_str());
+        TRACE(" error message : %s\n", gs.GetError()->m_error_message.c_str());
+        //TODO : display error message on the menu ?
         return;
     }
 
-    Manager()->SetState(gs, true);
+    Manager()->SetState(gs.GetValue(), true);
 }
