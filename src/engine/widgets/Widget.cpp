@@ -1,7 +1,8 @@
 #include "Widget.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
+#include "../util/Trace.h"
 #include "WidgetManager.h"
 
 
@@ -18,7 +19,13 @@ Widget::Widget(int x, int y, int w, int h) {
     m_full_size_offset_bottom = 0;
 }
 
-Widget::~Widget() = default;
+Widget::~Widget() {
+    if(m_manager != nullptr) {
+        TRACE("Trying to deallocate a widget while it is still in a manager\n");
+        //TODO : in this case maybe we should automatically remove the widget from the manager ? Like this :
+        //m_manager->RemoveWidget(this);
+    }
+}
 
 void Widget::Update() {
     //Must be defined by subclasses

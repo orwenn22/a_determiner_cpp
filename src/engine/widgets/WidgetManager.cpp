@@ -68,6 +68,7 @@ void WidgetManager::RemoveWidget(Widget *w) {
 
 void WidgetManager::Clear() {
     for(Widget *w : m_widgets) {
+        w->m_manager = nullptr;     //Do it this way in order to not recalculate the absolute position
         delete w;
     }
     m_widgets.clear();

@@ -216,7 +216,7 @@ void MapSelectMenu::LoadMap(int index) {
 
 void MapSelectMenu::SetError(std::string error_message) {
     if (m_error_label != nullptr) {
-        m_temporary_widgets->RemoveWidget(m_error_label);
+        m_permanent_widgets->RemoveWidget(m_error_label);
         delete m_error_label;
     }
 
@@ -224,5 +224,5 @@ void MapSelectMenu::SetError(std::string error_message) {
     m_error_label->SetAlignment(WidgetAlignment_HCenter);
     m_error_label->SetOutline(true);
     m_error_label->SetColor(RED);
-    m_temporary_widgets->AddWidget(m_error_label);
+    m_permanent_widgets->AddWidget(m_error_label);
 }
