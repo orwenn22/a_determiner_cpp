@@ -66,10 +66,12 @@ ErrorOr<GameplayState *> LegacyMapLoader::LoadMap(std::string path) {
             float w = std::stof(tokens[2]);
             float h = std::stof(tokens[3]);
             Terrain *t = Terrain::construct(tokens[1].c_str(), {w, h});
-            result->InitTerrain(t);
             if(t != nullptr) {
-                TRACE("Loading terrain from bitmap %s failed\n", tokens[1].c_str());
                 terrain_initialised = true;
+                result->InitTerrain(t);
+            }
+            else {
+                TRACE("Loading terrain from bitmap %s failed\n", tokens[1].c_str());
             }
         }
         else if(tokens[0] == "team_start") {

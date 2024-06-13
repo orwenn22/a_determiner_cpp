@@ -5,6 +5,7 @@
 #include "engine/state/StateManager.h"
 #include "engine/util/Paths.h"
 #include "engine/util/Open.h"
+#include "engine/util/Paths.h"
 #include "engine/util/Trace.h"
 #include "engine/widgets/Label.h"
 #include "engine/widgets/TiledButton.h"
@@ -22,6 +23,7 @@
 
 
 MapSelectMenu::MapSelectMenu() : State() {
+    m_error_label = nullptr;
     m_loaders.push_back(new LegacyMapLoader);
 
     m_bg = new TiledBackground(&Res::menubg_sprite);
@@ -163,7 +165,8 @@ void MapSelectMenu::SetPage(int page) {
         }
 
         TRACE("Button for %s\n", m_map_names[i].c_str());
-        TiledButton *b = new TiledButton(0, start_y, 250, MAP_BUTTON_HEIGHT, &Res::tiled_button_sprite, 8, 2, m_map_names[i]);      //TODO : remove path from name
+        std::string file_name_only = GetFileFromPath(m_map_names[i]);
+        TiledButton *b = new TiledButton(0, start_y, 250, MAP_BUTTON_HEIGHT, &Res::tiled_button_sprite, 8, 2, file_name_only);
         b->SetAlignment(WidgetAlignment_Center);
         b->SetFontSize(20);
         b->CenterLabel();
@@ -193,6 +196,7 @@ void MapSelectMenu::LoadMap(int index) {
 
     if(loader_to_use == -1) {
         TRACE("Could not find appropriate map loader for map %s\n", m_map_names[index].c_str());
+        SetError("Could not find appropriate map loader for map " + m_map_names[index]);
         return;
     }
 
@@ -202,9 +206,23 @@ void MapSelectMenu::LoadMap(int index) {
     if(gs.GetError() != nullptr) {
         TRACE("failed to load map for index %i (%s)\n", index, m_map_names[index].c_str());
         TRACE(" error message : %s\n", gs.GetError()->m_error_message.c_str());
-        //TODO : display error message on the menu ?
+        SetError(gs.GetError()->m_error_message);
         return;
     }
 
     Manager()->SetState(gs.GetValue(), true);
+}
+
+
+void MapSelectMenu::SetError(std::string error_message) {
+    if (m_error_label != nullptr) {
+        m_temporary_widgets->RemoveWidget(m_error_label);
+        delete m_error_label;
+    }
+
+    m_error_label = new Label(0, 70, 20, error_message);
+    m_error_label->SetAlignment(WidgetAlignment_HCenter);
+    m_error_label->SetOutline(true);
+    m_error_label->SetColor(RED);
+    m_temporary_widgets->AddWidget(m_error_label);
 }

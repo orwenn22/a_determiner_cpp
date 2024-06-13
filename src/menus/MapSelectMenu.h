@@ -25,6 +25,7 @@ private:
     void UpdateMapNames();
     void SetPage(int page);
     void LoadMap(int index);
+    void SetError(std::string error_message);
 
 
     TiledBackground *m_bg;
@@ -40,6 +41,7 @@ private:
     Label *m_current_page_label;
     Label *m_page_count_label;
     Label *m_cwd_label;
+    Label *m_error_label;
 };
 
 
