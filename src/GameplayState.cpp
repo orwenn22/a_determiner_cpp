@@ -21,6 +21,7 @@
 #include "objects/collectibles/Constructors.h"
 #include "widgets/PlayerIndicator.h"
 #include "windows/CollectibleSpawnWindow.h"
+#include "GlobalResources.h"
 #include "Teams.h"
 #include "Terrain.h"
 
@@ -131,13 +132,24 @@ void GameplayState::Draw() {
     Metrics::SetGraphicsCam(m_camera);
     Metrics::DrawGrid();
 
+    //Spawn regions
     if(PlacingPlayers()) {
         for(int i = 0; i < m_start_regions.size(); ++i) {
             Metrics::DrawRectangle(m_start_regions[i], {s_team_colors[i].r, s_team_colors[i].g, s_team_colors[i].b, 100});
         }
     }
+
     if(m_terrain != nullptr) m_terrain->Draw();
     m_object_manager->Draw();
+
+    //Green indicator
+    Player *p = GetCurrentPlayer();
+    if(p != nullptr) {
+        Vector2 pos = p->GetPosition();
+        pos.y -= 1.2f;
+        Metrics::DrawSpriteRot(Res::green_marker_sprite, pos, {.7f, .7f}, 0.f, WHITE);
+    }
+
     if(m_preview_spawned_object && m_spawned_object != nullptr) m_spawned_object->Draw();
 
     if(m_show_action_widgets) m_action_widgets->Draw();
@@ -318,24 +330,6 @@ void GameplayState::SetSpawnedObject(EntityObject *spawned_object) {
     m_spawned_object = spawned_object;
 }
 
-void GameplayState::UpdateSpawnedObject(Vector2 mouse_pos_meter) {
-    if(m_spawned_object == nullptr || IsMouseUsed()) {
-        m_preview_spawned_object = false;
-        return;
-    }
-
-    m_preview_spawned_object = true;
-    m_spawned_object->m_position = mouse_pos_meter;
-
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        m_object_manager->AddObject(m_spawned_object);
-        m_spawned_object = nullptr;
-        m_preview_spawned_object = false;
-    }
-
-    UseMouse();
-}
-
 
 ////////////////////////////////
 //// PRIVATE
@@ -381,6 +375,7 @@ void GameplayState::UpdateHotbarText() {
     m_hotbar_text->SetColor(s_team_colors[p->GetTeam()]);
 }
 
+
 void GameplayState::CheckForVictory() {
     std::vector<int> remaining_players;
     for(int i = 0; i < m_team_count; ++i) remaining_players.push_back(0);
@@ -402,4 +397,23 @@ void GameplayState::CheckForVictory() {
 
     TRACE("team %s won\n", s_team_names[winning_team]);
     Manager()->SetState(new PostGameMenu(winning_team), true);
+}
+
+
+void GameplayState::UpdateSpawnedObject(Vector2 mouse_pos_meter) {
+    if(m_spawned_object == nullptr || IsMouseUsed()) {
+        m_preview_spawned_object = false;
+        return;
+    }
+
+    m_preview_spawned_object = true;
+    m_spawned_object->m_position = mouse_pos_meter;
+
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        m_object_manager->AddObject(m_spawned_object);
+        m_spawned_object = nullptr;
+        m_preview_spawned_object = false;
+    }
+
+    UseMouse();
 }

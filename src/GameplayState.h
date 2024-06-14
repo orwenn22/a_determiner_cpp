@@ -51,7 +51,6 @@ public:
     inline bool IsShowingActions() { return m_show_action_widgets; }
 
     void SetSpawnedObject(EntityObject *spawned_object);
-    void UpdateSpawnedObject(Vector2 mouse_pos_meter);
 
 
 private:
@@ -59,6 +58,7 @@ private:
     void UpdateHotbarText();
 
     void CheckForVictory();
+    void UpdateSpawnedObject(Vector2 mouse_pos_meter);
 
 
     //static GameplayState *singleton;
