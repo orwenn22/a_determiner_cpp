@@ -5,12 +5,29 @@
 
 #include "engine/metrics/Graphics.h"
 #include "engine/util/Trace.h"
+#include "Config.h"
 
 Terrain *Terrain::construct(const char *filepath, Vector2 size) {
+    //Relative path
+    TRACE("Checking file %s\n", filepath);
     FILE *in_file = fopen(filepath, "r");
-    if(in_file == nullptr) return nullptr;
-    fclose(in_file);
-    return new Terrain(filepath, size);
+    if(in_file != nullptr) {
+        fclose(in_file);
+        return new Terrain(filepath, size);
+    }
+    TRACE("File not found :(\n");
+
+    //ext path
+    if(!Config::enable_external) return nullptr;
+    std::string ext_filepath = Config::GetExternalFolderPath() + "/" + filepath;
+    TRACE("Checking file %s\n", ext_filepath.c_str());
+    in_file = fopen(ext_filepath.c_str(), "r");
+    if(in_file != nullptr) {
+        fclose(in_file);
+        return new Terrain(ext_filepath.c_str(), size);
+    }
+    TRACE("File not found :(\n");
+    return nullptr;
 }
 
 Terrain::Terrain(const char *filepath, Vector2 size) {

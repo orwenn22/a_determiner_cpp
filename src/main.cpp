@@ -71,6 +71,7 @@ int main(int argc, const char *argv[]) {
     if(!CorrectCWD(argv[0])) return 1;
 #endif
 
+    Config::InitExtFolder();
     srand(time(nullptr));
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(960, 540, "À déterminer");

@@ -4,8 +4,12 @@
 #include <string>
 
 namespace Config {
+    extern bool enable_external;
 
     std::string GetKeybindConfigPath();
+    std::string GetExternalFolderPath();
+
+    void InitExtFolder();
 
 };  //namespace Config
 

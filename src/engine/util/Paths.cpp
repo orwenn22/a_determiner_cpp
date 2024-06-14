@@ -1,33 +1,10 @@
 #include "Paths.h"
 
-#if defined(linux) or defined(__EMSCRIPTEN__)
-
-#include <unistd.h>
+#include <filesystem>
 
 std::string GetCWD() {
-    char buf[512];
-    getcwd(buf, 512);
-    return std::string(buf);
+    return std::string(std::filesystem::current_path());
 }
-
-#elif defined(_WIN32)
-//TODO : test windows implementation
-
-#include <windows.h>
-
-std::string GetCWD() {
-    char buf[512];
-    (void) GetCurrentDirectory(512, buf);
-    return std::string(buf);
-}
-
-#else
-
-std::string GetCWD() {
-    return "";
-}
-
-#endif
 
 
 std::string RemoveFileFromPath(std::string file_path) {
@@ -50,4 +27,15 @@ std::string GetFileFromPath(std::string file_path) {
     if(last_slash <= 0) return file_path;       //no slash in path
     if(last_slash+1 >= file_path.size()) return "";
     return file_path.substr(last_slash+1);
+}
+
+
+bool TryCreateDirectory(std::string path) {
+    if(std::filesystem::exists(path)) {
+        if(std::filesystem::is_directory(path)) return true;
+        else return false;
+    }
+
+    if(std::filesystem::create_directory(path)) return true;
+    else return false;
 }

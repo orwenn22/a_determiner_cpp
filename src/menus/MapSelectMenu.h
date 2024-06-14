@@ -6,11 +6,23 @@
 
 #include "engine/state/State.h"
 
+//TODO : drag and drop to load map.
+//       This should detect if the dragged file is a map or an image. If it is an image, it should put it in ext/res,
+//       if it is a map, it should put it in ext/maps. If it is a map, we should reload the menu and go to the last page
 
 class Label;
 class MapLoader;
 class TiledBackground;
 class WidgetManager;
+
+
+struct MapInfo {
+    std::string map_path;
+    bool is_external;
+
+    MapInfo(std::string _map_path, bool _is_external) : map_path(_map_path), is_external(_is_external) {}
+};
+
 
 class MapSelectMenu : public State {
 public:
@@ -32,7 +44,7 @@ private:
     WidgetManager *m_permanent_widgets;
     WidgetManager *m_temporary_widgets;
 
-    std::vector<std::string> m_map_names;
+    std::vector<MapInfo> m_map_names;
     int m_page;     //current page index
     int m_page_count;
     std::vector<MapLoader *> m_loaders;

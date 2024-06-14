@@ -39,7 +39,7 @@ ErrorOr<GameplayState *> LegacyMapLoader::LoadMap(std::string path) {
         buf[0] = 0;
         fgets(buf, 512, in_file);
         size_t line_len = strlen(buf);
-        if(buf[line_len-1] == '\n') {
+        if(buf[line_len-1] == '\n') {       //FIXME : valgrind warning : Conditional jump or move depends on uninitialised value(s)
             buf[line_len - 1] = 0;
             --line_len;
         }
