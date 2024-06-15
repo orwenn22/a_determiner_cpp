@@ -49,17 +49,7 @@ ErrorOr<GameplayState *> LegacyMapLoader::LoadMap(std::string path) {
         std::vector<std::string> tokens = SplitTokens(buf);
 
         //Proceed to token identification
-        if(tokens[0] == "camera_center") {
-            TRACE("TODO : deprecate camera_center\n");
-            if(tokens.size() != 3) {
-                TRACE("camera_center needs 3 tokens\n");
-                continue;
-            }
-            float pos_x = std::stof(tokens[1]);
-            float pos_y = std::stof(tokens[2]);
-            result->GetCamera()->SetCameraCenter({pos_x, pos_y});
-        }
-        else if(tokens[0] == "bitmap") {
+        if(tokens[0] == "bitmap") {
             if(tokens.size() != 4) {
                 TRACE("bitmap needs 4 tokens\n");
                 continue;
@@ -76,6 +66,7 @@ ErrorOr<GameplayState *> LegacyMapLoader::LoadMap(std::string path) {
 
             terrain_initialised = true;
             result->InitTerrain(t);
+            result->GetCamera()->SetCameraCenter({t->Width()/2, t->Height()/2});
         }
         else if(tokens[0] == "team_start") {
             if(tokens.size() != 6) {
