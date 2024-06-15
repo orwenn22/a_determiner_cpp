@@ -29,6 +29,16 @@ std::string GetFileFromPath(std::string file_path) {
     return file_path.substr(last_slash+1);
 }
 
+std::string GetExtensionFromPath(std::string file_path) {
+    int last_dot = -1;
+    for(int i = 0; i < file_path.size(); ++i) {
+        char c = file_path[i];
+        if(c == '.') last_dot = i;
+    }
+    if(last_dot < 0 || file_path.back() == '.') return "";
+    return file_path.substr(last_dot+1);
+}
+
 
 bool TryCreateDirectory(std::string path) {
     if(std::filesystem::exists(path)) {

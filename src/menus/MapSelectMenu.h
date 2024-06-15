@@ -39,6 +39,9 @@ private:
     void LoadMap(int index);
     void SetError(std::string error_message);
 
+    void HandleFilesDragAndDrop();
+    static bool HandleFileDragAndDrop(std::string dragged_path);
+
 
     TiledBackground *m_bg;
     WidgetManager *m_permanent_widgets;

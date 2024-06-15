@@ -120,10 +120,13 @@ MapSelectMenu::~MapSelectMenu() {
 }
 
 void MapSelectMenu::Update(float dt) {
+    HandleFilesDragAndDrop();
+
     if(m_cwd_label != nullptr) {
         if(IsKeyPressed(KEY_F)) m_cwd_label->SetLabel("Map folder : " + GetCWD() + "/maps");
         else if(IsKeyReleased(KEY_F)) m_cwd_label->SetLabel("Map folder : [HOLD F]");
     }
+
     m_permanent_widgets->Update();
     m_temporary_widgets->Update();
     m_bg->Update(dt);
@@ -149,14 +152,14 @@ void MapSelectMenu::UpdateMapNames() {
     //Built-in maps
     for(auto element : std::filesystem::directory_iterator("./maps")) {
         if(!element.is_regular_file()) continue;
-        m_map_names.emplace_back(element.path(), false);
+        m_map_names.emplace_back(element.path(), false);        //TODO : loader check here ?
     }
 
     //External maps
     if(Config::enable_external) {
         for(auto element : std::filesystem::directory_iterator(Config::GetExternalFolderPath() + "/maps")) {
             if(!element.is_regular_file()) continue;
-            m_map_names.emplace_back(element.path(), true);
+            m_map_names.emplace_back(element.path(), true);     //TODO : loader check here ?
         }
     }
 
@@ -271,4 +274,49 @@ void MapSelectMenu::SetError(std::string error_message) {
     m_error_label->SetOutline(true);
     m_error_label->SetColor(RED);
     m_permanent_widgets->AddWidget(m_error_label);
+}
+
+
+void MapSelectMenu::HandleFilesDragAndDrop() {
+    if(!Config::enable_external || !IsFileDropped()) return;
+
+    FilePathList dropped_files = LoadDroppedFiles();
+    bool reload_pages = false;
+
+    for(int i = 0; i < dropped_files.count; ++i) {
+        if(HandleFileDragAndDrop(dropped_files.paths[i])) reload_pages = true;
+    }
+
+    UnloadDroppedFiles(dropped_files);
+
+    if(!reload_pages) return;
+    int current_page = m_page;
+    UpdateMapNames();
+    SetPage(current_page);
+}
+
+bool MapSelectMenu::HandleFileDragAndDrop(std::string dragged_path) {
+    if(!Config::enable_external) return false;
+
+    std::string file_extension = GetExtensionFromPath(dragged_path);
+    //TODO : use a map to match extensions to ext directories more efficiently ?
+    //TODO : check if it is a regular file ?
+    if(file_extension == "leg") {
+        if(std::filesystem::copy_file(dragged_path, Config::GetExternalFolderPath() + "/maps/" + GetFileFromPath(dragged_path))) {
+            return true;        //Reload pages
+        }
+        else {
+            TRACE("Could not import file (copy failed) : %s\n", dragged_path.c_str());
+        }
+    }
+    else if(file_extension == "png") {
+        if(!std::filesystem::copy_file(dragged_path, Config::GetExternalFolderPath() + "/res/" + GetFileFromPath(dragged_path))) {
+            TRACE("Could not import file (copy failed) : %s\n", dragged_path.c_str());
+        }
+    }
+    else {
+        TRACE("Could not import file (unknown type) : %s\n", dragged_path.c_str());
+    }
+
+    return false;
 }

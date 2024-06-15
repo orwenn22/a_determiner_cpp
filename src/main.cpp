@@ -8,12 +8,13 @@
 #include "engine/util/DebugOverlay.h"
 #include "engine/util/IDBFS.h"
 #include "engine/util/Paths.h"
+#include "engine/util/Trace.h"
 #include "engine/KeyBinds.h"
 #include "menus/MainMenu.h"
 #include "Config.h"
+#include "Ext.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
-#include "engine/util/Trace.h"
 
 #if !defined(__EMSCRIPTEN__)
 
@@ -71,7 +72,7 @@ int main(int argc, const char *argv[]) {
     if(!CorrectCWD(argv[0])) return 1;
 #endif
 
-    Config::InitExtFolder();
+    Ext::Init();
     srand(time(nullptr));
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(960, 540, "À déterminer");

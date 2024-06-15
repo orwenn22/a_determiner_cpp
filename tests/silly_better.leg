@@ -1,0 +1,7 @@
+legacy
+camera_center 20 11.25
+background None
+bitmap res/silly_better.png 40 22.5
+team_start 0 0 0 20 22.5
+team_start 1 20 0 20 22.5
+

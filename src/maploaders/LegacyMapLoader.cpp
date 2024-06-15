@@ -6,6 +6,7 @@
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/util/String.h"
 #include "engine/util/Trace.h"
+#include "Ext.h"
 #include "GameplayState.h"
 #include "Terrain.h"
 
@@ -63,16 +64,18 @@ ErrorOr<GameplayState *> LegacyMapLoader::LoadMap(std::string path) {
                 TRACE("bitmap needs 4 tokens\n");
                 continue;
             }
+            std::string bitmap_path = Ext::ResolvePath(tokens[1]);
             float w = std::stof(tokens[2]);
             float h = std::stof(tokens[3]);
-            Terrain *t = Terrain::construct(tokens[1].c_str(), {w, h});
-            if(t != nullptr) {
-                terrain_initialised = true;
-                result->InitTerrain(t);
+            Terrain *t = Terrain::construct(bitmap_path.c_str(), {w, h});
+
+            if(t == nullptr) {
+                TRACE("Loading terrain from bitmap %s failed\n", bitmap_path.c_str());
+                continue;
             }
-            else {
-                TRACE("Loading terrain from bitmap %s failed\n", tokens[1].c_str());
-            }
+
+            terrain_initialised = true;
+            result->InitTerrain(t);
         }
         else if(tokens[0] == "team_start") {
             if(tokens.size() != 6) {

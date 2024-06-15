@@ -9,8 +9,6 @@ namespace Config {
     std::string GetKeybindConfigPath();
     std::string GetExternalFolderPath();
 
-    void InitExtFolder();
-
 };  //namespace Config
 
 #endif //UI_FRAMEWORK_CONFIG_H
