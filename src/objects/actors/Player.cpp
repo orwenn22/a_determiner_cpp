@@ -128,7 +128,7 @@ void Player::SkipTurn() {
         if(a->OnSkip(this)) cancel_next_player_turn = true;
     }
 
-    m_energy += 10;         // Increase points
+    m_energy += 15;         // Increase points
     m_current_action = -1;  // Cancel any action
 
     if(!cancel_next_player_turn) {
