@@ -20,9 +20,9 @@ int OpenWithDefault(const char *path) {
 #include <windows.h>
 
 int OpenWithDefault(const char *path) {
-    HINSTANCE ret = ShellExecute(0, 0, path 0, 0 , SW_SHOW);
-    if(ret > 32) return 0;
-    return (int) ret;
+    HINSTANCE ret = ShellExecuteA(0, 0, path, 0, 0 , SW_SHOW);
+    if(ret > (HINSTANCE)32) return 0;
+    return (int)(size_t) ret;
 }
 
 #elif defined(__APPLE__)

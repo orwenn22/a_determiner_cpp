@@ -31,7 +31,7 @@ int EntityObject::GetMainType() {
 }
 
 Rectangle EntityObject::GetRectangle() {
-    return (Rectangle) {m_position.x - m_width/2, m_position.y - m_height/2, m_width, m_height};
+    return {m_position.x - m_width/2, m_position.y - m_height/2, m_width, m_height};
 }
 
 void EntityObject::DrawHitbox() {

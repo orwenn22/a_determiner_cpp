@@ -24,8 +24,9 @@
 
 bool IsCWDCorrect(std::string exec_name) {
     bool r = false;
-    for(auto f : std::filesystem::current_path()) {     //TODO : this is not available in old compilers
-        if(is_regular_file(f) && f.filename() == exec_name) {
+    for(auto f : std::filesystem::directory_iterator(std::filesystem::current_path())) {
+        //TRACE("name : %s\n", f.path().filename().string().c_str());
+        if(is_regular_file(f) && f.path().filename().string() == exec_name) {
             r = true;
         }
     }
@@ -33,6 +34,7 @@ bool IsCWDCorrect(std::string exec_name) {
 }
 
 bool CorrectCWD(std::string argv0) {
+    TRACE("Current CWD : %s\n", GetCWD().c_str());
     std::string executable_name = GetFileFromPath(argv0);
     if(IsCWDCorrect(executable_name)) return true;
 
@@ -40,7 +42,7 @@ bool CorrectCWD(std::string argv0) {
     TRACE("CWD incorrect, attempting to CHDIR into '%s'\n", executable_path.c_str());
     if(executable_path.empty()) return false;
 
-    std::filesystem::current_path(executable_path);     //TODO : this is not available in old compilers
+    std::filesystem::current_path(executable_path);
     if(IsCWDCorrect(executable_name)) return true;
 
     TRACE("Invalid launch directory, exiting\n");

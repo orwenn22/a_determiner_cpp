@@ -152,14 +152,14 @@ void MapSelectMenu::UpdateMapNames() {
     //Built-in maps
     for(auto element : std::filesystem::directory_iterator("./maps")) {
         if(!element.is_regular_file()) continue;
-        m_map_names.emplace_back(element.path(), false);        //TODO : loader check here ?
+        m_map_names.emplace_back(element.path().string(), false);        //TODO : loader check here ?
     }
 
     //External maps
     if(Config::enable_external) {
         for(auto element : std::filesystem::directory_iterator(Config::GetExternalFolderPath() + "/maps")) {
             if(!element.is_regular_file()) continue;
-            m_map_names.emplace_back(element.path(), true);     //TODO : loader check here ?
+            m_map_names.emplace_back(element.path().string(), true);     //TODO : loader check here ?
         }
     }
 

@@ -3,7 +3,7 @@
 #include <filesystem>
 
 std::string GetCWD() {
-    return std::string(std::filesystem::current_path());
+    return std::filesystem::current_path().string();
 }
 
 

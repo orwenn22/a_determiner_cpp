@@ -55,7 +55,7 @@ std::string ResolvePath(std::string path) {
 
     //In ext directory
     std::filesystem::path ext_path = Config::GetExternalFolderPath() + "/" + path;
-    if(std::filesystem::exists(ext_path)) return ext_path;
+    if(std::filesystem::exists(ext_path)) return ext_path.string();
     return "";
 }
 

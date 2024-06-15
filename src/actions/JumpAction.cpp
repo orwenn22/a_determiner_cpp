@@ -47,7 +47,7 @@ void JumpAction::OnDraw(Player *player) {
     prediction.DrawSimulation(10);
 
     player->BlockDefaultSprite();
-    float flip_factor = (player->GetThrowAngle() > PI/2 or player->GetThrowAngle() < -PI/2) ? -1.f : 1.f;
+    float flip_factor = (player->GetThrowAngle() > PI/2 || player->GetThrowAngle() < -PI/2) ? -1.f : 1.f;
 
     Metrics::DrawSpriteRotEx(Res::player_jump_sprite, {0.f, 0.f, 32.f*flip_factor, 32.f},
                              player->GetPosition(), {player->Width(), player->Height()},
