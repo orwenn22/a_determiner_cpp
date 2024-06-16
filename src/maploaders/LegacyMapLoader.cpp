@@ -6,9 +6,9 @@
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/util/String.h"
 #include "engine/util/Trace.h"
+#include "terrain/BitmapTerrain.h"
 #include "Ext.h"
 #include "GameplayState.h"
-#include "Terrain.h"
 
 
 LegacyMapLoader::LegacyMapLoader() = default;
@@ -57,7 +57,7 @@ ErrorOr<GameplayState *> LegacyMapLoader::LoadMap(std::string path) {
             std::string bitmap_path = Ext::ResolvePath(tokens[1]);
             float w = std::stof(tokens[2]);
             float h = std::stof(tokens[3]);
-            Terrain *t = Terrain::construct(bitmap_path.c_str(), {w, h});
+            BitmapTerrain *t = BitmapTerrain::construct(bitmap_path.c_str(), {w, h});
 
             if(t == nullptr) {
                 TRACE("Loading terrain from bitmap %s failed\n", bitmap_path.c_str());
@@ -79,6 +79,18 @@ ErrorOr<GameplayState *> LegacyMapLoader::LoadMap(std::string path) {
             float w = std::stof(tokens[4]);
             float h = std::stof(tokens[5]);
             result->InitSpawnRegion(team, {x, y, w, h});
+        }
+        else if(tokens[0] == "indestructible") {
+            if(tokens.size() != 5) {
+                TRACE("team_start needs 5 tokens\n");
+                continue;
+            }
+            if(!terrain_initialised) continue;
+            int x = std::stoi(tokens[1]);
+            int y = std::stoi(tokens[2]);
+            int w = std::stoi(tokens[3]);
+            int h = std::stoi(tokens[4]);
+            ((BitmapTerrain *)result->GetTerrain())->MakeIndestructible(x, y, w, h);
         }
         else {
             TRACE("Ignored token %s\n", tokens[0].c_str());

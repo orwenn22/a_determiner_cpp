@@ -2,10 +2,10 @@
 
 #include "engine/metrics/Graphics.h"
 #include "engine/object/ObjectManager.h"
+#include "terrain/BitmapTerrain.h"
 #include "Explosion.h"
 #include "GameplayState.h"
 #include "Player.h"
-#include "Terrain.h"
 #include "../ObjectIDs.h"
 
 
@@ -22,7 +22,7 @@ void Bullet::Update(float dt) {
     bool need_explosion = false;
     ProcessPhysics(dt);
 
-    if(m_gameplay_state->GetTerrain()->CheckCollisionRec(GetRectangle())) {
+    if(m_gameplay_state->GetTerrain()->CheckCollisionRec(GetRectangle(), false)) {
         need_explosion = true;
     }
 

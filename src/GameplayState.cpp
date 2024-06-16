@@ -1,8 +1,6 @@
 #include "GameplayState.h"
 
-#include <random>
 #include <raylib.h>
-#include <stdio.h>
 
 #include "engine/Globals.h"
 #include "engine/metrics/Graphics.h"
@@ -19,11 +17,11 @@
 #include "menus/PostGameMenu.h"
 #include "objects/actors/Player.h"
 #include "objects/collectibles/Constructors.h"
+#include "terrain/BitmapTerrain.h"
 #include "widgets/PlayerIndicator.h"
 #include "windows/CollectibleSpawnWindow.h"
 #include "GlobalResources.h"
 #include "Teams.h"
-#include "Terrain.h"
 
 
 //GameplayState *GameplayState::singleton = nullptr;

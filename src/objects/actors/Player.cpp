@@ -13,12 +13,12 @@
 #include "engine/util/VectorOps.h"
 #include "engine/widgets/TiledButton.h"
 #include "engine/Globals.h"
+#include "terrain/Terrain.h"
 #include "widgets/ActionWidget.h"
 #include "widgets/FakeActionWidget.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "Teams.h"
-#include "Terrain.h"
 #include "../ObjectIDs.h"
 
 Player::Player(Vector2 position, int team, GameplayState *gameplay_state, float mass) : KinematicObject(position, 1.f, 1.f, mass) {

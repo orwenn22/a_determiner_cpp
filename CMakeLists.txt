@@ -52,8 +52,8 @@ add_executable(UI_framework src/main.cpp
         src/engine/util/DebugOverlay.h
         src/GameplayState.cpp
         src/GameplayState.h
-        src/Terrain.cpp
-        src/Terrain.h
+        src/terrain/BitmapTerrain.cpp
+        src/terrain/BitmapTerrain.h
         src/objects/actors/Player.cpp
         src/objects/actors/Player.h
         src/engine/util/Math.h
@@ -130,6 +130,7 @@ add_executable(UI_framework src/main.cpp
         src/engine/util/String.cpp
         src/Ext.cpp
         src/Ext.h
+        src/terrain/Terrain.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

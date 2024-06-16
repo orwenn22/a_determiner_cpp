@@ -8,10 +8,10 @@
 #include "engine/KeyBinds.h"
 #include "objects/actors/Player.h"
 #include "objects/actors/Wall.h"
+#include "terrain/BitmapTerrain.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "Teams.h"
-#include "Terrain.h"
 
 
 WallAction::WallAction() : Action() {
@@ -73,7 +73,7 @@ void WallAction::PlaceWall(Player *player) {
 
     // If the wall is clipping with the terrain then make it go up
     float total_vertical_offset = 0.f;
-    while(gs->GetTerrain()->CheckCollisionRec(w->GetRectangle())) {
+    while(gs->GetTerrain()->CheckCollisionRec(w->GetRectangle(), true)) {
         w->m_position.y -= .1f;         //TODO  :take into account down vector ?
         total_vertical_offset += .1f;
         if(total_vertical_offset > 1.f) {

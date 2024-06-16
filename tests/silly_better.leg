@@ -1,6 +1,11 @@
 legacy
 background None
+
 bitmap res/silly_better.png 40 22.5
+indestructible 516 114 32 31
+indestructible 615 49 33 96
+indestructible 714 114 32 31
+indestructible 586 656 99 32
+
 team_start 0 0 0 20 22.5
 team_start 1 20 0 20 22.5
-

@@ -9,9 +9,9 @@
 #include "engine/object/ObjectManager.h"
 #include "engine/util/Trace.h"
 #include "engine/util/VectorOps.h"
+#include "terrain/Terrain.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
-#include "Terrain.h"
 
 Explosion::Explosion(Vector2 pos, float radius, GameplayState *gameplay_state) : EntityObject(pos, radius*2, radius*2) {
     m_radius = radius;

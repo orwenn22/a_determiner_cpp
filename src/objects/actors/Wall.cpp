@@ -4,9 +4,9 @@
 #include "engine/object/ObjectManager.h"
 #include "engine/util/Math.h"
 #include "objects/actors/Player.h"
+#include "terrain/Terrain.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
-#include "Terrain.h"
 #include "../ObjectIDs.h"
 
 
@@ -80,13 +80,13 @@ void Wall::UpdatePhysics(float dt) {
         // After pushing the player, if we are on a slope, it is possible that it is clipping in the floor,
         // so move it up if it is the case
         it = 0;
-        while(t->CheckCollisionRec(player->GetRectangle()) && it <= 150) {
+        while(t->CheckCollisionRec(player->GetRectangle(), true) && it <= 150) {
             player->m_position.y -= .01f;       //TODO : take into account down vector ?
             ++it;
         }
 
         // Crushed by wall and terrain
-        if(t->CheckCollisionRec(player->GetRectangle()) || player->CollideWithSolidObject()) {
+        if(t->CheckCollisionRec(player->GetRectangle(), true) || player->CollideWithSolidObject()) {
             m_gameplay_state->KillPlayer(player);
             continue;       //In case we add more stuff after that in the future
         }

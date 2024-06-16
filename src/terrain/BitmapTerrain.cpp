@@ -1,4 +1,4 @@
-#include "Terrain.h"
+#include "BitmapTerrain.h"
 
 #include <cmath>
 #include <malloc.h>
@@ -7,14 +7,14 @@
 #include "engine/util/Trace.h"
 #include "Config.h"
 
-Terrain *Terrain::construct(const char *filepath, Vector2 size) {
+BitmapTerrain *BitmapTerrain::construct(const char *filepath, Vector2 size) {
     FILE *in_file = fopen(filepath, "r");
     if(in_file == nullptr) return nullptr;
     fclose(in_file);
-    return new Terrain(filepath, size);
+    return new BitmapTerrain(filepath, size);
 }
 
-Terrain::Terrain(const char *filepath, Vector2 size) {
+BitmapTerrain::BitmapTerrain(const char *filepath, Vector2 size) : Terrain() {
     m_origin = {0.f, 0.f};
 
     m_image = LoadImage(filepath);
@@ -34,20 +34,20 @@ Terrain::Terrain(const char *filepath, Vector2 size) {
     TRACE("Done ! :D\n");
 }
 
-Terrain::~Terrain() {
+BitmapTerrain::~BitmapTerrain() {
     free(m_collision_mask);
     UnloadImage(m_image);
     UnloadTexture(m_texture);
 }
 
 
-void Terrain::Draw() {
+void BitmapTerrain::Draw() {
     Metrics::DrawSpriteScale(m_texture, {m_origin.x, m_origin.y, m_size.x, m_size.y}, WHITE);
     Metrics::DrawRectangle(m_origin.x, m_origin.y, m_size.x, m_size.y, RED, false);
 }
 
 
-bool Terrain::CheckCollision(Vector2 position, bool outside_solid) {
+bool BitmapTerrain::CheckCollision(Vector2 position, bool outside_solid) {
     //Compute the coordinates of the correct pixel on the image
     int pixel_x = (int) ((position.x - m_origin.x)/m_size.x * (float)m_image.width) - (position.x < m_origin.x);
     int pixel_y = (int) ((position.y - m_origin.y)/m_size.y * (float)m_image.height) - (position.y < m_origin.y);
@@ -56,7 +56,7 @@ bool Terrain::CheckCollision(Vector2 position, bool outside_solid) {
     return m_collision_mask[pixel_x + pixel_y*m_image.width];
 }
 
-bool Terrain::CheckCollisionRec(Rectangle rec, bool outside_solid) {
+bool BitmapTerrain::CheckCollisionRec(Rectangle rec, bool outside_solid) {
     //Top left
     int pixel_x = (int) (rec.x/m_size.x * (float)m_image.width) - (rec.x < m_origin.x);
     int pixel_y = (int) (rec.y/m_size.y * (float)m_image.height) - (rec.y < m_origin.y);
@@ -103,7 +103,7 @@ bool Terrain::CheckCollisionRec(Rectangle rec, bool outside_solid) {
 }
 
 
-void Terrain::DestroyRectangle(Rectangle rec) {
+void BitmapTerrain::DestroyRectangle(Rectangle rec) {
     //Top left
     int pixel_x = (int) (rec.x/m_size.x * (float)m_image.width) - (rec.x < m_origin.x);
     int pixel_y = (int) (rec.y/m_size.y * (float)m_image.height) - (rec.y < m_origin.y);
@@ -127,7 +127,7 @@ void Terrain::DestroyRectangle(Rectangle rec) {
     UpdateSprite();
 }
 
-void Terrain::DestroyCircle(Vector2 center, float radius) {
+void BitmapTerrain::DestroyCircle(Vector2 center, float radius) {
     //Calculate the horizontal and vertical "radius" of the shape (in case a pixel of the terrain is not a square)
     int radius_width = (int)(radius / m_size.x * (float)m_image.width);
     int radius_height = (int)(radius / m_size.y * (float)m_image.height);
@@ -135,11 +135,28 @@ void Terrain::DestroyCircle(Vector2 center, float radius) {
 }
 
 
+void BitmapTerrain::MakeIndestructible(int x, int y, int w, int h) {
+    int x_stop = x+w;
+    int y_stop = y+h;
+    if(x < 0) x = 0;
+    if(y < 0) y = 0;
+    if(x_stop >= m_image.width) x_stop = m_image.width-1;
+    if(y_stop >= m_image.height) y_stop = m_image.height-1;
+
+    for(int yi = y; yi < y_stop; ++yi) {
+        for(int xi = x; xi < x_stop; ++xi) {
+            size_t index = xi + yi*m_image.width;
+            if(m_collision_mask[index] != 0) m_collision_mask[index] = 2;
+        }
+    }
+}
+
+
 ///////////////////////////////
 //// PRIVATE
 
-void Terrain::UnsafeDestroyPixel(int x, int y) {
-    //TODO : make a way to make some stuff indestructible ?
+void BitmapTerrain::UnsafeDestroyPixel(int x, int y) {
+    if(m_collision_mask[x + y * m_image.width] == 2) return;        //indestructible
     m_collision_mask[x + y * m_image.width] = 0;
     ImageDrawPixel(&m_image, x, y, {0, 0, 0, 0});
 }
@@ -150,11 +167,11 @@ void Terrain::UnsafeDestroyPixel(int x, int y) {
  * @param radius_width width/2 (in pixels)
  * @param radius_height height/2 (in pixels)
  */
-void Terrain::DestroyElispePixel(Vector2 center, int radius_width, int radius_height) {
+void BitmapTerrain::DestroyElispePixel(Vector2 center, int radius_width, int radius_height) {
     int pixel_x = (int) ((center.x - m_origin.x)/m_size.x * (float)m_image.width) - (center.x < m_origin.x);
     int pixel_y = (int) ((center.y - m_origin.y)/m_size.y * (float)m_image.height) - (center.y < m_origin.y);
 
-    //Number of iterations we need to do in order to noit skip columns of pixels of the circle
+    //Number of iterations we need to do in order to not skip columns of pixels of the circle
     int step_count = (int)((float)radius_width * 3.14f);
 
     int previous_xpos = -99999;
@@ -177,7 +194,7 @@ void Terrain::DestroyElispePixel(Vector2 center, int radius_width, int radius_he
 }
 
 
-void Terrain::UpdateSprite() {
+void BitmapTerrain::UpdateSprite() {
     UnloadTexture(m_texture);
     m_texture = LoadTextureFromImage(m_image);
 }

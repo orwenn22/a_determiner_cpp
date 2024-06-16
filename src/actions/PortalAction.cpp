@@ -7,10 +7,10 @@
 #include "engine/object/ObjectManager.h"
 #include "objects/actors/Player.h"
 #include "objects/actors/Portal.h"
+#include "terrain/Terrain.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "Teams.h"
-#include "Terrain.h"
 
 PortalAction::PortalAction() : Action() {
     m_action_name = "Portal";
