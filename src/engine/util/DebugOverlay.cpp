@@ -29,7 +29,7 @@ void DrawDebugOverlay(float dt, StateManager *sm) {
     else {
         Vector2 mouse_world_pos = cam->ConvertAbsoluteToMeters(mouse_x, mouse_y);
 
-        DrawText(TextFormat("CAM : [origin_x : %f , origin_y : %f , ppm : %i]", cam->origin_x, cam->origin_y, cam->PixelsPerMeter()),
+        DrawText(TextFormat("CAM : [origin_x : %f , origin_y : %f , ppm : %f]", cam->origin_x, cam->origin_y, cam->PixelsPerMeter()),
                  10, painter_y, 20, WHITE);
         painter_y += 20;
 

@@ -2,7 +2,7 @@
 
 #include "Graphics.h"
 
-MetricsCamera::MetricsCamera(int _origin_x, int _origin_y, int _pixels_per_meter) {
+MetricsCamera::MetricsCamera(int _origin_x, int _origin_y, float _pixels_per_meter) {
     origin_x = (float)_origin_x;
     origin_y = (float)_origin_y;
     pixels_per_meter = _pixels_per_meter;
@@ -51,11 +51,11 @@ void MetricsCamera::SetCameraCenter(Vector2 worldpos) {
     SetCameraTopLeft(worldpos);
 
     //We need to add half of the screen size to set the middle
-    origin_x += (float)(GetScreenWidth()/2);
-    origin_y += (float)(GetScreenHeight()/2);
+    origin_x += (float)GetScreenWidth()/2.f;
+    origin_y += (float)GetScreenHeight()/2.f;
 }
 
-void MetricsCamera::SetPixelsPerMeter(int new_zoom) {
+void MetricsCamera::SetPixelsPerMeter(float new_zoom) {
     if(new_zoom == pixels_per_meter || new_zoom <= 0) return;
 
     Vector2 previous_center = GetCameraCenter();

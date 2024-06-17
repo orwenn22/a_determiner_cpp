@@ -5,7 +5,7 @@
 
 class MetricsCamera {
 public:
-    MetricsCamera(int _origin_x, int _origin_y, int _pixels_per_meter);
+    MetricsCamera(int _origin_x, int _origin_y, float _pixels_per_meter);
     ~MetricsCamera();
 
     // Convert an absolute position on the window to a world position in meters
@@ -23,21 +23,21 @@ public:
     void SetCameraCenter(Vector2 worldpos);
 
     //Set the zoom
-    void SetPixelsPerMeter(int new_zoom);
+    void SetPixelsPerMeter(float new_zoom);
 
     //Convert units
-    inline float PixelsToMeters(int pixels) { return (float)pixels/(float)pixels_per_meter; }
-    inline float MetersToPixels(float meters) { return meters*(float)pixels_per_meter; }
+    inline float PixelsToMeters(int pixels) { return (float)pixels/pixels_per_meter; }
+    inline float MetersToPixels(float meters) { return meters*pixels_per_meter; }
 
     //Get zoom level
-    inline int PixelsPerMeter() { return pixels_per_meter; }
+    inline float PixelsPerMeter() { return pixels_per_meter; }
 
     //This corresponds to the absolute position of the origin (0,0) of the world's metric system
     float origin_x, origin_y;
 
 
 private:
-    int pixels_per_meter;
+    float pixels_per_meter;
 };
 
 

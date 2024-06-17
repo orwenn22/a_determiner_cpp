@@ -350,8 +350,8 @@ void GameplayState::HandleDragCamera(float mouse_x, float mouse_y) {
 
         // Handle zoom
         float mouse_wheel = GetMouseWheelMove();
-        if(mouse_wheel > 0) m_camera->SetPixelsPerMeter(m_camera->PixelsPerMeter() * 2);
-        else if(mouse_wheel < 0) m_camera->SetPixelsPerMeter(m_camera->PixelsPerMeter() / 2);
+        if(mouse_wheel > 0) m_camera->SetPixelsPerMeter((float)m_camera->PixelsPerMeter() * (1.f+mouse_wheel));
+        else if(mouse_wheel < 0) m_camera->SetPixelsPerMeter((float)m_camera->PixelsPerMeter() / (1.f-mouse_wheel));
     }
 }
 
