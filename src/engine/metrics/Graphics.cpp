@@ -65,21 +65,25 @@ void DrawCircle(Vector2 center, float radius, Color c) {
  * @param c color applied to texture
  */
 void DrawSpriteScale(Texture sprite, Rectangle rec, Color c) {
+        DrawSpriteScaleEx(sprite, {0.f, 0.f, (float)sprite.width, (float)sprite.height}, rec, c);
+}
+
+void DrawSpriteScaleEx(Texture sprite, Rectangle source, Rectangle dest, Color c) {
     if(s_graphics_cam == nullptr) return;
 
-    Vector2 origin = s_graphics_cam->ConvertMetersToAbsolute({rec.x, rec.y});
-    float width = (float)s_graphics_cam->MetersToPixels(rec.width);
-    float height = (float)s_graphics_cam->MetersToPixels(rec.height);
+    Vector2 origin = s_graphics_cam->ConvertMetersToAbsolute({dest.x, dest.y});
+    float width = (float)s_graphics_cam->MetersToPixels(dest.width);
+    float height = (float)s_graphics_cam->MetersToPixels(dest.height);
 
     if(origin.x+width < 0 || origin.y+height < 0 || origin.x >= (float)GetScreenWidth() || origin.y >= (float)GetScreenHeight()) {
         return;
     }
 
-    ::DrawTexturePro(sprite, {0.f, 0.f, (float)sprite.width, (float)sprite.height},
+    ::DrawTexturePro(sprite, source,
                      {origin.x, origin.y, width, height},
                      {0.f, 0.f}, 0.f,
                      c);
-}
+    }
 
 /**
  * Draw a sprite using a position and rotation

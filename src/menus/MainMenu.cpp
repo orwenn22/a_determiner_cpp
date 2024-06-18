@@ -14,6 +14,8 @@
 #include "MapSelectMenu.h"
 #include "OptionsMenu.h"
 
+#include "terrain/TilemapTerrain.h"
+
 
 #ifdef GIT_COMMIT_HASH
 static const char *s_git_commit_hash = GIT_COMMIT_HASH;
@@ -113,6 +115,25 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::Update(float dt) {
+    if(IsKeyPressed(KEY_B)) {
+        GameplayState *gs = new GameplayState();
+        TilemapTerrain *tt = TilemapTerrain::construct("res/tilemap_grass.png", {10.f, 10.f}, 8, 8, 20, 20);
+        if(tt == nullptr) return;
+        gs->InitTerrain(tt);
+        gs->InitSpawnRegion(0, {0, 0, 5, 10});
+        gs->InitSpawnRegion(1, {5, 0, 5, 10});
+        for(int i = 0; i < 20; ++i) {
+            tt->SetTile(i, 12, 2, 1);
+            tt->SetTile(i, 13, 2, 1);
+            tt->SetTile(i, 14, 2, 1);
+            tt->SetTile(i, 15, 2, 1);
+            tt->SetTile(i, 16, 2, 1);
+            tt->SetTile(i, 17, 2, 1);
+            tt->SetTile(i, 18, 2, 1);
+            tt->SetTile(i, 19, 2, 1);
+        }
+        Manager()->SetState(gs);
+    }
     m_widgets->Update();
     m_bg->Update(dt);
 }

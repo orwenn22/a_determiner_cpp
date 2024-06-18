@@ -36,8 +36,6 @@ private:
     void UpdateSprite();
 
 
-    Vector2 m_origin;
-
     Image m_image;              //on cpu
     Texture m_texture;          //on gpu
     uint8_t *m_collision_mask;  //collisions

@@ -19,6 +19,7 @@ namespace Metrics {
     void DrawCircle(Vector2 center, float radius, Color c);
 
     void DrawSpriteScale(Texture sprite, Rectangle rec, Color c);
+    void DrawSpriteScaleEx(Texture sprite, Rectangle source, Rectangle dest, Color c);
     void DrawSpriteRot(Texture sprite, Vector2 pos, Vector2 size, float rotation, Color c);
     void DrawSpriteRotEx(Texture sprite, Rectangle source, Vector2 pos, Vector2 size, float rotation, Color c);
 

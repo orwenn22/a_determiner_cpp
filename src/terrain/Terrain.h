@@ -18,6 +18,10 @@ public:
 
     virtual float Width() = 0;
     virtual float Height() = 0;
+
+
+protected:
+    Vector2 m_origin;
 };
 
 
