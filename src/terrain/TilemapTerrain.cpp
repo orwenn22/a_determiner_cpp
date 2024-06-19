@@ -5,6 +5,7 @@
 #include <malloc.h>
 
 #include "engine/metrics/Graphics.h"
+#include "engine/metrics/MetricsCamera.h"
 
 
 TilemapTerrain *TilemapTerrain::construct(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height) {
@@ -19,12 +20,12 @@ TilemapTerrain *TilemapTerrain::construct(const char *tileset_path, Vector2 size
 
 TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height) {
     m_origin = {0.f, 0.f};
-    m_tileset = LoadTexture(tileset_path);
+    m_tileset = new Texture(LoadTexture(tileset_path));
     m_size = size;
     m_tile_width = tile_width;
     m_tile_height = tile_height;
-    m_tile_count_x = m_tileset.width / m_tile_width;
-    m_tile_count_y = m_tileset.height / m_tile_height;
+    m_tile_count_x = m_tileset->width / m_tile_width;
+    m_tile_count_y = m_tileset->height / m_tile_height;
     printf("Tile count x : %i   tile count y : %i\n", m_tile_count_x, m_tile_count_y);
     m_grid_width = grid_width;
     m_grid_height = grid_height;
@@ -39,6 +40,10 @@ TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_
 }
 
 TilemapTerrain::~TilemapTerrain() {
+    if(m_tileset != nullptr) {
+        UnloadTexture(*m_tileset);
+        delete m_tileset;
+    }
     free(m_tilemap_data);
     free(m_collision_mask);
 }
@@ -57,12 +62,34 @@ void TilemapTerrain::SetTile(int x, int y, unsigned char value, unsigned char co
 }
 
 void TilemapTerrain::Draw() {
+    if(m_tileset == nullptr) {
+        //Red outline
+        Metrics::DrawRectangle(m_origin.x, m_origin.y, m_size.x, m_size.y, RED, false);
+        return;
+    }
+
     //Calculate the size of a tile in meter
     float tile_w_m = m_size.x / (float)m_grid_width;
     float tile_h_m = m_size.y / (float)m_grid_height;
 
-    for(size_t y = 0; y < m_grid_height; ++y) {
-        for(size_t x = 0; x < m_grid_width; ++x) {
+    MetricsCamera *cam = Metrics::GetGraphicsCam();
+    if(cam == nullptr) return;
+
+    //Determine the interval of tiles we want to render
+    Vector2 top_left = cam->ConvertAbsoluteToMeters(0, 0);
+    top_left.x -= m_origin.x;
+    top_left.y -= m_origin.y;
+    Vector2 bottom_right = cam->ConvertAbsoluteToMeters(GetScreenWidth(), GetScreenHeight());
+    bottom_right.x -= m_origin.x;
+    bottom_right.y -= m_origin.y;
+    int start_x = (top_left.x < 0) ? 0 : (int)(top_left.x/tile_w_m);
+    int start_y = (top_left.y < 0) ? 0 : (int)(top_left.y/tile_h_m);
+    int stop_x = (bottom_right.x >= m_size.x) ? m_grid_width : (int)(bottom_right.x/tile_w_m) + 1;
+    int stop_y = (bottom_right.y >= m_size.y) ? m_grid_height : (int)(bottom_right.y/tile_h_m) + 1;
+
+    //Render the tiles
+    for(int y = start_y; y < stop_y; ++y) {
+        for(int x = start_x; x < stop_x; ++x) {
             //Get the tile index
             unsigned char tile_index = m_tilemap_data[x+y*m_grid_width];
 
@@ -76,7 +103,7 @@ void TilemapTerrain::Draw() {
             Rectangle dest = {m_origin.x + tile_w_m*(float)x, m_origin.y + tile_h_m*(float)y, tile_w_m, tile_h_m};
 
             //Draw the tile
-            Metrics::DrawSpriteScaleEx(m_tileset, source, dest, WHITE);
+            Metrics::DrawSpriteScaleEx(*m_tileset, source, dest, WHITE);
         }
     }
 

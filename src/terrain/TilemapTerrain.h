@@ -32,12 +32,12 @@ private:
 
     void DestroyElispeTiles(Vector2 center, int radius_width, int radius_height);
 
-    Texture m_tileset;
-    int m_tile_width, m_tile_height;
-    int m_tile_count_x, m_tile_count_y;
-    Vector2 m_size;
+    Texture *m_tileset;
+    int m_tile_width, m_tile_height;            //Size of a tile in the tilemap in pixel
+    int m_tile_count_x, m_tile_count_y;         //The number of tiles in the tilemap
+    Vector2 m_size;                             //Size of the terrain in meter
 
-    int m_grid_width, m_grid_height;
+    int m_grid_width, m_grid_height;            //Number of tile horizontally and vertically in the terrain
     unsigned char *m_tilemap_data;
     unsigned char *m_collision_mask;
 };
