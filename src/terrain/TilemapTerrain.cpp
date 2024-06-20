@@ -20,23 +20,16 @@ TilemapTerrain *TilemapTerrain::construct(const char *tileset_path, Vector2 size
 
 TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height) {
     m_origin = {0.f, 0.f};
-    m_tileset = new Texture(LoadTexture(tileset_path));
-    m_size = size;
-    m_tile_width = tile_width;
-    m_tile_height = tile_height;
-    m_tile_count_x = m_tileset->width / m_tile_width;
-    m_tile_count_y = m_tileset->height / m_tile_height;
-    printf("Tile count x : %i   tile count y : %i\n", m_tile_count_x, m_tile_count_y);
-    m_grid_width = grid_width;
-    m_grid_height = grid_height;
+    m_tileset = nullptr;
+    SetTilemap(new Texture(LoadTexture(tileset_path)), tile_width, tile_height);
 
-    size_t count = m_grid_width*m_grid_height;
-    m_tilemap_data = (unsigned char *) malloc(sizeof(unsigned char) * count);
-    m_collision_mask = (unsigned char *) malloc(sizeof(unsigned char) * count);
-    for(size_t i = 0; i < count; ++i) {
-        m_tilemap_data[i] = 0;
-        m_collision_mask[i] = 0;
-    }
+    //This if fine, because these get set in SetGridSize
+    m_grid_width = 0;
+    m_grid_height = 0;
+    m_tilemap_data = nullptr;
+    m_collision_mask = nullptr;
+
+    SetGridSize(grid_width, grid_height, size);
 }
 
 TilemapTerrain::~TilemapTerrain() {
@@ -68,28 +61,21 @@ void TilemapTerrain::Draw() {
         return;
     }
 
-    //Calculate the size of a tile in meter
-    float tile_w_m = m_size.x / (float)m_grid_width;
-    float tile_h_m = m_size.y / (float)m_grid_height;
-
     MetricsCamera *cam = Metrics::GetGraphicsCam();
     if(cam == nullptr) return;
 
     //Determine the interval of tiles we want to render
-    Vector2 top_left = cam->ConvertAbsoluteToMeters(0, 0);
-    top_left.x -= m_origin.x;
-    top_left.y -= m_origin.y;
-    Vector2 bottom_right = cam->ConvertAbsoluteToMeters(GetScreenWidth(), GetScreenHeight());
-    bottom_right.x -= m_origin.x;
-    bottom_right.y -= m_origin.y;
-    int start_x = (top_left.x < 0) ? 0 : (int)(top_left.x/tile_w_m);
-    int start_y = (top_left.y < 0) ? 0 : (int)(top_left.y/tile_h_m);
-    int stop_x = (bottom_right.x >= m_size.x) ? m_grid_width : (int)(bottom_right.x/tile_w_m) + 1;
-    int stop_y = (bottom_right.y >= m_size.y) ? m_grid_height : (int)(bottom_right.y/tile_h_m) + 1;
+    Vector2i start = GetTilePosition(cam->ConvertAbsoluteToMeters(0, 0));
+    Vector2i stop = GetTilePosition(cam->ConvertAbsoluteToMeters(GetScreenWidth(), GetScreenHeight()));
+    stop.x += 1; stop.y += 1;
+    if(start.x < 0) start.x = 0;
+    if(start.y < 0) start.y = 0;
+    if(stop.x > m_grid_width) stop.x = m_grid_width;
+    if(stop.y > m_grid_height) stop.y = m_grid_height;
 
     //Render the tiles
-    for(int y = start_y; y < stop_y; ++y) {
-        for(int x = start_x; x < stop_x; ++x) {
+    for(int y = start.y; y < stop.y; ++y) {
+        for(int x = start.x; x < stop.x; ++x) {
             //Get the tile index
             unsigned char tile_index = m_tilemap_data[x+y*m_grid_width];
 
@@ -100,7 +86,12 @@ void TilemapTerrain::Draw() {
                     (float)m_tile_width,
                     (float)m_tile_height
             };
-            Rectangle dest = {m_origin.x + tile_w_m*(float)x, m_origin.y + tile_h_m*(float)y, tile_w_m, tile_h_m};
+            Rectangle dest = {
+                    m_origin.x + m_tile_width_m*(float)x,
+                    m_origin.y + m_tile_height_m*(float)y,
+                    m_tile_width_m,
+                    m_tile_height_m
+            };
 
             //Draw the tile
             Metrics::DrawSpriteScaleEx(*m_tileset, source, dest, WHITE);
@@ -110,6 +101,11 @@ void TilemapTerrain::Draw() {
     //Red outline
     Metrics::DrawRectangle(m_origin.x, m_origin.y, m_size.x, m_size.y, RED, false);
 }
+
+void TilemapTerrain::DrawGrid(Color c) {
+    //TODO : implement this
+}
+
 
 bool TilemapTerrain::CheckCollision(Vector2 position, bool outside_solid) {
     //Compute the coordinates of the correct tile on the tilemap
@@ -200,6 +196,13 @@ float TilemapTerrain::Width() { return m_size.x; }
 float TilemapTerrain::Height() { return m_size.y; }
 
 
+Vector2i TilemapTerrain::GetTilePosition(Vector2 meter_position) {
+    int x = (int)((meter_position.x-m_origin.x)/m_tile_width_m) - (meter_position.x < m_origin.x);
+    int y = (int)((meter_position.y-m_origin.y)/m_tile_height_m) - (meter_position.y < m_origin.y);
+    return {x, y};
+}
+
+
 ///////////////////////////////////////////////
 //// PRIVATE
 
@@ -225,4 +228,55 @@ void TilemapTerrain::DestroyElispeTiles(Vector2 center, int radius_width, int ra
             SetTile(x_pos, y, 0, 0);                             //If so destroy it
         }
     }
+}
+
+
+void TilemapTerrain::SetTilemap(Texture *tileset, int tile_width_px, int tile_height_px) {
+    if(m_tileset != nullptr) {
+        UnloadTexture(*m_tileset);
+        delete m_tileset;
+    }
+    m_tileset = tileset;
+    m_tile_width = tile_width_px;
+    m_tile_height = tile_height_px;
+    m_tile_count_x = m_tileset->width / m_tile_width;
+    m_tile_count_y = m_tileset->height / m_tile_height;
+}
+
+
+/**
+ * Configure the size of the terrain
+ * @param w number of tile horizontally in the terrain
+ * @param h number of tile vertically in the terrain
+ * @param size_m size in meter of the terrain in the game world
+ */
+void TilemapTerrain::SetGridSize(int w, int h, Vector2 size_m) {
+    m_size = size_m;
+    if(w <= 0 || h <= 0) return;
+    if(w == m_grid_width || h == m_grid_height) return;
+
+    m_grid_width = w;
+    m_grid_height = h;
+    m_tile_width_m = m_size.x / (float)m_grid_width;
+    m_tile_height_m = m_size.y / (float) m_grid_height;
+
+    size_t count = m_grid_width*m_grid_height;
+    unsigned char *new_tilemap_data = (unsigned char *) malloc(sizeof(unsigned char) * count);
+    unsigned char *new_collision_mask = (unsigned char *) malloc(sizeof(unsigned char) * count);
+
+    //if(m_tilemap_data == nullptr || m_collision_mask == nullptr) {
+        for (size_t i = 0; i < count; ++i) {
+            new_tilemap_data[i] = 0;
+            new_collision_mask[i] = 0;
+        }
+    //}
+    //else {
+        //TODO : copy previous content here ?
+
+        free(m_tilemap_data);
+        free(m_collision_mask);
+    //}
+
+    m_tilemap_data = new_tilemap_data;
+    m_collision_mask = new_collision_mask;
 }
