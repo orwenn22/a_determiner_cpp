@@ -39,7 +39,7 @@ private:
 
 
     //TODO : method for setting only the size in meter, only for resizing, and only for changing the px size of a tile ?
-    void SetTilemap(Texture *tileset, int tile_width_px, int tile_height_px);
+    void SetTileset(Texture *tileset, int tile_width_px, int tile_height_px);
     void SetGridSize(int w, int h, Vector2 size_m);
 
 

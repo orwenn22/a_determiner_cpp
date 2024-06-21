@@ -21,7 +21,7 @@ TilemapTerrain *TilemapTerrain::construct(const char *tileset_path, Vector2 size
 TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height) {
     m_origin = {0.f, 0.f};
     m_tileset = nullptr;
-    SetTilemap(new Texture(LoadTexture(tileset_path)), tile_width, tile_height);
+    SetTileset(new Texture(LoadTexture(tileset_path)), tile_width, tile_height);
 
     //This if fine, because these get set in SetGridSize
     m_grid_width = 0;
@@ -231,7 +231,7 @@ void TilemapTerrain::DestroyElispeTiles(Vector2 center, int radius_width, int ra
 }
 
 
-void TilemapTerrain::SetTilemap(Texture *tileset, int tile_width_px, int tile_height_px) {
+void TilemapTerrain::SetTileset(Texture *tileset, int tile_width_px, int tile_height_px) {
     if(m_tileset != nullptr) {
         UnloadTexture(*m_tileset);
         delete m_tileset;
