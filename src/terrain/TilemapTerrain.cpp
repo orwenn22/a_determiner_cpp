@@ -6,6 +6,7 @@
 
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
+#include "engine/Tileset.h"
 
 
 TilemapTerrain *TilemapTerrain::construct(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height) {
@@ -20,8 +21,8 @@ TilemapTerrain *TilemapTerrain::construct(const char *tileset_path, Vector2 size
 
 TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height) {
     m_origin = {0.f, 0.f};
-    m_tileset = nullptr;
-    SetTileset(new Texture(LoadTexture(tileset_path)), tile_width, tile_height);
+    m_tileset = nullptr;        //TODO
+    SetTileset(new Tileset(tileset_path, tile_width, tile_height));
 
     //This if fine, because these get set in SetGridSize
     m_grid_width = 0;
@@ -33,10 +34,7 @@ TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_
 }
 
 TilemapTerrain::~TilemapTerrain() {
-    if(m_tileset != nullptr) {
-        UnloadTexture(*m_tileset);
-        delete m_tileset;
-    }
+    delete m_tileset;
     free(m_tilemap_data);
     free(m_collision_mask);
 }
@@ -79,13 +77,7 @@ void TilemapTerrain::Draw() {
             //Get the tile index
             unsigned char tile_index = m_tilemap_data[x+y*m_grid_width];
 
-            //Calculate source and destination
-            Rectangle source = {
-                    (float)(m_tile_width * (tile_index%m_tile_count_x)),
-                    (float)(m_tile_height * (tile_index/m_tile_count_x)),
-                    (float)m_tile_width,
-                    (float)m_tile_height
-            };
+            //Calculate destination
             Rectangle dest = {
                     m_origin.x + m_tile_width_m*(float)x,
                     m_origin.y + m_tile_height_m*(float)y,
@@ -94,7 +86,7 @@ void TilemapTerrain::Draw() {
             };
 
             //Draw the tile
-            Metrics::DrawSpriteScaleEx(*m_tileset, source, dest, WHITE);
+            m_tileset->MDraw(tile_index, dest);
         }
     }
 
@@ -231,16 +223,9 @@ void TilemapTerrain::DestroyElispeTiles(Vector2 center, int radius_width, int ra
 }
 
 
-void TilemapTerrain::SetTileset(Texture *tileset, int tile_width_px, int tile_height_px) {
-    if(m_tileset != nullptr) {
-        UnloadTexture(*m_tileset);
-        delete m_tileset;
-    }
+void TilemapTerrain::SetTileset(Tileset *tileset) {
+    delete m_tileset;
     m_tileset = tileset;
-    m_tile_width = tile_width_px;
-    m_tile_height = tile_height_px;
-    m_tile_count_x = m_tileset->width / m_tile_width;
-    m_tile_count_y = m_tileset->height / m_tile_height;
 }
 
 

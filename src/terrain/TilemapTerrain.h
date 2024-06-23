@@ -7,6 +7,8 @@
 #include <cstddef>
 
 
+class Tileset;
+
 class TilemapTerrain : public Terrain {
 public:
     static TilemapTerrain *construct(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height);
@@ -29,6 +31,7 @@ public:
 
     inline int GridWidth() { return m_grid_width; }
     inline int GridHeight() { return m_grid_height; }
+    inline Tileset *GetTileset() { return m_tileset; }
 
     Vector2i GetTilePosition(Vector2 meter_position);
 
@@ -39,13 +42,11 @@ private:
 
 
     //TODO : method for setting only the size in meter, only for resizing, and only for changing the px size of a tile ?
-    void SetTileset(Texture *tileset, int tile_width_px, int tile_height_px);
+    void SetTileset(Tileset *tileset);
     void SetGridSize(int w, int h, Vector2 size_m);
 
 
-    Texture *m_tileset;
-    int m_tile_width, m_tile_height;            //Size of a tile in the tilemap in pixel
-    int m_tile_count_x, m_tile_count_y;         //The number of tiles in the tilemap
+    Tileset *m_tileset;
     float m_tile_width_m, m_tile_height_m;      //Size of a tile in meter
     Vector2 m_size;                             //Size of the terrain in meter
 

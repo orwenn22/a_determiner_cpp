@@ -132,6 +132,9 @@ add_executable(UI_framework src/main.cpp
         src/Ext.h
         src/terrain/Terrain.cpp
         src/terrain/TilemapTerrain.cpp
+        src/EditorState.cpp
+        src/engine/Tileset.cpp
+        src/engine/TileGrid.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)
