@@ -35,7 +35,7 @@ target_name = "adeterminer.html"
 build_dir = "build_wasm"
 makefile_name = "wasm_auto.Makefile"
 CXX_command = "emcc -c [src] -o [obj] -Isrc -Iraylib/src"
-LINK_command = "emcc [obj_list] ./raylib/src/libraylib.a -o [target] -lidbfs.js -s USE_GLFW=3 -s ASYNCIFY --shell-file shell.html -sGL_ENABLE_GET_PROC_ADDRESS [preloaded_files]"
+LINK_command = "emcc [obj_list] ./raylib/src/libraylib.a -o [target] -lidbfs.js -s USE_GLFW=3 --shell-file shell.html -sGL_ENABLE_GET_PROC_ADDRESS [preloaded_files]"
 
 
 #################################

@@ -3,6 +3,10 @@
 #include <raylib.h>
 #include <time.h>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#endif
+
 #include "engine/Globals.h"
 #include "engine/state/StateManager.h"
 #include "engine/util/DebugOverlay.h"
@@ -15,6 +19,11 @@
 #include "Ext.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
+
+
+static StateManager *state_manager = nullptr;
+static bool display_debug_overlay = true;
+
 
 #if !defined(__EMSCRIPTEN__)
 
@@ -66,6 +75,21 @@ void InitKeybinds() {
     KeyBinds::The()->Save(Config::GetKeybindConfigPath());
 }
 
+void UpdateDrawFrame() {
+    // UPDATE
+    float dt = GetFrameTime();
+    display_debug_overlay ^= IsKeyPressed(KEY_F3);
+    ResetMouse();
+    state_manager->Update(dt);
+
+    //DRAW
+    BeginDrawing();
+    ClearBackground(BLACK);
+    state_manager->Draw();
+    if(display_debug_overlay) DrawDebugOverlay(dt, state_manager);
+    EndDrawing();
+}
+
 
 int main(int argc, const char *argv[]) {
 #ifdef __EMSCRIPTEN__
@@ -79,27 +103,19 @@ int main(int argc, const char *argv[]) {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(960, 540, "À déterminer");
     SetExitKey(KEY_NULL);
-    SetTargetFPS(240);
     InitKeybinds();
     Res::LoadAll();
 
-    StateManager *state_manager = new StateManager(new MainMenu);
+    state_manager = new StateManager(new MainMenu);
 
-    bool display_debug_overlay = true;
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
+#else
+    SetTargetFPS(240);
     while(!WindowShouldClose() && !QuitRequested()) {
-        // UPDATE
-        float dt = GetFrameTime();
-        display_debug_overlay ^= IsKeyPressed(KEY_F3);
-        ResetMouse();
-        state_manager->Update(dt);
-
-        //DRAW
-        BeginDrawing();
-        ClearBackground(BLACK);
-        state_manager->Draw();
-        if(display_debug_overlay) DrawDebugOverlay(dt, state_manager);
-        EndDrawing();
+        UpdateDrawFrame();
     }
+#endif
 
     delete state_manager;
     Res::UnloadAll();
