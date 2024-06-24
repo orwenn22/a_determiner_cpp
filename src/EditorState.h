@@ -24,6 +24,10 @@ public:
 
     void CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m);
 
+
+    inline bool IsEditingCollisions() { return m_editing_collisions; }
+    inline void SetEditingCollisions(bool b) { m_editing_collisions = b; }
+
 private:
     void UpdateEditTerrain();
 
@@ -43,6 +47,7 @@ private:
 
     TilemapTerrain *m_terrain;
 
+    bool m_editing_collisions;
     unsigned char m_tilemap_palette_index;
     unsigned char m_collision_palette_index;
 

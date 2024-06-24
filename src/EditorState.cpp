@@ -13,6 +13,7 @@
 #include "engine/TileGrid.h"
 #include "terrain/TilemapTerrain.h"
 #include "utils/TiledBackground.h"
+#include "windows/EditorLayerWindow.h"
 #include "windows/NewLevelWindow.h"
 #include "GlobalResources.h"
 
@@ -21,6 +22,7 @@ EditorState::EditorState() {
     m_preview_hovered_tile = false;
     m_hovered_tile = {0, 0};
 
+    m_editing_collisions = false;
     m_tilemap_palette_index = 1;
     m_collision_palette_index = 1;
 
@@ -58,6 +60,7 @@ EditorState::~EditorState() {
 
 void EditorState::Update(float dt) {
     HandleFilesDragAndDrop();
+    if(IsKeyPressed(KEY_TAB)) m_editing_collisions ^= 1;
     if(IsKeyPressed(KEY_N)) {
         //TODO : check if windows is already opened ?
         m_window_manager->AddWindow(new NewLevelWindow(this));
@@ -80,7 +83,7 @@ void EditorState::Draw() {
     m_bg->Draw();
     if(m_terrain) {
         m_terrain->Draw();
-        m_terrain->DrawCollisions();
+        if(m_editing_collisions) m_terrain->DrawCollisions();
         DrawHoveredTilePreview();
     }
     m_widgets->Draw();
@@ -96,6 +99,11 @@ void EditorState::CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m
     m_terrain = new TilemapTerrain(size_m, tile_w, tile_h, w, h);
     m_camera->origin_x = 10.f;
     m_camera->origin_y = 10.f;
+    m_editing_collisions = false;
+    m_tilemap_palette_index = 1;
+    m_collision_palette_index = 1;
+
+    m_window_manager->AddWindow(new EditorLayerWindow(this, 15, 15));
 }
 
 
@@ -113,7 +121,8 @@ void EditorState::UpdateEditTerrain() {
 
     m_preview_hovered_tile = true;
     if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        m_terrain->GetTilemap()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_tilemap_palette_index);
+        if(m_editing_collisions) m_terrain->GetCollision()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_collision_palette_index);
+        else m_terrain->GetTilemap()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_tilemap_palette_index);
     }
 }
 
