@@ -14,6 +14,7 @@
 #include "terrain/TilemapTerrain.h"
 #include "utils/TiledBackground.h"
 #include "windows/EditorLayerWindow.h"
+#include "windows/EditorPaletteWindow.h"
 #include "windows/NewLevelWindow.h"
 #include "GlobalResources.h"
 
@@ -104,6 +105,19 @@ void EditorState::CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m
     m_collision_palette_index = 1;
 
     m_window_manager->AddWindow(new EditorLayerWindow(this, 15, 15));
+    m_window_manager->AddWindow(new EditorPaletteWindow(this, 30, 30, 250, 250));
+}
+
+
+int EditorState::GetPaletteIndex() {
+    return (m_editing_collisions) ? m_collision_palette_index : m_tilemap_palette_index;
+}
+
+void EditorState::SetPaletteIndex(int index) {
+    if(index < 0) index = 0;
+    //TODO : more checks ?
+    if(m_editing_collisions) m_collision_palette_index = index;
+    else m_tilemap_palette_index = index;
 }
 
 

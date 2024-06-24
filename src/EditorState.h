@@ -24,9 +24,12 @@ public:
 
     void CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m);
 
+    int GetPaletteIndex();
+    void SetPaletteIndex(int index);
 
     inline bool IsEditingCollisions() { return m_editing_collisions; }
     inline void SetEditingCollisions(bool b) { m_editing_collisions = b; }
+    inline TilemapTerrain *GetTerrain() { return m_terrain; }
 
 private:
     void UpdateEditTerrain();

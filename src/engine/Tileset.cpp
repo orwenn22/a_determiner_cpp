@@ -39,6 +39,7 @@ void Tileset::SetTileSize(int tile_width, int tile_height) {
 
 
 void Tileset::Draw(int index, Rectangle dest) {
+    if(index >= m_tile_count_x*m_tile_count_y) return;
     float x = (float)(index%m_tile_count_x * m_tile_width);
     float y = (float)(index/m_tile_count_x * m_tile_height);
 
@@ -49,6 +50,7 @@ void Tileset::Draw(int index, Rectangle dest) {
 }
 
 void Tileset::MDraw(int index, Rectangle dest) {
+    //if(index < m_tile_count_x*m_tile_count_y) return;
     float x = (float)(index%m_tile_count_x * m_tile_width);
     float y = (float)(index/m_tile_count_x * m_tile_height);
 
