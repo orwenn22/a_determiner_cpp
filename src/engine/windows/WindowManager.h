@@ -30,6 +30,7 @@ public:
     void RemoveWindowByPtr(Window *window);     //Won"t deallocate
     void CloseWindowByPtr(Window *window);      //Will deallocate
     void BringOnTop(Window *window);
+    void Clear();
 
 private:
     void MakeWindowsInBound();

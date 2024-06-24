@@ -121,6 +121,14 @@ void WindowManager::BringOnTop(Window *window) {
     m_windows.insert(m_windows.begin(), window);
 }
 
+void WindowManager::Clear() {
+    for(Window *w : m_windows) {
+        w->m_manager = nullptr;
+        m_trashcan.push_back(w);
+    }
+    m_windows.clear();
+}
+
 void WindowManager::MakeWindowsInBound() {
     for(Window *win : m_windows) {
         if(win->X() + win->Width() >= m_x + m_w) win->SetPosition(m_x + m_w - win->Width() - 1, win->Y());

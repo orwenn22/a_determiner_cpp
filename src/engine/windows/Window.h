@@ -21,11 +21,13 @@ public:
     inline int Width() { return m_w; }
     inline int Height() { return m_h; }
     inline WidgetManager *GetWidgetManager() { return m_widgets; }
+    inline int GetID() { return m_id; }
 
     //Setters
     void SetPosition(int x, int y);
     void SetSize(int w, int h);
     void SetTitle(std::string title);
+    void SetID(int id);
 
     bool IsMouseHovering();
 
@@ -35,6 +37,10 @@ protected:
     Color m_background_color;
     Color m_titlebar_color;
     Color m_title_color;
+
+    bool m_closable;
+
+    int m_id;
 
 private:
     friend WindowManager;

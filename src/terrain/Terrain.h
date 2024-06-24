@@ -19,6 +19,9 @@ public:
     virtual float Width() = 0;
     virtual float Height() = 0;
 
+    inline float X() { return m_origin.x; }
+    inline float Y() { return m_origin.y; }
+
 
 protected:
     Vector2 m_origin;

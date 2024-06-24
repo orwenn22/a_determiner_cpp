@@ -3,6 +3,8 @@
 
 #include <raylib.h>
 
+class Tileset;
+
 namespace Res {
     extern Texture player_mini_sprite;
     extern Texture player_mini_ded_sprite;
@@ -37,6 +39,9 @@ namespace Res {
     extern Texture menubg_options_sprite;
     extern Texture menubg_credits_sprite;
     extern Texture menubg_grayscale;
+
+    extern Texture collisions_sprite;
+    extern Tileset *collisions_tileset;
 
 
     void LoadAll();

@@ -1,5 +1,7 @@
 #include "GlobalResources.h"
 
+#include "engine/Tileset.h"
+
 namespace Res {
 
 Texture player_mini_sprite;
@@ -36,6 +38,9 @@ Texture menubg_options_sprite;
 Texture menubg_credits_sprite;
 Texture menubg_grayscale;
 
+Texture collisions_sprite;
+Tileset *collisions_tileset = nullptr;
+
 
 void LoadAll() {
     player_mini_sprite = LoadTexture("res/mini.png");
@@ -71,9 +76,15 @@ void LoadAll() {
     menubg_options_sprite = LoadTexture("res/menubg_option.png");
     menubg_credits_sprite = LoadTexture("res/menubg_credits_alt.png");
     menubg_grayscale = LoadTexture("res/menubg_grayscale.png");
+
+    collisions_sprite = LoadTexture("res/collisions.png");
+    collisions_tileset = new Tileset(&collisions_sprite, 16, 16, false);
 }
 
 void UnloadAll() {
+    delete collisions_tileset;
+    UnloadTexture(collisions_sprite);
+
     UnloadTexture(menubg_grayscale);
     UnloadTexture(menubg_credits_sprite);
     UnloadTexture(menubg_options_sprite);

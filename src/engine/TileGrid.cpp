@@ -72,7 +72,7 @@ void TileGrid::MDraw(Tileset *tileset, Rectangle dest) {
             };
 
             //Draw the tile
-            tileset->MDraw(UnsafeGetTile(x, y), dest);
+            tileset->MDraw(UnsafeGetTile(x, y), tile_dest);
         }
     }
 }

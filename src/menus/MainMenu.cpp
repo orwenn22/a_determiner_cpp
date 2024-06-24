@@ -9,6 +9,7 @@
 #include "maploaders/LegacyMapLoader.h"
 #include "utils/TiledBackground.h"
 #include "CreditsMenu.h"
+#include "EditorState.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "MapSelectMenu.h"
@@ -133,6 +134,9 @@ void MainMenu::Update(float dt) {
             tt->SetTile(i, 19, 2, 1);
         }
         Manager()->SetState(gs);
+    }
+    else if(IsKeyPressed(KEY_E)) {
+        Manager()->SetState(new EditorState);
     }
     m_widgets->Update();
     m_bg->Update(dt);

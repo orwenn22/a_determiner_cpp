@@ -5,8 +5,7 @@
 
 class Tileset {
 public:
-    Tileset(Texture texture, int tile_width, int tile_height, bool ownership);
-    Tileset(const char *file_path, int tile_width, int tile_height);        //Will have ownership set to true
+    Tileset(Texture *texture, int tile_width, int tile_height, bool ownership);
     ~Tileset();
 
     inline Texture* GetTexture() { return m_texture; }
@@ -20,9 +19,9 @@ public:
 
     bool Usable();
 
-private:
-    void InitTexture(Texture texture, int tile_width, int tile_height);     //This is to avoid having the same code in both constructors
+    void SetTexture(Texture *new_texture, bool new_ownership);
 
+private:
     Texture *m_texture;
     int m_tile_width, m_tile_height;
     int m_tile_count_x, m_tile_count_y;

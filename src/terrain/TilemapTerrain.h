@@ -7,18 +7,20 @@
 #include <cstddef>
 
 
+class TileGrid;
 class Tileset;
 
 class TilemapTerrain : public Terrain {
 public:
     static TilemapTerrain *construct(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height);
+    TilemapTerrain(Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height);
     ~TilemapTerrain() override;
 
     void SetTile(size_t tile_index, unsigned char value, unsigned char col_id);
     void SetTile(int x, int y, unsigned char value, unsigned char col_id);
 
     void Draw() override;
-    void DrawGrid(Color c);
+    void DrawCollisions();
 
     bool CheckCollision(Vector2 position, bool outside_solid) override;
     bool CheckCollisionRec(Rectangle rec, bool outside_solid) override;
@@ -29,11 +31,17 @@ public:
     float Width() override;
     float Height() override;
 
-    inline int GridWidth() { return m_grid_width; }
-    inline int GridHeight() { return m_grid_height; }
+    int GridWidth();
+    int GridHeight();
     inline Tileset *GetTileset() { return m_tileset; }
 
     Vector2i GetTilePosition(Vector2 meter_position);
+
+    inline TileGrid *GetTilemap() { return m_tilemap_data; }
+    inline TileGrid *GetCollision() { return m_collision_mask; }
+
+    inline float TileWidth() { return m_tile_width_m; }
+    inline float TileHeight() { return m_tile_height_m; }
 
 private:
     TilemapTerrain(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height);
@@ -42,7 +50,6 @@ private:
 
 
     //TODO : method for setting only the size in meter, only for resizing, and only for changing the px size of a tile ?
-    void SetTileset(Tileset *tileset);
     void SetGridSize(int w, int h, Vector2 size_m);
 
 
@@ -50,9 +57,8 @@ private:
     float m_tile_width_m, m_tile_height_m;      //Size of a tile in meter
     Vector2 m_size;                             //Size of the terrain in meter
 
-    int m_grid_width, m_grid_height;            //Number of tile horizontally and vertically in the terrain
-    unsigned char *m_tilemap_data;
-    unsigned char *m_collision_mask;
+    TileGrid *m_tilemap_data;
+    TileGrid *m_collision_mask;
 };
 
 

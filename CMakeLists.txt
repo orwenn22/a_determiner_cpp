@@ -135,6 +135,8 @@ add_executable(UI_framework src/main.cpp
         src/EditorState.cpp
         src/engine/Tileset.cpp
         src/engine/TileGrid.cpp
+        src/windows/NewLevelWindow.cpp
+        src/engine/widgets/HLine.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

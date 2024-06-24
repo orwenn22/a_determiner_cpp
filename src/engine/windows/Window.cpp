@@ -20,10 +20,13 @@ Window::Window(int x, int y, int w, int h) {
     m_manager = nullptr;
     m_widgets = new WidgetManager(x, y + TITLEBAR_HEIGHT, w, h - TITLEBAR_HEIGHT);
 
+    m_id = 0;
+
     m_follow_mouse = false;
     m_follow_offset_x = 0;
     m_follow_offset_y = 0;
 
+    m_closable = true;
     m_background_color = {0x11, 0x11, 0x11, 0xff};
     m_titlebar_color = BLUE;
     m_title_color = WHITE;
@@ -46,7 +49,7 @@ void Window::Draw() {
     DrawRectangle(m_x, m_y, m_w, m_h, m_background_color);        //bg
     DrawRectangle(m_x, m_y, m_w, TITLEBAR_HEIGHT, m_titlebar_color);        //title bar
     DrawText(m_title.c_str(), m_x+2, m_y+2, 10, m_title_color);             //title
-    DrawRectangle(m_x+m_w-CLOSE_WIDTH, m_y, CLOSE_WIDTH, TITLEBAR_HEIGHT, RED);     //close button
+    if(m_closable) DrawRectangle(m_x+m_w-CLOSE_WIDTH, m_y, CLOSE_WIDTH, TITLEBAR_HEIGHT, RED);     //close button
     m_widgets->Draw();
     DrawRectangleLines(m_x, m_y, m_w, m_h, WHITE);      //outline
 }
@@ -96,6 +99,11 @@ bool Window::IsMouseHovering() {
 }
 
 
+void Window::SetID(int id) {
+    m_id = id;
+}
+
+
 //////////////////////////////
 // PRIVATE
 
@@ -123,7 +131,7 @@ void Window::HandleDrag() {
                 TRACE("Can't close a window that is not in a manager\n");
                 return;
             }
-            m_manager->CloseWindowByPtr(this);
+            if(m_closable) m_manager->CloseWindowByPtr(this);
         }
     }
 

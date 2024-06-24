@@ -2,21 +2,28 @@
 
 #include "metrics/Graphics.h"
 
-Tileset::Tileset(Texture texture, int tile_width, int tile_height, bool ownership) {
+Tileset::Tileset(Texture *texture, int tile_width, int tile_height, bool ownership) {
     m_ownership = ownership;
-    InitTexture(texture, tile_width, tile_height);
-}
+    m_tile_width = tile_width;
+    if(m_tile_width <= 0) m_tile_width = 1;
+    m_tile_height = tile_height;
+    if(m_tile_height <= 0) m_tile_height = 1;
 
-Tileset::Tileset(const char *file_path, int tile_width, int tile_height) {
-    m_ownership = true;
-    InitTexture(LoadTexture(file_path), tile_width, tile_height);
+    if(texture == nullptr) {
+        m_texture = nullptr;
+        m_tile_count_x = 0;
+        m_tile_count_y = 0;
+    }
+    else {
+        m_texture = new Texture(*texture);
+        m_tile_count_x = m_texture->width/m_tile_width;
+        m_tile_count_y = m_texture->height/m_tile_height;
+    }
 }
 
 Tileset::~Tileset() {
-    if(m_ownership) {
-        UnloadTexture(*m_texture);
-        delete m_texture;
-    }
+    if(m_ownership && m_texture != nullptr) UnloadTexture(*m_texture);
+    delete m_texture;
 }
 
 
@@ -54,16 +61,19 @@ bool Tileset::Usable() {
     return (m_texture != nullptr && m_tile_count_x != 0);
 }
 
+void Tileset::SetTexture(Texture *new_texture, bool new_ownership) {
+    if(m_ownership && m_texture != nullptr) UnloadTexture(*m_texture);
+    delete m_texture;
 
-/////////////////////////////////////////////////
-// PRIVATE
-
-void Tileset::InitTexture(Texture texture, int tile_width, int tile_height) {
-    m_tile_width = tile_width;
-    if(m_tile_width <= 0) m_tile_width = 1;
-    m_tile_height = tile_height;
-    if(m_tile_height <= 0) m_tile_height = 1;
-    m_texture = new Texture(texture);
-    m_tile_count_x = m_texture->width/m_tile_width;
-    m_tile_count_y = m_texture->height/m_tile_height;
+    m_ownership = new_ownership;
+    if(new_texture == nullptr) {
+        m_texture = nullptr;
+        m_tile_count_x = 0;
+        m_tile_count_y = 0;
+    }
+    else {
+        m_texture = new Texture(*new_texture);
+        m_tile_count_x = m_texture->width/m_tile_width;
+        m_tile_count_y = m_texture->height/m_tile_height;
+    }
 }
