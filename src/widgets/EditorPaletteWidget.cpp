@@ -22,7 +22,7 @@ void EditorPaletteWidget::Update() {
     if(!IsMouseHovering() || IsMouseUsed()) return;
     UseMouse();
 
-    Tileset *tileset = (m_editor->IsEditingCollisions()) ? Res::collisions_tileset : m_editor->GetTerrain()->GetTileset();
+    Tileset *tileset = (m_editor->GetCurrentLayer() == Layer_Collisions) ? Res::collisions_tileset : m_editor->GetTerrain()->GetTileset();
     if(tileset == nullptr || tileset->GetTileWidth() == 0) return;
     int tiles_per_rows = Width()/(tileset->GetTileWidth()*m_zoom);
 
@@ -56,7 +56,7 @@ void EditorPaletteWidget::Draw() {
 
     DrawRectangleLines(x, y, Width(), Height(), WHITE);
 
-    Tileset *tileset = (m_editor->IsEditingCollisions()) ? Res::collisions_tileset : m_editor->GetTerrain()->GetTileset();
+    Tileset *tileset = (m_editor->GetCurrentLayer() == Layer_Collisions) ? Res::collisions_tileset : m_editor->GetTerrain()->GetTileset();
     if(tileset == nullptr || !tileset->Usable()) {
         DrawText("Error while drawing tileset :(", x+2, y+2, 10, RED);
         return;

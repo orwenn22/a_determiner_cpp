@@ -13,6 +13,12 @@ class TiledBackground;
 class WidgetManager;
 class WindowManager;
 
+enum EditorLayerNames {
+    Layer_Teams,
+    Layer_Collisions,
+    Layer_Tilemap
+};
+
 class EditorState : public State {
 public:
     EditorState();
@@ -23,12 +29,13 @@ public:
 
 
     void CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m);
+    void Save(std::string file_name);
 
     int GetPaletteIndex();
     void SetPaletteIndex(int index);
 
-    inline bool IsEditingCollisions() { return m_editing_collisions; }
-    inline void SetEditingCollisions(bool b) { m_editing_collisions = b; }
+    inline int GetCurrentLayer() { return m_current_layer; }
+    inline void SetCurrentlayer(int l) { m_current_layer = l; }
     inline TilemapTerrain *GetTerrain() { return m_terrain; }
 
 private:
@@ -50,7 +57,7 @@ private:
 
     TilemapTerrain *m_terrain;
 
-    bool m_editing_collisions;
+    int m_current_layer;            //0 = teams, 1 = collisions, 2 = tilemap
     unsigned char m_tilemap_palette_index;
     unsigned char m_collision_palette_index;
 

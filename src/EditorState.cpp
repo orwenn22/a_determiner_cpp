@@ -23,7 +23,7 @@ EditorState::EditorState() {
     m_preview_hovered_tile = false;
     m_hovered_tile = {0, 0};
 
-    m_editing_collisions = false;
+    m_current_layer = Layer_Tilemap;
     m_tilemap_palette_index = 1;
     m_collision_palette_index = 1;
 
@@ -61,7 +61,7 @@ EditorState::~EditorState() {
 
 void EditorState::Update(float dt) {
     HandleFilesDragAndDrop();
-    if(IsKeyPressed(KEY_TAB)) m_editing_collisions ^= 1;
+    if(IsKeyPressed(KEY_TAB)) m_current_layer = (m_current_layer+1)%3;
     if(IsKeyPressed(KEY_N)) {
         //TODO : check if windows is already opened ?
         m_window_manager->AddWindow(new NewLevelWindow(this));
@@ -84,7 +84,7 @@ void EditorState::Draw() {
     m_bg->Draw();
     if(m_terrain) {
         m_terrain->Draw();
-        if(m_editing_collisions) m_terrain->DrawCollisions();
+        if(m_current_layer == Layer_Collisions) m_terrain->DrawCollisions();
         DrawHoveredTilePreview();
     }
     m_widgets->Draw();
@@ -100,7 +100,7 @@ void EditorState::CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m
     m_terrain = new TilemapTerrain(size_m, tile_w, tile_h, w, h);
     m_camera->origin_x = 10.f;
     m_camera->origin_y = 10.f;
-    m_editing_collisions = false;
+    m_current_layer = Layer_Tilemap;
     m_tilemap_palette_index = 1;
     m_collision_palette_index = 1;
 
@@ -108,15 +108,25 @@ void EditorState::CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m
     m_window_manager->AddWindow(new EditorPaletteWindow(this, 30, 30, 250, 250));
 }
 
+void EditorState::Save(std::string file_name) {
+    if(m_terrain == nullptr || !m_terrain->GetTileset()->Usable()) return;
+
+    //TODO : save size info
+    //TODO : save spawn regions
+    //TODO : save tileset bitmap
+    //TODO : save terrain tilemap
+    //TODO : save terrain collision mask
+}
+
 
 int EditorState::GetPaletteIndex() {
-    return (m_editing_collisions) ? m_collision_palette_index : m_tilemap_palette_index;
+    return (m_current_layer == Layer_Collisions) ? m_collision_palette_index : m_tilemap_palette_index;
 }
 
 void EditorState::SetPaletteIndex(int index) {
     if(index < 0) index = 0;
     //TODO : more checks ?
-    if(m_editing_collisions) m_collision_palette_index = index;
+    if(m_current_layer == Layer_Collisions) m_collision_palette_index = index;
     else m_tilemap_palette_index = index;
 }
 
@@ -134,9 +144,16 @@ void EditorState::UpdateEditTerrain() {
     }
 
     m_preview_hovered_tile = true;
-    if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        if(m_editing_collisions) m_terrain->GetCollision()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_collision_palette_index);
-        else m_terrain->GetTilemap()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_tilemap_palette_index);
+    if(!IsMouseButtonDown(MOUSE_BUTTON_LEFT)) return;
+    switch(m_current_layer) {
+        case Layer_Collisions:
+            m_terrain->GetCollision()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_collision_palette_index);
+            break;
+        case Layer_Tilemap:
+            m_terrain->GetTilemap()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_tilemap_palette_index);
+            break;
+        default:
+            break;
     }
 }
 
