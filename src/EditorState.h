@@ -6,7 +6,9 @@
 
 #include <raylib.h>
 #include <string>
+#include <vector>
 
+class EditorSpawnRegion;
 class MetricsCamera;
 class TilemapTerrain;
 class TiledBackground;
@@ -56,6 +58,7 @@ private:
     Vector2 m_cam_mouse_offset;
 
     TilemapTerrain *m_terrain;
+    std::vector<EditorSpawnRegion> m_spawn_regions;
 
     int m_current_layer;            //0 = teams, 1 = collisions, 2 = tilemap
     unsigned char m_tilemap_palette_index;

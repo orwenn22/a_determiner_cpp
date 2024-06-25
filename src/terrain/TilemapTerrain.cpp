@@ -41,8 +41,8 @@ TilemapTerrain::TilemapTerrain(Vector2 size, int tile_width, int tile_height, in
 
 TilemapTerrain::~TilemapTerrain() {
     delete m_tileset;
-    free(m_tilemap_data);
-    free(m_collision_mask);
+    delete m_tilemap_data;
+    delete m_collision_mask;
 }
 
 

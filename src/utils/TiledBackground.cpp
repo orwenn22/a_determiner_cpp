@@ -5,6 +5,7 @@
 
 TiledBackground::TiledBackground(Texture *texture) {
     m_texture = texture;
+    m_scroll = {0.f, 0.f};
     m_scroll_speed = 16.f;
     m_color = WHITE;
     if(m_texture == nullptr) {

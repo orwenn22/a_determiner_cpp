@@ -1,5 +1,6 @@
 #include "EditorState.h"
 
+#include "editor/EditorSpawnRegion.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/util/Paths.h"
@@ -74,6 +75,7 @@ void EditorState::Update(float dt) {
     if(m_terrain == nullptr) m_camera->SetCameraTopLeft({0.f, 0.f});
     else HandleDragCamera((float)GetMouseX(), (float)GetMouseY());
 
+    for(auto &sr : m_spawn_regions) sr.Update();
     if(m_terrain != nullptr) UpdateEditTerrain();
 
     m_bg->Update(dt);
@@ -83,8 +85,10 @@ void EditorState::Draw() {
     Metrics::SetGraphicsCam(m_camera);
     m_bg->Draw();
     if(m_terrain) {
+        if(m_current_layer != Layer_Teams )for(auto sr : m_spawn_regions) sr.Draw();
         m_terrain->Draw();
         if(m_current_layer == Layer_Collisions) m_terrain->DrawCollisions();
+        if(m_current_layer == Layer_Teams )for(auto sr : m_spawn_regions) sr.Draw();
         DrawHoveredTilePreview();
     }
     m_widgets->Draw();
@@ -97,6 +101,11 @@ void EditorState::CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m
     m_window_manager->Clear();
     m_widgets->Clear();
     delete m_terrain;
+
+    m_spawn_regions.clear();
+    m_spawn_regions.push_back(EditorSpawnRegion(this, 0.f, 0.f, (float)w/2.f, (float)h, 0));
+    m_spawn_regions.push_back(EditorSpawnRegion(this, (float)w/2.f, 0.f, (float)w/2.f, (float)h, 1));
+
     m_terrain = new TilemapTerrain(size_m, tile_w, tile_h, w, h);
     m_camera->origin_x = 10.f;
     m_camera->origin_y = 10.f;
