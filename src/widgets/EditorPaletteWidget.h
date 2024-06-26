@@ -14,8 +14,6 @@ public:
 
 private:
     EditorState *m_editor;
-
-    int m_first_tile_scroll;
     int m_zoom;
 };
 

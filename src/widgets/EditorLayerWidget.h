@@ -5,12 +5,10 @@
 
 class EditorState;
 
-//Quick and dirty widget to select the layer in the editor. Right now everything is hardcoded, which is not good,
-//so maybe in the future it would be nice to allow the editor and the tilemap terrain to have a dynamic number of
-//layers.
+//TODO : implement scrolling
 class EditorLayerWidget : public Widget {
 public:
-    EditorLayerWidget(EditorState *editor, int x, int y);
+    EditorLayerWidget(EditorState *editor, int x, int y, int w, int h);
     ~EditorLayerWidget() override;
 
     void Update() override;

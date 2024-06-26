@@ -8,6 +8,8 @@ public:
     Tileset(Texture *texture, int tile_width, int tile_height, bool ownership);
     ~Tileset();
 
+    Tileset *WeakCopy();
+
     inline Texture* GetTexture() { return m_texture; }
     inline int GetTileWidth() { return m_tile_width; }
     inline int GetTileHeight() { return m_tile_height; }

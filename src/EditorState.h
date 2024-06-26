@@ -9,6 +9,7 @@
 #include <vector>
 
 class EditorSpawnRegion;
+class Layer;
 class MetricsCamera;
 class TilemapTerrain;
 class TiledBackground;
@@ -30,7 +31,7 @@ public:
     void Draw() override;
 
 
-    void CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m);
+    void CreateNew(int grid_w, int grid_h, Vector2 size_m);
     void Save(std::string file_name);
 
     int GetPaletteIndex();
@@ -39,12 +40,23 @@ public:
     float GetTileWidthM();
     float GetTileHeightM();
 
-    inline int GetCurrentLayer() { return m_current_layer; }
-    inline void SetCurrentlayer(int l) { m_current_layer = l; }
-    inline TilemapTerrain *GetTerrain() { return m_terrain; }
+    inline WindowManager *GetWindowManager() { return m_window_manager; }
+
+    inline int GetCurrentLayerIndex() { return m_current_layer; }
+    inline void SetCurrentLayerIndex(int l) { m_current_layer = l; }
+    inline Layer *GetCurrentLayer() { return m_layers[m_current_layer]; }
+    inline int GetlayerCount() { return (int) m_layers.size(); }
+    Layer *GetLayer(int index);
+
+    inline int GridWidth() { return m_grid_width; }
+    inline int GridHeight() { return m_grid_height; }
+    inline float GetTerrainWidth() { return m_size_m.x; }
+    inline float GetTerrainHeight() { return m_size_m.y; }
+    inline int GetHoveredTileX() { return m_hovered_tile.x; }
+    inline int GetHoveredTileY() { return m_hovered_tile.y; }
 
 private:
-    void UpdateEditTerrain();
+    void UpdateHoveredTilePreview();
 
     void DrawHoveredTilePreview();
 
@@ -60,12 +72,12 @@ private:
     bool m_cam_follow_mouse;
     Vector2 m_cam_mouse_offset;
 
-    TilemapTerrain *m_terrain;
-    std::vector<EditorSpawnRegion> m_spawn_regions;
+    bool m_level_loaded;
+    std::vector<Layer *> m_layers;      //index 0 is top layer
+    int m_grid_width, m_grid_height;
+    Vector2 m_size_m;
 
-    int m_current_layer;            //0 = teams, 1 = collisions, 2 = tilemap
-    unsigned char m_tilemap_palette_index;
-    unsigned char m_collision_palette_index;
+    int m_current_layer;
 
     bool m_preview_hovered_tile;
     Vector2i m_hovered_tile;

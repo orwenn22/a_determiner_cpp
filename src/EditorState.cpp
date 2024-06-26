@@ -1,5 +1,8 @@
 #include "EditorState.h"
 
+#include "editor/layers/Layer.h"
+#include "editor/layers/LayerSpawnRegions.h"
+#include "editor/layers/LayerTilemap.h"
 #include "editor/EditorSpawnRegion.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
@@ -25,12 +28,14 @@ EditorState::EditorState() {
     m_hovered_tile = {0, 0};
 
     m_current_layer = Layer_Tilemap;
-    m_tilemap_palette_index = 1;
-    m_collision_palette_index = 1;
 
     m_bg = new TiledBackground(&Res::menubg_grayscale);
     m_bg->SetColor({20, 20, 20, 255});
-    m_terrain = nullptr;
+
+    m_level_loaded = false;
+    m_size_m = {0.f, 0.f};
+    m_grid_width = 0;
+    m_grid_height = 0;
 
     m_camera = new MetricsCamera(10, 10, 16);
 
@@ -55,12 +60,15 @@ EditorState::EditorState() {
 }
 
 EditorState::~EditorState() {
-    delete m_terrain;
+    for(Layer *l : m_layers) delete l;
+    m_layers.clear();
     delete m_camera;
     delete m_widgets;
 }
 
 void EditorState::Update(float dt) {
+    m_bg->Update(dt);
+
     HandleFilesDragAndDrop();
     if(IsKeyPressed(KEY_TAB)) m_current_layer = (m_current_layer+1)%3;
     if(IsKeyPressed(KEY_N)) {
@@ -68,57 +76,62 @@ void EditorState::Update(float dt) {
         m_window_manager->AddWindow(new NewLevelWindow(this));
     }
 
-
     m_window_manager->Update();
     m_widgets->Update();
 
-    if(m_terrain == nullptr) m_camera->SetCameraTopLeft({0.f, 0.f});
-    else HandleDragCamera((float)GetMouseX(), (float)GetMouseY());
-
-    for(auto &sr : m_spawn_regions) sr.Update();
-    if(m_terrain != nullptr) UpdateEditTerrain();
-
-    m_bg->Update(dt);
+    if(m_level_loaded) {
+        HandleDragCamera((float)GetMouseX(), (float)GetMouseY());
+        m_layers[m_current_layer]->UpdateIfSelected();
+        UpdateHoveredTilePreview();
+        for(size_t i = 0; i < m_layers.size(); ++i) m_layers[i]->Update();
+    }
+    else {
+        m_camera->SetCameraTopLeft({0.f, 0.f});
+    }
 }
 
 void EditorState::Draw() {
     Metrics::SetGraphicsCam(m_camera);
     m_bg->Draw();
-    if(m_terrain) {
-        if(m_current_layer != Layer_Teams )for(auto sr : m_spawn_regions) sr.Draw();
-        m_terrain->Draw();
-        if(m_current_layer == Layer_Collisions) m_terrain->DrawCollisions();
-        if(m_current_layer == Layer_Teams )for(auto &sr : m_spawn_regions) sr.Draw();
+    if(m_level_loaded) {
+        for(auto it = m_layers.rbegin(); it != m_layers.rend(); it++) (*it)->Draw();
         DrawHoveredTilePreview();
+        Metrics::DrawRectangle(0, 0, GetTerrainWidth(), GetTerrainHeight(), RED, false);
     }
     m_widgets->Draw();
     m_window_manager->Draw();
 }
 
 
-void EditorState::CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m) {
-    if(w <= 0 || h <= 0 || size_m.x <= 0 || size_m.y <= 0) return;
+void EditorState::CreateNew(int grid_w, int grid_h, Vector2 size_m) {
+    if(grid_w <= 0 || grid_h <= 0 || size_m.x <= 0 || size_m.y <= 0) return;
     m_window_manager->Clear();
     m_widgets->Clear();
-    delete m_terrain;
+    for(Layer *l : m_layers) delete l;
+    m_layers.clear();
 
-    m_spawn_regions.clear();
-    m_spawn_regions.push_back(EditorSpawnRegion(this, 0.f, 0.f, size_m.x/2.f, (float)h, 0));
-    m_spawn_regions.push_back(EditorSpawnRegion(this, size_m.x/2.f, 0.f, size_m.x/2.f, (float)h, 1));
+    m_grid_width = grid_w;
+    m_grid_height = grid_h;
+    m_size_m = size_m;
 
-    m_terrain = new TilemapTerrain(size_m, tile_w, tile_h, w, h);
+    m_layers.push_back(new LayerSpawnRegions(this));
+    LayerTilemap *collisions = new LayerTilemap(this, "Collisions");
+    collisions->SetTileset(Res::collisions_tileset->WeakCopy(), true);
+    m_layers.push_back(collisions);
+    m_layers.push_back(new LayerTilemap(this, "Tilemap"));
+
     m_camera->origin_x = 10.f;
     m_camera->origin_y = 10.f;
-    m_current_layer = Layer_Tilemap;
-    m_tilemap_palette_index = 1;
-    m_collision_palette_index = 1;
+    m_current_layer = 2;
 
     m_window_manager->AddWindow(new EditorLayerWindow(this, 15, 15));
     m_window_manager->AddWindow(new EditorPaletteWindow(this, 30, 30, 250, 250));
+
+    m_level_loaded = true;
 }
 
 void EditorState::Save(std::string file_name) {
-    if(m_terrain == nullptr || !m_terrain->GetTileset()->Usable()) return;
+    if(!m_level_loaded) return;
 
     //TODO : save size info
     //TODO : save spawn regions
@@ -129,62 +142,59 @@ void EditorState::Save(std::string file_name) {
 
 
 int EditorState::GetPaletteIndex() {
-    return (m_current_layer == Layer_Collisions) ? m_collision_palette_index : m_tilemap_palette_index;
+    Layer *l = GetCurrentLayer();
+    if(l == nullptr || l->Type() != LayerType_Tilemap) return 0;
+    return ((LayerTilemap *)l)->GetPaletteIndex();
 }
 
 void EditorState::SetPaletteIndex(int index) {
+    Layer *l = GetCurrentLayer();
+    if(l == nullptr || l->Type() != LayerType_Tilemap) return;
     if(index < 0) index = 0;
-    //TODO : more checks ?
-    if(m_current_layer == Layer_Collisions) m_collision_palette_index = index;
-    else m_tilemap_palette_index = index;
+    ((LayerTilemap *)l)->SetPaletteIndex(index);
 }
 
 
 float EditorState::GetTileWidthM() {
-    if(m_terrain == nullptr) return 0;
-    return m_terrain->TileWidth();
+    if(!m_level_loaded) return 0;
+    return m_size_m.x/(float)m_grid_width;
 }
 
 float EditorState::GetTileHeightM() {
-    if(m_terrain == nullptr) return 0;
-    return m_terrain->TileHeight();
+    if(!m_level_loaded) return 0;
+    return m_size_m.y/(float)m_grid_height;
+}
+
+
+Layer *EditorState::GetLayer(int index) {
+    if(index < 0 || index >= m_layers.size()) return nullptr;
+    return m_layers[index];
 }
 
 
 /////////////////////////////////////
 //// PRIVATE
 
-void EditorState::UpdateEditTerrain() {
+void EditorState::UpdateHoveredTilePreview() {
+    if(!m_level_loaded) return;
+
     Vector2 mouse_pos = m_camera->ConvertAbsoluteToMeters(GetMouseX(), GetMouseY());
-    m_hovered_tile = m_terrain->GetTilePosition(mouse_pos);
+    m_hovered_tile = {
+            (int)(mouse_pos.x / GetTileWidthM()) - (mouse_pos.x < 0),
+            (int)(mouse_pos.y / GetTileHeightM()) - (mouse_pos.y < 0)
+    };
 
-    if(IsMouseUsed()) {
-        m_preview_hovered_tile = false;
-        return;
-    }
-
-    m_preview_hovered_tile = true;
-    if(!IsMouseButtonDown(MOUSE_BUTTON_LEFT)) return;
-    switch(m_current_layer) {
-        case Layer_Collisions:
-            m_terrain->GetCollision()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_collision_palette_index);
-            break;
-        case Layer_Tilemap:
-            m_terrain->GetTilemap()->SetTile(m_hovered_tile.x, m_hovered_tile.y, m_tilemap_palette_index);
-            break;
-        default:
-            break;
-    }
+    m_preview_hovered_tile = !IsMouseUsed();
 }
 
 
 void EditorState::DrawHoveredTilePreview() {
     if(!m_preview_hovered_tile) return;
     Rectangle dest = {
-            m_terrain->X() + m_terrain->TileWidth()*(float)m_hovered_tile.x,
-            m_terrain->Y() + m_terrain->TileHeight()*(float)m_hovered_tile.y,
-            m_terrain->TileWidth(),
-            m_terrain->TileHeight()
+            GetTileWidthM()*(float)m_hovered_tile.x,
+            GetTileHeightM()*(float)m_hovered_tile.y,
+            GetTileWidthM(),
+            GetTileHeightM()
     };
     Metrics::DrawRectangle(dest , GREEN, false);
 
@@ -225,12 +235,10 @@ void EditorState::HandleFilesDragAndDrop() {
 void EditorState::HandleFileDragAndDrop(std::string file_path) {
     std::string extension = GetExtensionFromPath(file_path);
 
-    if(extension == "png") {
-        Texture new_texture = LoadTexture(file_path.c_str());
-        m_terrain->GetTileset()->SetTexture(&new_texture, true);
-        TRACE("Imported texture %s\n", file_path.c_str());
-    }
-    else {
-        TRACE("Unknown %s\n", file_path.c_str());
-    }
+    //if(file_is_level(file_path)) {
+    //    load(file_path)
+    //}
+    //else {
+        if(GetCurrentLayer() != nullptr) GetCurrentLayer()->HandleFileDrag(file_path);
+    //}
 }

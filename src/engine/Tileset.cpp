@@ -26,6 +26,11 @@ Tileset::~Tileset() {
     delete m_texture;
 }
 
+//TODO : keep track of week copies, and invalidate all of them if the texture of the main one is unloaded ?
+//TODO 2 : prevent week copies on tilesets that don't have the ownership of the texture ?
+Tileset *Tileset::WeakCopy() {
+    return new Tileset(m_texture, m_tile_width, m_tile_height, false);
+}
 
 void Tileset::SetTileSize(int tile_width, int tile_height) {
     m_tile_width = tile_width;

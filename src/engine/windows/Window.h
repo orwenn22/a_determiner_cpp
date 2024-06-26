@@ -20,6 +20,7 @@ public:
     inline int Y() { return m_y; }
     inline int Width() { return m_w; }
     inline int Height() { return m_h; }
+    inline WindowManager *GetWindowManager() { return m_manager; }
     inline WidgetManager *GetWidgetManager() { return m_widgets; }
     inline int GetID() { return m_id; }
 
