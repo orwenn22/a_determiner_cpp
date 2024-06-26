@@ -88,7 +88,7 @@ void EditorState::Draw() {
         if(m_current_layer != Layer_Teams )for(auto sr : m_spawn_regions) sr.Draw();
         m_terrain->Draw();
         if(m_current_layer == Layer_Collisions) m_terrain->DrawCollisions();
-        if(m_current_layer == Layer_Teams )for(auto sr : m_spawn_regions) sr.Draw();
+        if(m_current_layer == Layer_Teams )for(auto &sr : m_spawn_regions) sr.Draw();
         DrawHoveredTilePreview();
     }
     m_widgets->Draw();
@@ -103,8 +103,8 @@ void EditorState::CreateNew(int w, int h, int tile_w, int tile_h, Vector2 size_m
     delete m_terrain;
 
     m_spawn_regions.clear();
-    m_spawn_regions.push_back(EditorSpawnRegion(this, 0.f, 0.f, (float)w/2.f, (float)h, 0));
-    m_spawn_regions.push_back(EditorSpawnRegion(this, (float)w/2.f, 0.f, (float)w/2.f, (float)h, 1));
+    m_spawn_regions.push_back(EditorSpawnRegion(this, 0.f, 0.f, size_m.x/2.f, (float)h, 0));
+    m_spawn_regions.push_back(EditorSpawnRegion(this, size_m.x/2.f, 0.f, size_m.x/2.f, (float)h, 1));
 
     m_terrain = new TilemapTerrain(size_m, tile_w, tile_h, w, h);
     m_camera->origin_x = 10.f;
@@ -137,6 +137,17 @@ void EditorState::SetPaletteIndex(int index) {
     //TODO : more checks ?
     if(m_current_layer == Layer_Collisions) m_collision_palette_index = index;
     else m_tilemap_palette_index = index;
+}
+
+
+float EditorState::GetTileWidthM() {
+    if(m_terrain == nullptr) return 0;
+    return m_terrain->TileWidth();
+}
+
+float EditorState::GetTileHeightM() {
+    if(m_terrain == nullptr) return 0;
+    return m_terrain->TileHeight();
 }
 
 

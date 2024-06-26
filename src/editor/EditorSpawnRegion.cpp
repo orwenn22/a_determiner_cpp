@@ -30,8 +30,10 @@ void EditorSpawnRegion::Update() {
 
     if(m_follow_mouse) {
         if(IsKeyDown(KEY_LEFT_SHIFT)) {
-            m_x = (float)(int)(mouse_m.x - m_mouse_offset_x);
-            m_y = (float)(int)(mouse_m.y - m_mouse_offset_y);
+            //m_x = (float)(int)(mouse_m.x - m_mouse_offset_x);
+            //m_y = (float)(int)(mouse_m.y - m_mouse_offset_y);
+            m_x = (float)(int)((mouse_m.x - m_mouse_offset_x) / m_editor->GetTileWidthM()) * m_editor->GetTileWidthM();
+            m_y = (float)(int)((mouse_m.y - m_mouse_offset_y) / m_editor->GetTileHeightM()) * m_editor->GetTileHeightM();
         }
         else {
             m_x = mouse_m.x - m_mouse_offset_x;
@@ -40,8 +42,8 @@ void EditorSpawnRegion::Update() {
     }
     else if(m_resized) {
         if(IsKeyDown(KEY_LEFT_SHIFT)) {
-            m_w = (float)(int)(mouse_m.x-m_x);
-            m_h = (float)(int)(mouse_m.y-m_y);
+            m_w = (float)(int)((mouse_m.x-m_x) / m_editor->GetTileWidthM()) * m_editor->GetTileWidthM();
+            m_h = (float)(int)((mouse_m.y-m_y) / m_editor->GetTileHeightM()) * m_editor->GetTileHeightM();
         }
         else {
             m_w = mouse_m.x-m_x;

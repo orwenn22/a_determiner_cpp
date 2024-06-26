@@ -36,6 +36,9 @@ public:
     int GetPaletteIndex();
     void SetPaletteIndex(int index);
 
+    float GetTileWidthM();
+    float GetTileHeightM();
+
     inline int GetCurrentLayer() { return m_current_layer; }
     inline void SetCurrentlayer(int l) { m_current_layer = l; }
     inline TilemapTerrain *GetTerrain() { return m_terrain; }
