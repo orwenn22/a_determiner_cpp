@@ -2,11 +2,11 @@
 
 #include <utility>
 
+#include "editor/windows/EditorImportTilesetWindow.h"
 #include "engine/windows/WindowManager.h"
 #include "engine/Globals.h"
 #include "engine/TileGrid.h"
 #include "engine/Tileset.h"
-#include "windows/EditorImportTilesetWindow.h"
 #include "EditorState.h"
 
 

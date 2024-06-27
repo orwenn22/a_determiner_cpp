@@ -135,17 +135,17 @@ add_executable(UI_framework src/main.cpp
         src/EditorState.cpp
         src/engine/Tileset.cpp
         src/engine/TileGrid.cpp
-        src/windows/NewLevelWindow.cpp
+        src/editor/windows/NewLevelWindow.cpp
         src/engine/widgets/HLine.cpp
-        src/widgets/EditorLayerWidget.cpp
-        src/windows/EditorLayerWindow.cpp
-        src/widgets/EditorPaletteWidget.cpp
-        src/windows/EditorPaletteWindow.cpp
+        src/editor/widgets/EditorLayerWidget.cpp
+        src/editor/windows/EditorLayerWindow.cpp
+        src/editor/widgets/EditorPaletteWidget.cpp
+        src/editor/windows/EditorPaletteWindow.cpp
         src/editor/EditorSpawnRegion.cpp
         src/editor/layers/Layer.cpp
         src/editor/layers/LayerTilemap.cpp
         src/editor/layers/LayerSpawnRegions.cpp
-        src/windows/EditorImportTilesetWindow.cpp
+        src/editor/windows/EditorImportTilesetWindow.cpp
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

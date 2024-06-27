@@ -3,6 +3,9 @@
 #include "editor/layers/Layer.h"
 #include "editor/layers/LayerSpawnRegions.h"
 #include "editor/layers/LayerTilemap.h"
+#include "editor/windows/EditorLayerWindow.h"
+#include "editor/windows/EditorPaletteWindow.h"
+#include "editor/windows/NewLevelWindow.h"
 #include "editor/EditorSpawnRegion.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
@@ -17,9 +20,6 @@
 #include "engine/TileGrid.h"
 #include "terrain/TilemapTerrain.h"
 #include "utils/TiledBackground.h"
-#include "windows/EditorLayerWindow.h"
-#include "windows/EditorPaletteWindow.h"
-#include "windows/NewLevelWindow.h"
 #include "GlobalResources.h"
 
 
