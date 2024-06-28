@@ -11,6 +11,8 @@ public:
     LayerTilemap(EditorState *editor, std::string name);
     ~LayerTilemap() override;
 
+    void ResizeGrid(int grid_w, int grid_h);
+
     //void Update() override;
     void UpdateIfSelected() override;
     void Draw() override;

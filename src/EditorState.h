@@ -32,6 +32,9 @@ public:
 
 
     void CreateNew(int grid_w, int grid_h, Vector2 size_m);
+    void ResizeGrid(int grid_w, int grid_h);
+    void ResizeTerrain(Vector2 size_m);
+    void Resize(int grid_w, int grid_h, Vector2 size_m);
     void Save(std::string file_name);
 
     int GetPaletteIndex();

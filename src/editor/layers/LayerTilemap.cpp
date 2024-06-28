@@ -23,6 +23,20 @@ LayerTilemap::~LayerTilemap() {
     delete m_tilegrid;
 }
 
+
+void LayerTilemap::ResizeGrid(int grid_w, int grid_h) {
+    if(grid_w < 0 || grid_h < 0) return;
+    TileGrid *new_tilegrid = new TileGrid(grid_w, grid_h);
+    for(int y = 0; y < m_tilegrid->GridHeight(); ++y) {
+        for(int x = 0; x < m_tilegrid->GridWidth(); ++x) {
+            new_tilegrid->SetTile(x, y, m_tilegrid->GetTile(x, y));
+        }
+    }
+    delete m_tilegrid;
+    m_tilegrid = new_tilegrid;
+}
+
+
 void LayerTilemap::UpdateIfSelected() {
     Layer::UpdateIfSelected();
     if(IsMouseUsed() || IsMouseButtonUp(MOUSE_BUTTON_LEFT)) return;

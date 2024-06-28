@@ -6,6 +6,7 @@
 #include "editor/windows/EditorLayerWindow.h"
 #include "editor/windows/EditorPaletteWindow.h"
 #include "editor/windows/NewLevelWindow.h"
+#include "editor/windows/ResizeLevelWindow.h"
 #include "editor/EditorSpawnRegion.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
@@ -70,10 +71,16 @@ void EditorState::Update(float dt) {
     m_bg->Update(dt);
 
     HandleFilesDragAndDrop();
-    if(IsKeyPressed(KEY_TAB)) m_current_layer = (m_current_layer+1)%3;
-    if(IsKeyPressed(KEY_N)) {
-        //TODO : check if windows is already opened ?
-        m_window_manager->AddWindow(new NewLevelWindow(this));
+    if(IsKeyPressed(KEY_TAB)) m_current_layer = (m_current_layer+1)%(int)(m_layers.size());
+
+    if(IsKeyDown(KEY_LEFT_CONTROL)) {
+        if (IsKeyPressed(KEY_N)) {
+            //TODO : check if windows is already opened ?
+            m_window_manager->AddWindow(new NewLevelWindow(this));
+        }
+        else if(IsKeyPressed(KEY_R)) {
+            m_window_manager->AddWindow(new ResizeLevelWindow(this));
+        }
     }
 
     m_window_manager->Update();
@@ -129,6 +136,30 @@ void EditorState::CreateNew(int grid_w, int grid_h, Vector2 size_m) {
 
     m_level_loaded = true;
 }
+
+
+void EditorState::ResizeGrid(int grid_w, int grid_h) {
+    if(!m_level_loaded ||grid_w <= 0 || grid_h <= 0) return;        //TODO : error message ?
+    m_grid_width = grid_w;
+    m_grid_height = grid_h;
+    for(Layer *l : m_layers) {
+        if(l->Type() != LayerType_Tilemap) continue;
+        ((LayerTilemap *)l)->ResizeGrid(grid_w, grid_h);
+    }
+}
+
+void EditorState::ResizeTerrain(Vector2 size_m) {
+    if(!m_level_loaded) return;
+    if(size_m.x <= 0 || size_m.y <= 0) return;
+    m_size_m = size_m;
+}
+
+void EditorState::Resize(int grid_w, int grid_h, Vector2 size_m) {
+    if(!m_level_loaded) return;
+    ResizeGrid(grid_w, grid_h);
+    ResizeTerrain(size_m);
+}
+
 
 void EditorState::Save(std::string file_name) {
     if(!m_level_loaded) return;
