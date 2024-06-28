@@ -88,7 +88,8 @@ void WindowManager::MakeFullscreen() {
 void WindowManager::AddWindow(Window *window) {
     if(window == nullptr) return;
     if(window->m_manager != nullptr) return;
-    m_windows.push_back(window);
+    //m_windows.push_back(window);
+    m_windows.insert(m_windows.begin(), window);
     window->m_manager = this;
 }
 
