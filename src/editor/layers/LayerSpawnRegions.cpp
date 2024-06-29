@@ -32,7 +32,14 @@ void LayerSpawnRegions::Draw() {
     if(m_selected) for(EditorSpawnRegion &r : m_spawn_regions) r.Draw();
 }
 
+
+void LayerSpawnRegions::AddSpawnRegion(EditorSpawnRegion region) {
+    m_spawn_regions.push_back(region);
+}
+
 void LayerSpawnRegions::Save(FILE *out_file) {
+    Layer::Save(out_file);
+
     fputs("reg", out_file);             //signature
     WriteU32(m_spawn_regions.size(), out_file);         //Region count
     for(EditorSpawnRegion &region : m_spawn_regions) {
@@ -40,12 +47,6 @@ void LayerSpawnRegions::Save(FILE *out_file) {
     }
     fputs("ger", out_file);             //2nd signature
 }
-
-
-void LayerSpawnRegions::AddSpawnRegion(EditorSpawnRegion region) {
-    m_spawn_regions.push_back(region);
-}
-
 
 LayerSpawnRegions *LayerSpawnRegions::Load(EditorState *editor, FILE *in_file) {
     if(in_file == nullptr) return nullptr;

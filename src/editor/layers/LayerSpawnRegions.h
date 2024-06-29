@@ -16,10 +16,10 @@ public:
     void Update() override;
     void PreDraw() override;
     void Draw() override;
-    void Save(FILE *out_file) override;
 
     void AddSpawnRegion(EditorSpawnRegion region);
 
+    void Save(FILE *out_file) override;
     static LayerSpawnRegions *Load(EditorState *editor, FILE *in_file);
 
 private:
