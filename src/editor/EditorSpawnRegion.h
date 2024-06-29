@@ -1,6 +1,8 @@
 #ifndef UI_FRAMEWORK_EDITORSPAWNREGION_H
 #define UI_FRAMEWORK_EDITORSPAWNREGION_H
 
+#include <cstdio>
+
 class EditorState;
 
 class EditorSpawnRegion {
@@ -9,6 +11,8 @@ public:
 
     void Update();
     void Draw();
+
+    void Save(FILE *out_file);
 
 private:
     float m_x, m_y, m_w, m_h;

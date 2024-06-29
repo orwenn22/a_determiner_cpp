@@ -18,8 +18,11 @@ public:
 
     virtual void Update();
     virtual void UpdateIfSelected();
+    virtual void PreDraw();
     virtual void Draw();
     virtual void HandleFileDrag(std::string file_name);
+
+    virtual void Save(FILE *out_file);
 
     inline EditorState *Editor() { return m_editor; }
     inline LayerType Type() { return m_layer_type; }

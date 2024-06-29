@@ -14,12 +14,17 @@ public:
 
     void UpdateIfSelected() override;
     void Update() override;
+    void PreDraw() override;
     void Draw() override;
+    void Save(FILE *out_file) override;
 
     void AddSpawnRegion(EditorSpawnRegion region);
 
+    static LayerSpawnRegions *Load(EditorState *editor, FILE *in_file);
+
 private:
     std::vector<EditorSpawnRegion> m_spawn_regions;
+    bool m_selected;
 };
 
 

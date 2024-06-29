@@ -3,8 +3,10 @@
 #include "engine/metrics/Graphics.h"
 #include "engine/util/Trace.h"
 #include "engine/Globals.h"
+#include "utils/FileOp.h"
 #include "EditorState.h"
 #include "Teams.h"
+
 
 EditorSpawnRegion::EditorSpawnRegion(EditorState *editor, float x, float y, float w, float h, int team_index) {
     m_editor = editor;
@@ -28,8 +30,8 @@ void EditorSpawnRegion::Update() {
         m_follow_mouse = false;
     }
 
-    if(m_follow_mouse) {
-        if(IsKeyDown(KEY_LEFT_SHIFT)) {
+    if(m_follow_mouse) {        //dragging
+        if(IsKeyDown(KEY_LEFT_SHIFT)) {         //snap
             //m_x = (float)(int)(mouse_m.x - m_mouse_offset_x);
             //m_y = (float)(int)(mouse_m.y - m_mouse_offset_y);
             m_x = (float)(int)((mouse_m.x - m_mouse_offset_x) / m_editor->GetTileWidthM()) * m_editor->GetTileWidthM();
@@ -40,8 +42,8 @@ void EditorSpawnRegion::Update() {
             m_y = mouse_m.y - m_mouse_offset_y;
         }
     }
-    else if(m_resized) {
-        if(IsKeyDown(KEY_LEFT_SHIFT)) {
+    else if(m_resized) {        //resizing
+        if(IsKeyDown(KEY_LEFT_SHIFT)) {         //snap
             m_w = (float)(int)((mouse_m.x-m_x) / m_editor->GetTileWidthM()) * m_editor->GetTileWidthM();
             m_h = (float)(int)((mouse_m.y-m_y) / m_editor->GetTileHeightM()) * m_editor->GetTileHeightM();
         }
@@ -51,6 +53,7 @@ void EditorSpawnRegion::Update() {
         }
     }
 
+    //Enforce minimum size
     if(m_w < 1.f) m_w = 1.f;
     if(m_h < 1.f) m_h = 1.f;
 
@@ -83,4 +86,11 @@ void EditorSpawnRegion::Draw() {
     if(m_follow_mouse || m_resized) {
         Metrics::DrawRectangle(m_x, m_y, m_w, m_h, GREEN, false);
     }
+}
+
+void EditorSpawnRegion::Save(FILE *out_file) {
+    WriteF32(m_x, out_file);
+    WriteF32(m_y, out_file);
+    WriteF32(m_w, out_file);
+    WriteF32(m_h, out_file);
 }

@@ -101,6 +101,7 @@ void EditorState::Draw() {
     Metrics::SetGraphicsCam(m_camera);
     m_bg->Draw();
     if(m_level_loaded) {
+        for(auto it = m_layers.rbegin(); it != m_layers.rend(); it++) (*it)->PreDraw();
         for(auto it = m_layers.rbegin(); it != m_layers.rend(); it++) (*it)->Draw();
         DrawHoveredTilePreview();
         Metrics::DrawRectangle(0, 0, GetTerrainWidth(), GetTerrainHeight(), RED, false);

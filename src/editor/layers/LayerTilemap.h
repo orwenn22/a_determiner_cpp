@@ -18,6 +18,10 @@ public:
     void Draw() override;
     void HandleFileDrag(std::string file_name) override;
 
+    void Save(FILE *out_file) override;
+    void SaveTileset(FILE *out_file);
+    bool LoadTileset(FILE *in_file);
+
     //The layer will have ownership ot the tileset object passed here. It should be allocated on the heap.
     void SetTileset(Tileset *tileset, bool lock = false);
     inline bool IsTilesetLocked() { return m_tileset_lock; }
