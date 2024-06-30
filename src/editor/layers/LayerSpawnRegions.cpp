@@ -1,35 +1,36 @@
 #include "LayerSpawnRegions.h"
 
+#include "../EditorLevel.h"
 #include "utils/FileOp.h"
 #include "engine/util/Trace.h"
 #include "EditorState.h"
 
-LayerSpawnRegions::LayerSpawnRegions(EditorState *editor) : Layer(editor, "Spawn regions", LayerType_SpawnRegions) {
+LayerSpawnRegions::LayerSpawnRegions(EditorLevel *level) : Layer(level, "Spawn regions", LayerType_SpawnRegions) {
     m_selected = false;
-    m_spawn_regions.emplace_back(editor, 0, 0, Editor()->GetTerrainWidth()/2.f, Editor()->GetTerrainHeight(), 0);
-    m_spawn_regions.emplace_back(editor, Editor()->GetTerrainWidth()/2.f, 0, Editor()->GetTerrainWidth()/2.f, Editor()->GetTerrainHeight(), 1);
+    m_spawn_regions.emplace_back(Level(), 0, 0, Level()->GetTerrainWidth()/2.f, Level()->GetTerrainHeight(), 0);
+    m_spawn_regions.emplace_back(Level(), Level()->GetTerrainWidth()/2.f, 0, Level()->GetTerrainWidth()/2.f, Level()->GetTerrainHeight(), 1);
 }
 
 LayerSpawnRegions::~LayerSpawnRegions() {
 
 }
 
-void LayerSpawnRegions::UpdateIfSelected() {
-    Layer::UpdateIfSelected();
-    for(EditorSpawnRegion &r : m_spawn_regions) r.Update();
+void LayerSpawnRegions::UpdateIfSelected(EditorState *editor) {
+    Layer::UpdateIfSelected(editor);
+    for(EditorSpawnRegion &r : m_spawn_regions) r.Update(editor);
 }
 
-void LayerSpawnRegions::Update() {
-    Layer::Update();
-    m_selected = (Editor()->GetCurrentLayer() == this);
+void LayerSpawnRegions::Update(EditorState *editor) {
+    Layer::Update(editor);
+    m_selected = (editor->GetCurrentLayer() == this);
 }
 
-void LayerSpawnRegions::PreDraw() {
-    if(!m_selected) for(EditorSpawnRegion &r : m_spawn_regions) r.Draw();
+void LayerSpawnRegions::PreDraw(EditorState *editor) {
+    if(!m_selected) for(EditorSpawnRegion &r : m_spawn_regions) r.Draw(editor);
 }
 
-void LayerSpawnRegions::Draw() {
-    if(m_selected) for(EditorSpawnRegion &r : m_spawn_regions) r.Draw();
+void LayerSpawnRegions::Draw(EditorState *editor) {
+    if(m_selected) for(EditorSpawnRegion &r : m_spawn_regions) r.Draw(editor);
 }
 
 
@@ -48,7 +49,7 @@ void LayerSpawnRegions::Save(FILE *out_file) {
     fputs("ger", out_file);             //2nd signature
 }
 
-LayerSpawnRegions *LayerSpawnRegions::Load(EditorState *editor, FILE *in_file) {
+LayerSpawnRegions *LayerSpawnRegions::Load(EditorLevel *level, FILE *in_file) {
     if(in_file == nullptr) return nullptr;
 
     char sig[4] = { 0 };
@@ -64,7 +65,7 @@ LayerSpawnRegions *LayerSpawnRegions::Load(EditorState *editor, FILE *in_file) {
         return nullptr;
     }
 
-    LayerSpawnRegions *r = new LayerSpawnRegions(editor);
+    LayerSpawnRegions *r = new LayerSpawnRegions(level);
     r->m_spawn_regions.clear();
 
     for(int i = 0; i < region_count; ++i) {
@@ -72,7 +73,7 @@ LayerSpawnRegions *LayerSpawnRegions::Load(EditorState *editor, FILE *in_file) {
         float y = ReadF32(in_file);
         float w = ReadF32(in_file);
         float h = ReadF32(in_file);
-        r->AddSpawnRegion(EditorSpawnRegion(editor, x, y, w, h, i));
+        r->AddSpawnRegion(EditorSpawnRegion(level, x, y, w, h, i));
     }
 
     sig[0] = 0;

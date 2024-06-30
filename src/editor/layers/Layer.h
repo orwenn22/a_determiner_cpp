@@ -9,28 +9,30 @@ enum LayerType {
     LayerType_SpawnRegions
 };
 
+class EditorLevel;
 class EditorState;
 
 class Layer {
 public:
-    Layer(EditorState *editor, std::string name, LayerType layer_type = LayerType_None);
+    Layer(EditorLevel *level, std::string name, LayerType layer_type = LayerType_None);
     virtual ~Layer();
 
-    virtual void Update();
-    virtual void UpdateIfSelected();
-    virtual void PreDraw();
-    virtual void Draw();
-    virtual void HandleFileDrag(std::string file_name);
+    //Methods for the editor
+    virtual void Update(EditorState *editor);
+    virtual void UpdateIfSelected(EditorState *editor);
+    virtual void PreDraw(EditorState *editor);
+    virtual void Draw(EditorState *editor);
+    virtual void HandleFileDrag(EditorState *editor, std::string file_name);
 
     virtual void Save(FILE *out_file);
-    static Layer *Load(EditorState *editor, FILE *in_file);
+    static Layer *Load(EditorLevel *editor, FILE *in_file);
 
-    inline EditorState *Editor() { return m_editor; }
+    inline EditorLevel *Level() { return m_level; }
     inline LayerType Type() { return m_layer_type; }
     inline std::string Name() { return m_name; }
 
 private:
-    EditorState *m_editor;
+    EditorLevel *m_level;
     LayerType m_layer_type;
     std::string m_name;
 };

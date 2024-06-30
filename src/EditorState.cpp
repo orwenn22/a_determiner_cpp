@@ -7,6 +7,7 @@
 #include "editor/windows/EditorPaletteWindow.h"
 #include "editor/windows/NewLevelWindow.h"
 #include "editor/windows/ResizeLevelWindow.h"
+#include "editor/EditorLevel.h"
 #include "editor/EditorSpawnRegion.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
@@ -33,10 +34,7 @@ EditorState::EditorState() {
     m_bg = new TiledBackground(&Res::menubg_grayscale);
     m_bg->SetColor({20, 20, 20, 255});
 
-    m_level_loaded = false;
-    m_size_m = {0.f, 0.f};
-    m_grid_width = 0;
-    m_grid_height = 0;
+    m_level = nullptr;
 
     m_camera = new MetricsCamera(10, 10, 16);
 
@@ -61,8 +59,7 @@ EditorState::EditorState() {
 }
 
 EditorState::~EditorState() {
-    for(Layer *l : m_layers) delete l;
-    m_layers.clear();
+    delete m_level;
     delete m_camera;
     delete m_widgets;
 }
@@ -71,7 +68,6 @@ void EditorState::Update(float dt) {
     m_bg->Update(dt);
 
     HandleFilesDragAndDrop();
-    if(IsKeyPressed(KEY_TAB)) m_current_layer = (m_current_layer+1)%(int)(m_layers.size());
 
     if(IsKeyDown(KEY_LEFT_CONTROL)) {
         if (IsKeyPressed(KEY_N)) {
@@ -86,11 +82,12 @@ void EditorState::Update(float dt) {
     m_window_manager->Update();
     m_widgets->Update();
 
-    if(m_level_loaded) {
+    if(m_level != nullptr) {
+        if(IsKeyPressed(KEY_TAB)) m_current_layer = (m_current_layer+1)%(m_level->GetLayerCount());
         HandleDragCamera((float)GetMouseX(), (float)GetMouseY());
-        m_layers[m_current_layer]->UpdateIfSelected();
         UpdateHoveredTilePreview();
-        for(size_t i = 0; i < m_layers.size(); ++i) m_layers[i]->Update();
+        m_level->EditorUpdate(this);
+        m_preview_hovered_tile = !IsMouseUsed();
     }
     else {
         m_camera->SetCameraTopLeft({0.f, 0.f});
@@ -100,11 +97,10 @@ void EditorState::Update(float dt) {
 void EditorState::Draw() {
     Metrics::SetGraphicsCam(m_camera);
     m_bg->Draw();
-    if(m_level_loaded) {
-        for(auto it = m_layers.rbegin(); it != m_layers.rend(); it++) (*it)->PreDraw();
-        for(auto it = m_layers.rbegin(); it != m_layers.rend(); it++) (*it)->Draw();
+    if(m_level != nullptr) {
+        m_level->EditorDraw(this);
         DrawHoveredTilePreview();
-        Metrics::DrawRectangle(0, 0, GetTerrainWidth(), GetTerrainHeight(), RED, false);
+        Metrics::DrawRectangle(0, 0, m_level->GetTerrainWidth(), m_level->GetTerrainHeight(), RED, false);
     }
     m_widgets->Draw();
     m_window_manager->Draw();
@@ -115,18 +111,16 @@ void EditorState::CreateNew(int grid_w, int grid_h, Vector2 size_m) {
     if(grid_w <= 0 || grid_h <= 0 || size_m.x <= 0 || size_m.y <= 0) return;
     m_window_manager->Clear();
     m_widgets->Clear();
-    for(Layer *l : m_layers) delete l;
-    m_layers.clear();
 
-    m_grid_width = grid_w;
-    m_grid_height = grid_h;
-    m_size_m = size_m;
+    delete m_level;
+    m_level = new EditorLevel(grid_w, grid_h, size_m);
 
-    m_layers.push_back(new LayerSpawnRegions(this));
-    LayerTilemap *collisions = new LayerTilemap(this, "Collisions");
+
+    m_level->AddLayer(new LayerSpawnRegions(m_level));
+    LayerTilemap *collisions = new LayerTilemap(m_level, "Collisions");
     collisions->SetTileset(Res::collisions_tileset->WeakCopy(), true);
-    m_layers.push_back(collisions);
-    m_layers.push_back(new LayerTilemap(this, "Tilemap"));
+    m_level->AddLayer(collisions);
+    m_level->AddLayer(new LayerTilemap(m_level, "Tilemap"));
 
     m_camera->origin_x = 10.f;
     m_camera->origin_y = 10.f;
@@ -134,42 +128,24 @@ void EditorState::CreateNew(int grid_w, int grid_h, Vector2 size_m) {
 
     m_window_manager->AddWindow(new EditorLayerWindow(this, 15, 15));
     m_window_manager->AddWindow(new EditorPaletteWindow(this, 30, 30, 250, 250));
-
-    m_level_loaded = true;
 }
 
 
 void EditorState::ResizeGrid(int grid_w, int grid_h) {
-    if(!m_level_loaded ||grid_w <= 0 || grid_h <= 0) return;        //TODO : error message ?
-    m_grid_width = grid_w;
-    m_grid_height = grid_h;
-    for(Layer *l : m_layers) {
-        if(l->Type() != LayerType_Tilemap) continue;
-        ((LayerTilemap *)l)->ResizeGrid(grid_w, grid_h);
-    }
+    if(m_level != nullptr) m_level->ResizeGrid(grid_w, grid_h);
 }
 
 void EditorState::ResizeTerrain(Vector2 size_m) {
-    if(!m_level_loaded) return;
-    if(size_m.x <= 0 || size_m.y <= 0) return;
-    m_size_m = size_m;
+    if(m_level != nullptr) m_level->ResizeTerrain(size_m);
 }
 
 void EditorState::Resize(int grid_w, int grid_h, Vector2 size_m) {
-    if(!m_level_loaded) return;
-    ResizeGrid(grid_w, grid_h);
-    ResizeTerrain(size_m);
+    if(m_level != nullptr) m_level->Resize(grid_w, grid_h, size_m);
 }
 
 
 void EditorState::Save(std::string file_name) {
-    if(!m_level_loaded) return;
-
-    //TODO : save size info
-    //TODO : save spawn regions
-    //TODO : save tileset bitmap
-    //TODO : save terrain tilemap
-    //TODO : save terrain collision mask
+    if(m_level != nullptr) m_level->Save(file_name);
 }
 
 
@@ -187,20 +163,9 @@ void EditorState::SetPaletteIndex(int index) {
 }
 
 
-float EditorState::GetTileWidthM() {
-    if(!m_level_loaded) return 0;
-    return m_size_m.x/(float)m_grid_width;
-}
-
-float EditorState::GetTileHeightM() {
-    if(!m_level_loaded) return 0;
-    return m_size_m.y/(float)m_grid_height;
-}
-
-
-Layer *EditorState::GetLayer(int index) {
-    if(index < 0 || index >= m_layers.size()) return nullptr;
-    return m_layers[index];
+Layer *EditorState::GetCurrentLayer() {
+    if(m_level == nullptr) return nullptr;
+    return m_level->GetLayer(m_current_layer);
 }
 
 
@@ -208,25 +173,23 @@ Layer *EditorState::GetLayer(int index) {
 //// PRIVATE
 
 void EditorState::UpdateHoveredTilePreview() {
-    if(!m_level_loaded) return;
+    if(m_level == nullptr) return;
 
     Vector2 mouse_pos = m_camera->ConvertAbsoluteToMeters(GetMouseX(), GetMouseY());
     m_hovered_tile = {
-            (int)(mouse_pos.x / GetTileWidthM()) - (mouse_pos.x < 0),
-            (int)(mouse_pos.y / GetTileHeightM()) - (mouse_pos.y < 0)
+            (int)(mouse_pos.x / m_level->GetTileWidthM()) - (mouse_pos.x < 0),
+            (int)(mouse_pos.y / m_level->GetTileHeightM()) - (mouse_pos.y < 0)
     };
-
-    m_preview_hovered_tile = !IsMouseUsed();
 }
 
 
 void EditorState::DrawHoveredTilePreview() {
     if(!m_preview_hovered_tile) return;
     Rectangle dest = {
-            GetTileWidthM()*(float)m_hovered_tile.x,
-            GetTileHeightM()*(float)m_hovered_tile.y,
-            GetTileWidthM(),
-            GetTileHeightM()
+            m_level->GetTileWidthM()*(float)m_hovered_tile.x,
+            m_level->GetTileHeightM()*(float)m_hovered_tile.y,
+            m_level->GetTileWidthM(),
+            m_level->GetTileHeightM()
     };
     Metrics::DrawRectangle(dest , GREEN, false);
 
@@ -271,6 +234,6 @@ void EditorState::HandleFileDragAndDrop(std::string file_path) {
     //    load(file_path)
     //}
     //else {
-        if(GetCurrentLayer() != nullptr) GetCurrentLayer()->HandleFileDrag(file_path);
+        if(GetCurrentLayer() != nullptr) GetCurrentLayer()->HandleFileDrag(this, file_path);
     //}
 }

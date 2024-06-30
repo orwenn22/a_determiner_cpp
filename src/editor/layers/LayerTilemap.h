@@ -8,18 +8,18 @@ class Tileset;
 
 class LayerTilemap : public Layer {
 public:
-    LayerTilemap(EditorState *editor, std::string name);
+    LayerTilemap(EditorLevel *level, std::string name);
     ~LayerTilemap() override;
 
     void ResizeGrid(int grid_w, int grid_h);
 
-    //void Update() override;
-    void UpdateIfSelected() override;
-    void Draw() override;
-    void HandleFileDrag(std::string file_name) override;
+    //void Update(EditorState *editor) override;
+    void UpdateIfSelected(EditorState *editor) override;
+    void Draw(EditorState *editor) override;
+    void HandleFileDrag(EditorState *editor, std::string file_name) override;
 
     void Save(FILE *out_file) override;
-    static LayerTilemap *Load(EditorState *editor, FILE *in_file);
+    static LayerTilemap *Load(EditorLevel *level, FILE *in_file);
 
     //The layer will have ownership ot the tileset object passed here. It should be allocated on the heap.
     void SetTileset(Tileset *tileset, bool lock = false);

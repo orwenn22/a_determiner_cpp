@@ -9,18 +9,18 @@
 
 class LayerSpawnRegions : public Layer {
 public:
-    explicit LayerSpawnRegions(EditorState *editor);
+    explicit LayerSpawnRegions(EditorLevel *level);
     ~LayerSpawnRegions() override;
 
-    void UpdateIfSelected() override;
-    void Update() override;
-    void PreDraw() override;
-    void Draw() override;
+    void UpdateIfSelected(EditorState *editor) override;
+    void Update(EditorState *editor) override;
+    void PreDraw(EditorState *editor) override;
+    void Draw(EditorState *editor) override;
 
     void AddSpawnRegion(EditorSpawnRegion region);
 
     void Save(FILE *out_file) override;
-    static LayerSpawnRegions *Load(EditorState *editor, FILE *in_file);
+    static LayerSpawnRegions *Load(EditorLevel *level, FILE *in_file);
 
 private:
     std::vector<EditorSpawnRegion> m_spawn_regions;

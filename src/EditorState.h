@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-class EditorSpawnRegion;
+class EditorLevel;
 class Layer;
 class MetricsCamera;
 class TilemapTerrain;
@@ -32,6 +32,8 @@ public:
 
 
     void CreateNew(int grid_w, int grid_h, Vector2 size_m);
+
+    //These are just aliases to the m_level methods
     void ResizeGrid(int grid_w, int grid_h);
     void ResizeTerrain(Vector2 size_m);
     void Resize(int grid_w, int grid_h, Vector2 size_m);
@@ -40,21 +42,13 @@ public:
     int GetPaletteIndex();
     void SetPaletteIndex(int index);
 
-    float GetTileWidthM();
-    float GetTileHeightM();
-
     inline WindowManager *GetWindowManager() { return m_window_manager; }
 
+    inline EditorLevel *GetLevel() { return m_level; }
     inline int GetCurrentLayerIndex() { return m_current_layer; }
     inline void SetCurrentLayerIndex(int l) { m_current_layer = l; }
-    inline Layer *GetCurrentLayer() { return m_layers[m_current_layer]; }
-    inline int GetlayerCount() { return (int) m_layers.size(); }
-    Layer *GetLayer(int index);
+    Layer *GetCurrentLayer();
 
-    inline int GridWidth() { return m_grid_width; }
-    inline int GridHeight() { return m_grid_height; }
-    inline float GetTerrainWidth() { return m_size_m.x; }
-    inline float GetTerrainHeight() { return m_size_m.y; }
     inline int GetHoveredTileX() { return m_hovered_tile.x; }
     inline int GetHoveredTileY() { return m_hovered_tile.y; }
 
@@ -75,10 +69,7 @@ private:
     bool m_cam_follow_mouse;
     Vector2 m_cam_mouse_offset;
 
-    bool m_level_loaded;
-    std::vector<Layer *> m_layers;      //index 0 is top layer
-    int m_grid_width, m_grid_height;
-    Vector2 m_size_m;
+    EditorLevel *m_level;
 
     int m_current_layer;
 

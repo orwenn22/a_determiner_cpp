@@ -4,12 +4,13 @@
 #include "engine/util/Trace.h"
 #include "engine/Globals.h"
 #include "utils/FileOp.h"
+#include "EditorLevel.h"
 #include "EditorState.h"
 #include "Teams.h"
 
 
-EditorSpawnRegion::EditorSpawnRegion(EditorState *editor, float x, float y, float w, float h, int team_index) {
-    m_editor = editor;
+EditorSpawnRegion::EditorSpawnRegion(EditorLevel *level, float x, float y, float w, float h, int team_index) {
+    m_level = level;
     m_x = x;
     m_y = y;
     m_w = w;
@@ -22,7 +23,7 @@ EditorSpawnRegion::EditorSpawnRegion(EditorState *editor, float x, float y, floa
     m_resized = false;
 }
 
-void EditorSpawnRegion::Update() {
+void EditorSpawnRegion::Update(EditorState *editor) {
     Vector2 mouse_m = Metrics::GetGraphicsCam()->ConvertAbsoluteToMeters(GetMouseX(), GetMouseY());
 
     if(IsMouseButtonUp(MOUSE_BUTTON_LEFT)) {
@@ -34,8 +35,8 @@ void EditorSpawnRegion::Update() {
         if(IsKeyDown(KEY_LEFT_SHIFT)) {         //snap
             //m_x = (float)(int)(mouse_m.x - m_mouse_offset_x);
             //m_y = (float)(int)(mouse_m.y - m_mouse_offset_y);
-            m_x = (float)(int)((mouse_m.x - m_mouse_offset_x) / m_editor->GetTileWidthM()) * m_editor->GetTileWidthM();
-            m_y = (float)(int)((mouse_m.y - m_mouse_offset_y) / m_editor->GetTileHeightM()) * m_editor->GetTileHeightM();
+            m_x = (float)(int)((mouse_m.x - m_mouse_offset_x) / m_level->GetTileWidthM()) * m_level->GetTileWidthM();
+            m_y = (float)(int)((mouse_m.y - m_mouse_offset_y) / m_level->GetTileHeightM()) * m_level->GetTileHeightM();
         }
         else {
             m_x = mouse_m.x - m_mouse_offset_x;
@@ -44,8 +45,8 @@ void EditorSpawnRegion::Update() {
     }
     else if(m_resized) {        //resizing
         if(IsKeyDown(KEY_LEFT_SHIFT)) {         //snap
-            m_w = (float)(int)((mouse_m.x-m_x) / m_editor->GetTileWidthM()) * m_editor->GetTileWidthM();
-            m_h = (float)(int)((mouse_m.y-m_y) / m_editor->GetTileHeightM()) * m_editor->GetTileHeightM();
+            m_w = (float)(int)((mouse_m.x-m_x) / m_level->GetTileWidthM()) * m_level->GetTileWidthM();
+            m_h = (float)(int)((mouse_m.y-m_y) / m_level->GetTileHeightM()) * m_level->GetTileHeightM();
         }
         else {
             m_w = mouse_m.x-m_x;
@@ -57,7 +58,7 @@ void EditorSpawnRegion::Update() {
     if(m_w < 1.f) m_w = 1.f;
     if(m_h < 1.f) m_h = 1.f;
 
-    if(IsMouseUsed() || m_editor->GetCurrentLayerIndex() != Layer_Teams) return;
+    if(IsMouseUsed() || editor->GetCurrentLayerIndex() != Layer_Teams) return;
 
     if(!CheckCollisionPointRec(mouse_m, {m_x, m_y, m_w, m_h})) return;
     UseMouse();
@@ -79,7 +80,7 @@ void EditorSpawnRegion::Update() {
     }
 }
 
-void EditorSpawnRegion::Draw() {
+void EditorSpawnRegion::Draw(EditorState *editor) {
     Color c = s_team_colors[m_team_index];
     c.a = 100;
     Metrics::DrawRectangle(m_x, m_y, m_w, m_h, c, true);

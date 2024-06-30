@@ -3,6 +3,7 @@
 #include <raylib.h>
 
 #include "editor/layers/Layer.h"
+#include "editor/EditorLevel.h"
 #include "engine/Globals.h"
 #include "EditorState.h"
 
@@ -34,8 +35,8 @@ void EditorLayerWidget::Draw() {
     DrawRectangleLines(x, y, Width(), Height(), WHITE);
 
     int painter_y = y;
-    for(int i = 0; i < m_editor->GetlayerCount(); ++i) {
-        Layer *l = m_editor->GetLayer(i);
+    for(int i = 0; i < m_editor->GetLevel()->GetLayerCount(); ++i) {
+        Layer *l = m_editor->GetLevel()->GetLayer(i);
         DrawText(l->Name().c_str(), x+5, painter_y+5, 20, WHITE);
         DrawLine(x, painter_y+30, x+Width(), painter_y+30, WHITE);
         if(i == m_editor->GetCurrentLayerIndex()) {

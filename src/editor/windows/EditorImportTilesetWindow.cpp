@@ -8,8 +8,7 @@
 #include "engine/windows/WindowManager.h"
 #include "engine/Tileset.h"
 
-EditorImportTilesetWindow::EditorImportTilesetWindow(EditorState *editor, LayerTilemap *layer, std::string file_path) : Window(50, 50, 255, 200) {
-    m_editor = editor;
+EditorImportTilesetWindow::EditorImportTilesetWindow(LayerTilemap *layer, std::string file_path) : Window(50, 50, 255, 200) {
     m_layer = layer;
     m_file_path = file_path;        //don't std::move it
 

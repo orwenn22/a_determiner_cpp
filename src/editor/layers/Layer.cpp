@@ -6,18 +6,18 @@
 #include "LayerTilemap.h"
 
 
-Layer::Layer(EditorState *editor, std::string name, LayerType layer_type) {
-    m_editor = editor;
+Layer::Layer(EditorLevel *level, std::string name, LayerType layer_type) {
+    m_level = level;
     m_name = name;
     m_layer_type = layer_type;
 }
 
 Layer::~Layer() = default;
-void Layer::Update() { }
-void Layer::UpdateIfSelected() { }
-void Layer::PreDraw() { }
-void Layer::Draw() { }
-void Layer::HandleFileDrag(std::string file_name) { }
+void Layer::Update(EditorState *editor) { }
+void Layer::UpdateIfSelected(EditorState *editor) { }
+void Layer::PreDraw(EditorState *editor) { }
+void Layer::Draw(EditorState *editor) { }
+void Layer::HandleFileDrag(EditorState *editor, std::string file_name) { }
 
 void Layer::Save(FILE *out_file) {
     fputs("lay", out_file);             //signature
@@ -27,7 +27,7 @@ void Layer::Save(FILE *out_file) {
 }
 
 
-Layer *Layer::Load(EditorState *editor, FILE *in_file) {
+Layer *Layer::Load(EditorLevel *level, FILE *in_file) {
     if(in_file == nullptr) return nullptr;
 
     char sig[4] = { 0 };
@@ -52,10 +52,10 @@ Layer *Layer::Load(EditorState *editor, FILE *in_file) {
 
     switch (layer_type) {
         case LayerType_SpawnRegions:
-            r = LayerSpawnRegions::Load(editor, in_file);
+            r = LayerSpawnRegions::Load(level, in_file);
             break;
         case LayerType_Tilemap:
-            r = LayerTilemap::Load(editor, in_file);
+            r = LayerTilemap::Load(level, in_file);
             break;
         default:
             break;

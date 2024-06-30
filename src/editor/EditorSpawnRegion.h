@@ -3,14 +3,16 @@
 
 #include <cstdio>
 
+class EditorLevel;
 class EditorState;
 
 class EditorSpawnRegion {
 public:
-    EditorSpawnRegion(EditorState *editor, float x, float y, float w, float h, int team_index);
+    EditorSpawnRegion(EditorLevel *level, float x, float y, float w, float h, int team_index);
 
-    void Update();
-    void Draw();
+    //For the editor
+    void Update(EditorState *editor);
+    void Draw(EditorState *editor);
 
     void Save(FILE *out_file);
 
@@ -22,7 +24,7 @@ private:
     bool m_resized;
     float m_mouse_offset_x, m_mouse_offset_y;
 
-    EditorState *m_editor;
+    EditorLevel *m_level;
 };
 
 
