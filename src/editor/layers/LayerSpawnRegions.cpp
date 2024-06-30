@@ -7,6 +7,7 @@
 
 LayerSpawnRegions::LayerSpawnRegions(EditorLevel *level) : Layer(level, "Spawn regions", LayerType_SpawnRegions) {
     m_selected = false;
+    //TODO : do the above in the editor's CreateNew() ?
     m_spawn_regions.emplace_back(Level(), 0, 0, Level()->GetTerrainWidth()/2.f, Level()->GetTerrainHeight(), 0);
     m_spawn_regions.emplace_back(Level(), Level()->GetTerrainWidth()/2.f, 0, Level()->GetTerrainWidth()/2.f, Level()->GetTerrainHeight(), 1);
 }
@@ -39,35 +40,46 @@ void LayerSpawnRegions::AddSpawnRegion(EditorSpawnRegion region) {
 }
 
 void LayerSpawnRegions::Save(FILE *out_file) {
+    //Save the layer header
     Layer::Save(out_file);
 
-    fputs("reg", out_file);             //signature
-    WriteU32(m_spawn_regions.size(), out_file);         //Region count
+    //First signature
+    fputs("reg", out_file);
+
+    //Save region count
+    WriteU32(m_spawn_regions.size(), out_file);
+
+    //Save all regions
     for(EditorSpawnRegion &region : m_spawn_regions) {
         region.Save(out_file);
     }
-    fputs("ger", out_file);             //2nd signature
+
+    //End signature
+    fputs("ger", out_file);
 }
 
+//This should be called by Layer::Load
 LayerSpawnRegions *LayerSpawnRegions::Load(EditorLevel *level, FILE *in_file) {
     if(in_file == nullptr) return nullptr;
 
-    char sig[4] = { 0 };
-    fgets(sig, 4, in_file);
-    if(std::string(sig) != "reg") {
+    //First signature check
+    if(!CheckSignature("reg", 3, in_file)) {
         TRACE("No 'reg' signature\n");
         return nullptr;
     }
 
+    //Get the number of spawn regions
     int region_count = (int) ReadU32(in_file);
     if(region_count <= 0) {
         TRACE("Invalid region count (%i) \n", region_count);
         return nullptr;
     }
 
+    //Create new spawn region layer
     LayerSpawnRegions *r = new LayerSpawnRegions(level);
     r->m_spawn_regions.clear();
 
+    //Load all regions
     for(int i = 0; i < region_count; ++i) {
         float x = ReadF32(in_file);
         float y = ReadF32(in_file);
@@ -76,9 +88,8 @@ LayerSpawnRegions *LayerSpawnRegions::Load(EditorLevel *level, FILE *in_file) {
         r->AddSpawnRegion(EditorSpawnRegion(level, x, y, w, h, i));
     }
 
-    sig[0] = 0;
-    fgets(sig, 4, in_file);
-    if(std::string(sig) != "ger") {
+    //Check end signature
+    if(!CheckSignature("ger", 3, in_file)) {
         TRACE("No 'ger' signature\n");
         delete r;
         return nullptr;

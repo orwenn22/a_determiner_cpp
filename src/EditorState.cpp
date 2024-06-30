@@ -77,6 +77,9 @@ void EditorState::Update(float dt) {
         else if(IsKeyPressed(KEY_R)) {
             m_window_manager->AddWindow(new ResizeLevelWindow(this));
         }
+        else if(IsKeyPressed(KEY_S)) {
+            if(m_level != nullptr) Save("out.lev");
+        }
     }
 
     m_window_manager->Update();
@@ -109,25 +112,18 @@ void EditorState::Draw() {
 
 void EditorState::CreateNew(int grid_w, int grid_h, Vector2 size_m) {
     if(grid_w <= 0 || grid_h <= 0 || size_m.x <= 0 || size_m.y <= 0) return;
-    m_window_manager->Clear();
-    m_widgets->Clear();
 
     delete m_level;
     m_level = new EditorLevel(grid_w, grid_h, size_m);
 
-
+    //Add default layers
     m_level->AddLayer(new LayerSpawnRegions(m_level));
     LayerTilemap *collisions = new LayerTilemap(m_level, "Collisions");
     collisions->SetTileset(Res::collisions_tileset->WeakCopy(), true);
     m_level->AddLayer(collisions);
     m_level->AddLayer(new LayerTilemap(m_level, "Tilemap"));
 
-    m_camera->origin_x = 10.f;
-    m_camera->origin_y = 10.f;
-    m_current_layer = 2;
-
-    m_window_manager->AddWindow(new EditorLayerWindow(this, 15, 15));
-    m_window_manager->AddWindow(new EditorPaletteWindow(this, 30, 30, 250, 250));
+    SetupDefaultConfig();
 }
 
 
@@ -145,7 +141,8 @@ void EditorState::Resize(int grid_w, int grid_h, Vector2 size_m) {
 
 
 void EditorState::Save(std::string file_name) {
-    if(m_level != nullptr) m_level->Save(file_name);
+    if(m_level == nullptr) return;
+    m_level->Save(file_name);
 }
 
 
@@ -196,6 +193,18 @@ void EditorState::DrawHoveredTilePreview() {
 }
 
 
+void EditorState::SetupDefaultConfig() {
+    m_camera->origin_x = 10.f;
+    m_camera->origin_y = 10.f;
+    m_current_layer = 2;
+
+    m_window_manager->Clear();
+    m_widgets->Clear();
+    m_window_manager->AddWindow(new EditorLayerWindow(this, 15, 15));
+    m_window_manager->AddWindow(new EditorPaletteWindow(this, 30, 30, 250, 250));
+}
+
+
 void EditorState::HandleDragCamera(float mouse_x, float mouse_y) {
     if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && !IsMouseUsed()) {
         m_cam_follow_mouse = true;
@@ -230,10 +239,19 @@ void EditorState::HandleFilesDragAndDrop() {
 void EditorState::HandleFileDragAndDrop(std::string file_path) {
     std::string extension = GetExtensionFromPath(file_path);
 
-    //if(file_is_level(file_path)) {
-    //    load(file_path)
-    //}
-    //else {
+    if(extension == "lev") {
+        EditorLevel *level = EditorLevel::Load(file_path);
+        if(level == nullptr) {
+            TRACE("Failed to load file %s as level :(\n", file_path.c_str());
+            return;
+        }
+
+        //TODO : open a confirm window instead of doing this immediately ?
+        delete m_level;
+        m_level = level;
+        SetupDefaultConfig();
+    }
+    else {
         if(GetCurrentLayer() != nullptr) GetCurrentLayer()->HandleFileDrag(this, file_path);
-    //}
+    }
 }

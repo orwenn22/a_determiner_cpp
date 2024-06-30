@@ -4,6 +4,7 @@
 #include "layers/LayerTilemap.h"
 #include "engine/Tileset.h"
 #include "engine/util/Trace.h"
+#include "utils/FileOp.h"
 #include "EditorState.h"
 #include "GlobalResources.h"
 
@@ -72,19 +73,19 @@ void EditorLevel::Resize(int grid_w, int grid_h, Vector2 size_m) {
     ResizeTerrain(size_m);
 }
 
-void EditorLevel::Save(std::string file_name) {
-    //TODO : save size info
-    //TODO : save spawn regions
-    //TODO : save tileset bitmap
-    //TODO : save terrain tilemap
-    //TODO : save terrain collision mask
-}
-
 
 Layer *EditorLevel::GetLayer(int index) {
     if(index < 0 || index >= GetLayerCount()) return nullptr;
     return m_layers[index];
 }
+
+Layer *EditorLevel::GetLayer(std::string name) {
+    for(Layer *l : m_layers) {
+        if(l->Name() == name) return l;
+    }
+    return nullptr;
+}
+
 
 void EditorLevel::AddLayer(Layer *l) {
     if(l == nullptr) return;
@@ -96,4 +97,98 @@ void EditorLevel::AddLayer(Layer *l) {
     else {
         TRACE("The layer is in another level\n");
     }
+}
+
+
+void EditorLevel::Save(std::string file_name) {
+    //TODO : perform checks to ensure all layers are savable here
+
+    FILE *out_file = fopen(file_name.c_str(), "w");
+    if(out_file == nullptr) {
+        TRACE("Failed to create/open file %s\n", file_name.c_str());
+        return;     //TODO : return false ?
+    }
+
+    fputs("lev", out_file);
+
+    //Save grid size
+    WriteU32(m_grid_width, out_file);
+    WriteU32(m_grid_height, out_file);
+
+    //Save terrain size (m)
+    WriteF32(m_size_m.x, out_file);
+    WriteF32(m_size_m.y, out_file);
+
+    //Save layer count
+    WriteU32(m_layers.size(), out_file);
+
+    //Save layers
+    for(int i = 0; i < m_layers.size(); ++i) {
+        m_layers[i]->Save(out_file);
+    }
+
+    //End signature
+    fputs("vel", out_file);
+
+    fclose(out_file);
+    TRACE("Successfully saved as %s\n", file_name.c_str());
+}
+
+
+EditorLevel *EditorLevel::Load(std::string file_name) {
+    FILE *in_file = fopen(file_name.c_str(), "r");
+    if(in_file == nullptr) {
+        TRACE("Could not open file %s\n", file_name.c_str());
+        return nullptr;
+    }
+
+    //Check first signature
+    if(!CheckSignature("lev", 3, in_file)) {
+        fclose(in_file);
+        TRACE("No 'lev' signature\n");
+        return nullptr;
+    }
+
+    //Read grid size
+    int grid_width = ReadU32(in_file);
+    int grid_height = ReadU32(in_file);
+    if(grid_width <= 0 || grid_height <= 0) {
+        fclose(in_file);
+        TRACE("Invalid grid size (%i * %i)\n", grid_width, grid_height);
+        return nullptr;
+    }
+
+    //Read terrain size
+    float terrain_width = ReadF32(in_file);
+    float terrain_height = ReadF32(in_file);
+
+    //Read layer count   TODO : prevent too many layers from being loaded ?
+    int layer_count = ReadU32(in_file);
+    if(layer_count < 0) {
+        fclose(in_file);
+        TRACE("Invalid layer count (%i)\n", layer_count);
+        return nullptr;
+    }
+
+    EditorLevel *r = new EditorLevel(grid_width, grid_height, {terrain_width, terrain_height});
+
+    //Load layers
+    for(int i = 0; i < layer_count; ++i) {
+        Layer *l = Layer::Load(r, in_file);
+        if(l == nullptr) {
+            TRACE("Failed to load layer %i\n", i);
+            delete r;
+            return nullptr;
+        }
+        r->AddLayer(l);
+    }
+
+    //Check end signature
+    if(!CheckSignature("vel", 3, in_file)) {
+        TRACE("No 'vel' signature\n");
+        delete r;
+        return nullptr;
+    }
+
+    return r;
 }

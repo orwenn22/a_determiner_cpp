@@ -57,6 +57,8 @@ private:
 
     void DrawHoveredTilePreview();
 
+    void SetupDefaultConfig();
+
     void HandleDragCamera(float mouse_x, float mouse_y);        //Take mouse pos in pixel
     void HandleFilesDragAndDrop();
     void HandleFileDragAndDrop(std::string file_path);

@@ -25,7 +25,7 @@ public:
     virtual void HandleFileDrag(EditorState *editor, std::string file_name);
 
     virtual void Save(FILE *out_file);
-    static Layer *Load(EditorLevel *editor, FILE *in_file);
+    static Layer *Load(EditorLevel *level, FILE *in_file);
 
     inline EditorLevel *Level() { return m_level; }
     inline LayerType Type() { return m_layer_type; }

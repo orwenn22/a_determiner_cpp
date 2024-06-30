@@ -19,7 +19,6 @@ public:
     void ResizeGrid(int grid_w, int grid_h);
     void ResizeTerrain(Vector2 size_m);
     void Resize(int grid_w, int grid_h, Vector2 size_m);
-    void Save(std::string file_name);
 
     float GetTileWidthM();
     float GetTileHeightM();
@@ -31,7 +30,11 @@ public:
 
     inline int GetLayerCount() { return (int) m_layers.size(); }
     Layer *GetLayer(int index);
+    Layer *GetLayer(std::string name);
     void AddLayer(Layer *l);
+
+    void Save(std::string file_name);
+    static EditorLevel *Load(std::string file_name);
 
 
 private:

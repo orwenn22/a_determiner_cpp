@@ -14,4 +14,6 @@ float ReadF32(FILE *f);
 void WriteTexture(Texture texture, FILE *f);
 Texture ReadTexture(FILE *f);
 
+bool CheckSignature(const char *signature, int length, FILE *f);
+
 #endif //UI_FRAMEWORK_FILEOP_H

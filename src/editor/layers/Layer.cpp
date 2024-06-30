@@ -30,9 +30,7 @@ void Layer::Save(FILE *out_file) {
 Layer *Layer::Load(EditorLevel *level, FILE *in_file) {
     if(in_file == nullptr) return nullptr;
 
-    char sig[4] = { 0 };
-    fgets(sig, 4, in_file);
-    if(std::string(sig) != "lay") {
+    if(!CheckSignature("lay", 3, in_file)) {
         TRACE("No 'lay' signature\n");
         return nullptr;
     }
@@ -50,6 +48,8 @@ Layer *Layer::Load(EditorLevel *level, FILE *in_file) {
     LayerType layer_type = (LayerType) ReadU32(in_file);
     Layer *r = nullptr;
 
+    TRACE("Parsing layer '%s' of type %i\n", name_buf, layer_type);
+
     switch (layer_type) {
         case LayerType_SpawnRegions:
             r = LayerSpawnRegions::Load(level, in_file);
@@ -61,7 +61,10 @@ Layer *Layer::Load(EditorLevel *level, FILE *in_file) {
             break;
     }
 
-    if(r != nullptr) r->m_name = std::string(name_buf);
+    if(r != nullptr) {
+        r->m_name = std::string(name_buf);
+        TRACE("Successfully parsed layer '%s' of type %i\n", name_buf, layer_type);
+    }
 
     return r;
 }

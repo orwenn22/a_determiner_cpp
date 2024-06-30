@@ -11,6 +11,7 @@
 #include "utils/FileOp.h"
 #include "../EditorLevel.h"
 #include "EditorState.h"
+#include "GlobalResources.h"
 
 
 LayerTilemap::LayerTilemap(EditorLevel *level, std::string name) : Layer(level, std::move(name), LayerType_Tilemap) {
@@ -81,53 +82,99 @@ void LayerTilemap::SetPaletteScroll(int scroll) {
 }
 
 
+//NOTE : this does not save the size of the grid because it is stored in the EditorLevel
 void LayerTilemap::Save(FILE *out_file) {
-    Layer::Save(out_file);
-
     if(!m_tileset->Usable()) {
         TRACE("Can't save unusable tileset :(\n");
-        return;
+        return;     //TODO : return false ?
     }
 
-    fputs("til", out_file);             //signature
+    //Save layer header
+    Layer::Save(out_file);
+
+    //First signature
+    fputs("til", out_file);
+
+    //Save tile width and tile height
     WriteU32(m_tileset->GetTileWidth(), out_file);
     WriteU32(m_tileset->GetTileHeight(), out_file);
+
+    //Save lock
     WriteU32((uint32_t)m_tileset_lock, out_file);
-    if(m_tileset_lock) WriteTexture(*(m_tileset->GetTexture()), out_file);
+
+    //If the tileset is unlocked (aka not the collision layer) then we save the texture
+    if(!m_tileset_lock) WriteTexture(*(m_tileset->GetTexture()), out_file);
+
+    //Save tilemat data
     for(int y = 0; y < m_tilegrid->GridHeight(); ++y) {
         for(int x = 0; x < m_tilegrid->GridWidth(); ++x) {
             fputc(m_tilegrid->GetTile(x, y), out_file);
         }
     }
-    fputs("lit", out_file);             //2nd signature
+
+    //End signature
+    fputs("lit", out_file);
 }
 
+//This should be called by Layer::Load
 LayerTilemap *LayerTilemap::Load(EditorLevel *level, FILE *in_file) {
     if(in_file == nullptr) return nullptr;
     LayerTilemap *r = nullptr;
 
-    char sig[4] = { 0 };
-    fgets(sig, 4, in_file);
-    if(std::string(sig) != "til") {
+    //Check first signature
+    if(!CheckSignature("til", 3, in_file)) {
         TRACE("No signature 'til'\n");
         return nullptr;
     }
 
+    //Read size
     int tile_width = (int) ReadU32(in_file);
     int tile_height = (int) ReadU32(in_file);
+    TRACE("Tile layer have size (%i * %i)\n", tile_width, tile_height);
     if(tile_width <= 0 || tile_height <= 0) {
-        TRACE("Invalid tile size (%i * %i)", tile_width, tile_height);
+        TRACE("Invalid size\n");
         return nullptr;
     }
 
+    //Read lock
     int lock = (int) ReadU32(in_file);
+    TRACE("tileset lock : %i\n", lock);
+
+    r = new LayerTilemap(level, "temp lmao");       //The name is set when we return to Layer::Load
     if(lock) {
-        //TODO : don't load bitmap, use collision tileset
-        //r = new LayerTilemap()
+        //In this case we don't need to load the bitmap, we just use the collision tileset
+         r->SetTileset(Res::collisions_tileset->WeakCopy(), true);
     }
     else {
-        //TODO : load bitmap
+        //Load bitmap
+        Texture tileset_texture = ReadTexture(in_file);
+        if(tileset_texture.id <= 0) {
+            TRACE("Failed to load texture\n");
+            delete r;
+            return nullptr;
+        }
+        r->SetTileset(new Tileset(&tileset_texture, tile_width, tile_height, true));
     }
 
-    return nullptr;
+    //Load tilemap
+    for(int y = 0; y < level->GridHeight(); ++y) {
+        for(int x = 0; x < level->GridWidth(); ++x) {
+            int tile = getc(in_file);
+            if(tile == EOF) {
+                TRACE("Reached EOF while parsing tilemap\n");
+                delete r;
+                return nullptr;
+            }
+            r->m_tilegrid->SetTile(x, y, tile);
+        }
+    }
+
+    //Check end signature
+    if(!CheckSignature("lit", 3, in_file)) {
+        TRACE("No signature 'lit' (offset 0x%lx)\n", ftell(in_file));
+        delete r;
+        return nullptr;
+    }
+
+    return r;
 }

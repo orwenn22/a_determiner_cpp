@@ -116,3 +116,11 @@ Texture ReadTexture(FILE *f) {
     UnloadImage(tileset_image);
     return tileset_texture;
 }
+
+
+bool CheckSignature(const char *signature, int length, FILE *f) {
+    for(int i = 0; i < length; ++i) {
+        if(fgetc(f) != signature[i]) return false;
+    }
+    return true;
+}
