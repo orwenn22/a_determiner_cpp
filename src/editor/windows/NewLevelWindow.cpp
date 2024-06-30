@@ -18,7 +18,7 @@ NewLevelWindow::NewLevelWindow(EditorState *editor) : Window(50, 50, 250, 140) {
 
     Label *grid_size_label = new Label(3, 3, 10, "Grid size (tiles) :");
     IntField *grid_w_field = new IntField(153, 3, 95, 10, &m_grid_w);
-    IntField *grid_h_field = new IntField(153, 18, 95, 10, &m_grid_w);
+    IntField *grid_h_field = new IntField(153, 18, 95, 10, &m_grid_h);
 
     Label *level_size_label = new Label(3, 36, 10, "Level size (m) :");
     IntField *level_w_field = new IntField(153, 36, 95, 10, &m_level_w_m);
