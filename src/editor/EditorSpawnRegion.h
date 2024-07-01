@@ -16,6 +16,13 @@ public:
 
     void Save(FILE *out_file);
 
+    //Getters
+    inline float X() { return m_x; }
+    inline float Y() { return m_y; }
+    inline float Width() { return m_w; }
+    inline float Height() { return m_h; }
+    inline int TeamIndex() { return m_team_index; }
+
 private:
     float m_x, m_y, m_w, m_h;
     int m_team_index;

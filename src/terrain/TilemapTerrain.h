@@ -13,11 +13,12 @@ class Tileset;
 class TilemapTerrain : public Terrain {
 public:
     static TilemapTerrain *construct(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height);
-    TilemapTerrain(Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height);
+    TilemapTerrain(Vector2 size, int grid_width, int grid_height);
     ~TilemapTerrain() override;
 
     void SetTile(size_t tile_index, unsigned char value, unsigned char col_id);
     void SetTile(int x, int y, unsigned char value, unsigned char col_id);
+    void DestroyTile(int x, int y);
 
     void Draw() override;
     void DrawCollisions();
@@ -42,6 +43,9 @@ public:
 
     inline float TileWidth() { return m_tile_width_m; }
     inline float TileHeight() { return m_tile_height_m; }
+
+    void SetTileset(Tileset *tileset);
+
 
 private:
     TilemapTerrain(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height);

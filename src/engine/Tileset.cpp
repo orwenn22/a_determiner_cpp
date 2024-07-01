@@ -22,7 +22,9 @@ Tileset::Tileset(Texture *texture, int tile_width, int tile_height, bool ownersh
 }
 
 Tileset::~Tileset() {
-    if(m_ownership && m_texture != nullptr) UnloadTexture(*m_texture);
+    if(m_ownership && m_texture != nullptr) {
+        UnloadTexture(*m_texture);
+    }
     delete m_texture;
 }
 
@@ -30,6 +32,13 @@ Tileset::~Tileset() {
 //TODO 2 : prevent week copies on tilesets that don't have the ownership of the texture ?
 Tileset *Tileset::WeakCopy() {
     return new Tileset(m_texture, m_tile_width, m_tile_height, false);
+}
+
+//TODO : find a better name for this
+Tileset *Tileset::StrongClone() {
+    if(!m_ownership) return nullptr;
+    m_ownership = false;
+    return new Tileset(m_texture, m_tile_width, m_tile_height, true);
 }
 
 void Tileset::SetTileSize(int tile_width, int tile_height) {

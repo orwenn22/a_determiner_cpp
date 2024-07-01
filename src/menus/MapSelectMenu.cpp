@@ -12,6 +12,7 @@
 #include "engine/widgets/TiledDivision.h"
 #include "engine/widgets/WidgetManager.h"
 #include "maploaders/LegacyMapLoader.h"
+#include "maploaders/LevMapLoader.h"
 #include "utils/TiledBackground.h"
 #include "Config.h"
 #include "GameplayState.h"
@@ -26,6 +27,7 @@
 MapSelectMenu::MapSelectMenu() : State() {
     m_error_label = nullptr;
     m_loaders.push_back(new LegacyMapLoader);
+    m_loaders.push_back(new LevMapLoader);
 
     m_bg = new TiledBackground(&Res::menubg_sprite);
 
@@ -301,7 +303,7 @@ bool MapSelectMenu::HandleFileDragAndDrop(std::string dragged_path) {
     std::string file_extension = GetExtensionFromPath(dragged_path);
     //TODO : use a map to match extensions to ext directories more efficiently ?
     //TODO : check if it is a regular file ?
-    if(file_extension == "leg") {
+    if(file_extension == "leg" || file_extension == "lev") {
         if(std::filesystem::copy_file(dragged_path, Config::GetExternalFolderPath() + "/maps/" + GetFileFromPath(dragged_path))) {
             return true;        //Reload pages
         }

@@ -9,6 +9,7 @@ public:
     ~Tileset();
 
     Tileset *WeakCopy();
+    Tileset *StrongClone();
 
     inline Texture* GetTexture() { return m_texture; }
     inline int GetTileWidth() { return m_tile_width; }

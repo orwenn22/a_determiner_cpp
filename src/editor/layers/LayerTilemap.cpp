@@ -183,3 +183,8 @@ LayerTilemap *LayerTilemap::Load(EditorLevel *level, FILE *in_file) {
 
     return r;
 }
+
+
+unsigned char LayerTilemap::GetTile(int x, int y) {
+    return m_tilegrid->GetTile(x, y);
+}

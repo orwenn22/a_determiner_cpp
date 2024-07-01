@@ -18,6 +18,8 @@ public:
     void Draw(EditorState *editor) override;
 
     void AddSpawnRegion(EditorSpawnRegion region);
+    EditorSpawnRegion *GetSpawnRegion(int index);
+    int GetSpawnRegionCount();
 
     bool Save(FILE *out_file) override;
     static LayerSpawnRegions *Load(EditorLevel *level, FILE *in_file);

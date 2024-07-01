@@ -34,6 +34,8 @@ public:
     inline int GetPaletteScroll() { return m_palette_widget_scroll; }
     void SetPaletteScroll(int scroll);
 
+    unsigned char GetTile(int x, int y);
+
 private:
     TileGrid *m_tilegrid;
     Tileset *m_tileset;

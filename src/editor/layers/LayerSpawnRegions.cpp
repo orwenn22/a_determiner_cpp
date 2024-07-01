@@ -39,6 +39,17 @@ void LayerSpawnRegions::AddSpawnRegion(EditorSpawnRegion region) {
     m_spawn_regions.push_back(region);
 }
 
+EditorSpawnRegion *LayerSpawnRegions::GetSpawnRegion(int index) {
+    if(index < 0 || index >= m_spawn_regions.size()) return nullptr;
+    return &(m_spawn_regions[index]);
+}
+
+int LayerSpawnRegions::GetSpawnRegionCount() {
+    return (int) m_spawn_regions.size();
+}
+
+
+
 bool LayerSpawnRegions::Save(FILE *out_file) {
     //Save the layer header
     (void) Layer::Save(out_file);

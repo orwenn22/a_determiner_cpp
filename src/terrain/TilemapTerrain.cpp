@@ -31,9 +31,9 @@ TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_
     SetGridSize(grid_width, grid_height, size);
 }
 
-TilemapTerrain::TilemapTerrain(Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height) {
+TilemapTerrain::TilemapTerrain(Vector2 size, int grid_width, int grid_height) {
     m_origin = {0.f, 0.f};
-    m_tileset = new Tileset(nullptr, tile_width, tile_height, true);
+    m_tileset = nullptr;
     m_tilemap_data = nullptr;
     m_collision_mask = nullptr;
     SetGridSize(grid_width, grid_height, size);
@@ -55,6 +55,12 @@ void TilemapTerrain::SetTile(int x, int y, unsigned char value, unsigned char co
     m_tilemap_data->SetTile(x, y, value);
     m_collision_mask->SetTile(x, y, col_id);
 }
+
+void TilemapTerrain::DestroyTile(int x, int y) {
+    if(m_collision_mask->GetTile(x, y) == 2) return;        //2 is indestructible
+    SetTile(x, y, 0, 0);
+}
+
 
 void TilemapTerrain::Draw() {
     if(m_tileset == nullptr) {
@@ -150,7 +156,7 @@ void TilemapTerrain::DestroyRectangle(Rectangle rec) {
 
     for(size_t y = tile_pos.y; y <= tile_pos2.y; ++y) {
         for(size_t x = tile_pos.x; x <= tile_pos2.x; ++x) {
-            SetTile((int)x, (int)y, 0, 0);
+            DestroyTile((int)x, (int)y);
         }
     }
 }
@@ -168,10 +174,17 @@ float TilemapTerrain::Height() { return m_size.y; }
 int TilemapTerrain::GridWidth() { return (m_tilemap_data == nullptr) ? 0 : m_tilemap_data->GridWidth(); }
 int TilemapTerrain::GridHeight() { return (m_tilemap_data == nullptr) ? 0 : m_tilemap_data->GridHeight(); }
 
+
 Vector2i TilemapTerrain::GetTilePosition(Vector2 meter_position) {
     int x = (int)((meter_position.x-m_origin.x)/m_tile_width_m) - (meter_position.x < m_origin.x);
     int y = (int)((meter_position.y-m_origin.y)/m_tile_height_m) - (meter_position.y < m_origin.y);
     return {x, y};
+}
+
+
+void TilemapTerrain::SetTileset(Tileset *tileset) {
+    delete m_tileset;
+    m_tileset = tileset;
 }
 
 
@@ -200,7 +213,7 @@ void TilemapTerrain::DestroyElispeTiles(Vector2 center, int radius_width, int ra
         int y_dist = (int)(sin((double)i*PI / (double)step_count) * (double)radius_height);         //y distance from the x axes
         for(int y = tile_pos.y - y_dist; y <= tile_pos.y + y_dist; ++y) {                 //for each tile of the columns...
             if(y < 0 || y >= m_grid_height) continue;                           //check if it is in bound....
-            SetTile(x_pos, y, 0, 0);                             //If so destroy it
+            DestroyTile(x_pos, y);                                           //If so destroy it
         }
     }
 }
