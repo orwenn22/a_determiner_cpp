@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 
 def add_source_files_to_array(directory: str, array: list):
@@ -26,17 +27,47 @@ def mangle_to_object_file_name(source_file_path: str) -> str:
     return build_dir + "/" + source_file_path.replace("/", "_").replace(".", "_") + ".o"
 
 
+def build_shell_html(source_path: str, dest_path: str):
+    in_file = open(source_path, "r")
+    final_shell = open(dest_path, "w")
+
+    for line in in_file.readlines():
+        while "[[[" in line and "]]]" in line:
+            start_pos = line.find("[[[")
+            stop_pos = line.find("]]]")
+            if start_pos > stop_pos: break      # TODO : error message ?
+
+            insert_file = open(line[start_pos+3:stop_pos], "r")
+            content = insert_file.read()
+            insert_file.close()
+            if start_pos != 0: content = "\n" + content
+
+            line = line.replace(line[start_pos:stop_pos+3], content)
+        final_shell.write(line)
+
+    in_file.close()
+    final_shell.close()
+
+
 #################################
 # CONFIGURATION
+
+git_branch = subprocess.run(["git",  "rev-parse", "HEAD"], stdout=subprocess.PIPE).stdout.decode().strip()
+git_commit = subprocess.run(["git",  "rev-parse", "--abbrev-ref", "HEAD"], stdout=subprocess.PIPE).stdout.decode().strip()
 
 source_dir = "./src"
 preload_dirs = ["./res", "./maps"]
 target_name = "adeterminer.html"
 build_dir = "build_wasm"
 makefile_name = "wasm_auto.Makefile"
-CXX_command = "emcc -c [src] -o [obj] -Isrc -Iraylib/src"
+CXX_command = f"emcc -c [src] -o [obj] -Isrc -Iraylib/src -DGIT_COMMIT_HASH=\\\"{git_commit}\\\" -DGIT_BRANCH=\\\"{git_branch}\\\""
 LINK_command = "emcc [obj_list] ./raylib/src/libraylib.a -o [target] -lidbfs.js -s USE_GLFW=3 --shell-file shell.html -sGL_ENABLE_GET_PROC_ADDRESS [preloaded_files]"
 
+
+#################################
+# GENERATING SHELL
+
+build_shell_html("web/shell.html", "./shell.html")
 
 #################################
 # GENERATING MAKEFILE

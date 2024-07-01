@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>test</title>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+
+<script type='text/javascript'>[[[web/emscripten_boilerplate.js]]]</script>
+<script type='text/javascript'>[[[web/prevent_default.js]]]</script>
+<script type='text/javascript'>[[[web/download_from_fs.js]]]</script>
+{{{ SCRIPT }}}
+</body>
+</html>
