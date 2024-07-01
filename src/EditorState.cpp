@@ -5,12 +5,14 @@
 #include "editor/layers/LayerTilemap.h"
 #include "editor/windows/EditorLayerWindow.h"
 #include "editor/windows/EditorPaletteWindow.h"
+#include "editor/windows/LeaveEditorWindow.h"
 #include "editor/windows/NewLevelWindow.h"
 #include "editor/windows/ResizeLevelWindow.h"
 #include "editor/EditorLevel.h"
 #include "editor/EditorSpawnRegion.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
+#include "engine/state/StateManager.h"
 #include "engine/util/Paths.h"
 #include "engine/util/Trace.h"
 #include "engine/widgets/Button.h"
@@ -20,6 +22,7 @@
 #include "engine/Globals.h"
 #include "engine/Tileset.h"
 #include "engine/TileGrid.h"
+#include "menus/MainMenu.h"
 #include "terrain/TilemapTerrain.h"
 #include "utils/TiledBackground.h"
 #include "windows/ErrorWindow.h"
@@ -29,8 +32,11 @@
 #include "engine/util/WasmFS.h"
 #endif
 
+#define ESCAPE_TIMER_DURATION 1.f
 
 EditorState::EditorState() {
+    m_escape_timer = 0.f;
+
     m_preview_hovered_tile = false;
     m_hovered_tile = {0, 0};
 
@@ -87,6 +93,17 @@ void EditorState::Update(float dt) {
         }
     }
 
+    if(IsKeyDown(KEY_ESCAPE)) {
+        m_escape_timer += dt;
+    }
+    else {
+        if(m_escape_timer < .2f && IsKeyReleased(KEY_ESCAPE)) {
+            m_window_manager->AddWindow(new LeaveEditorWindow(this, 15, 15));        //TODO : check if window exist
+        }
+        m_escape_timer = 0.f;
+    }
+    if(m_escape_timer >= ESCAPE_TIMER_DURATION) Manager()->SetState(new MainMenu);
+
     m_window_manager->Update();
     m_widgets->Update();
 
@@ -112,6 +129,10 @@ void EditorState::Draw() {
     }
     m_widgets->Draw();
     m_window_manager->Draw();
+
+    if(m_escape_timer > 0.f) {
+        DrawText(TextFormat("Quitting in %f seconds...", ESCAPE_TIMER_DURATION-m_escape_timer), 10, 10, 40, RED);
+    }
 }
 
 

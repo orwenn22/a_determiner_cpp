@@ -77,6 +77,8 @@ private:
 
     bool m_preview_hovered_tile;
     Vector2i m_hovered_tile;
+
+    float m_escape_timer;
 };
 
 

@@ -29,11 +29,14 @@ public:
     void DestroyRectangle(Rectangle rec) override;
     void DestroyCircle(Vector2 center, float radius) override;       //Take in meters
 
+    //Get terrain size in meter
     float Width() override;
     float Height() override;
 
+    //Get the amount of tile horizontally/vertically
     int GridWidth();
     int GridHeight();
+
     inline Tileset *GetTileset() { return m_tileset; }
 
     Vector2i GetTilePosition(Vector2 meter_position);
@@ -41,6 +44,7 @@ public:
     inline TileGrid *GetTilemap() { return m_tilemap_data; }
     inline TileGrid *GetCollision() { return m_collision_mask; }
 
+    //Get the size of a tile in meters
     inline float TileWidth() { return m_tile_width_m; }
     inline float TileHeight() { return m_tile_height_m; }
 

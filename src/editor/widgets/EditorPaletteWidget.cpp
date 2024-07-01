@@ -6,9 +6,7 @@
 #include "editor/layers/LayerTilemap.h"
 #include "engine/util/Trace.h"
 #include "engine/Globals.h"
-#include "engine/TileGrid.h"
 #include "engine/Tileset.h"
-#include "terrain/TilemapTerrain.h"
 #include "EditorState.h"
 
 
@@ -83,12 +81,14 @@ void EditorPaletteWidget::Draw() {
     int painter_x = 1;
     int painter_y = 1;
     int tile_index = ((LayerTilemap *)current_layer)->GetPaletteScroll();
+    int selected_tile = m_editor->GetPaletteIndex();
 
     while(painter_y < Height()-tile_height) {       //Rows
         while(painter_x < Width()-tile_width) {     //Columns
             Rectangle dest = {(float)(x+painter_x), (float)(y+painter_y), (float)tile_width, (float)tile_height};
             tileset->Draw(tile_index, dest);
-            DrawText(TextFormat("%i", tile_index), (int)dest.x, (int)dest.y, 10, WHITE);
+            DrawText(TextFormat("%i", tile_index), (int)dest.x+1, (int)dest.y+1, 10, WHITE);
+            if(tile_index == selected_tile) DrawRectangleLinesEx(dest, 1, GREEN);
             ++tile_index;
             painter_x += tile_width;
         }

@@ -6,7 +6,6 @@
 #include "engine/widgets/Label.h"
 #include "engine/widgets/TiledButton.h"
 #include "engine/widgets/WidgetManager.h"
-#include "maploaders/LegacyMapLoader.h"
 #include "utils/TiledBackground.h"
 #include "CreditsMenu.h"
 #include "EditorState.h"
@@ -14,8 +13,6 @@
 #include "GlobalResources.h"
 #include "MapSelectMenu.h"
 #include "OptionsMenu.h"
-
-#include "terrain/TilemapTerrain.h"
 
 
 #ifdef GIT_COMMIT_HASH
@@ -58,19 +55,24 @@ MainMenu::MainMenu() : State() {
     play_button->CenterLabel();
     play_button->SetAlignment(WidgetAlignment_Center);
     play_button->SetCallback([=]() {
-        //LegacyMapLoader loader;
-        //GameplayState *gs = loader.LoadMap("maps/Big.txt");
-        //if(gs == nullptr) {
-        //    TRACE("failed to load map\n");
-        //    return;
-        //}
-        //this->Manager()->SetState(gs, true);
         this->Manager()->SetState(new MapSelectMenu, true);
     });
     m_widgets->AddWidget(play_button);
 
+    //EDITOR BUTTON
+    TiledButton *editor_button = new TiledButton(0, 0, 150, 40,
+                                               &Res::tiled_button_sprite, 8, 2, "Editor");
+    editor_button->SetFontSize(20);
+    editor_button->SetHoverColor(BLUE);
+    editor_button->CenterLabel();
+    editor_button->SetAlignment(WidgetAlignment_Center);
+    editor_button->SetCallback([=]() {
+        this->Manager()->SetState(new EditorState, true);
+    });
+    m_widgets->AddWidget(editor_button);
+
     //OPTIONS BUTTON
-    TiledButton *option_button = new TiledButton(0, 0, 150, 40,
+    TiledButton *option_button = new TiledButton(0, 50, 150, 40,
                                                  &Res::tiled_button_sprite, 8, 2, "Options");
     option_button->SetFontSize(20);
     option_button->CenterLabel();
@@ -81,7 +83,7 @@ MainMenu::MainMenu() : State() {
     m_widgets->AddWidget(option_button);
 
     //CREDITS BUTTON
-    TiledButton *credits_button = new TiledButton(0, 50, 150, 40,
+    TiledButton *credits_button = new TiledButton(0, 100, 150, 40,
                                                   &Res::tiled_button_sprite, 8, 2, "Credits");
     credits_button->SetFontSize(20);
     credits_button->CenterLabel();
@@ -92,7 +94,7 @@ MainMenu::MainMenu() : State() {
     m_widgets->AddWidget(credits_button);
 
     //QUIT BUTTON
-    TiledButton *quit_button = new TiledButton(0, 100, 150, 40,
+    TiledButton *quit_button = new TiledButton(0, 150, 150, 40,
                                                &Res::tiled_button_sprite, 8, 2, "Quit");
     quit_button->SetFontSize(20);
     quit_button->SetHoverColor(RED);
@@ -116,26 +118,7 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::Update(float dt) {
-    if(IsKeyPressed(KEY_B)) {
-        GameplayState *gs = new GameplayState();
-        TilemapTerrain *tt = TilemapTerrain::construct("res/tilemap_grass.png", {10.f, 10.f}, 8, 8, 20, 20);
-        if(tt == nullptr) return;
-        gs->InitTerrain(tt);
-        gs->InitSpawnRegion(0, {0, 0, 5, 10});
-        gs->InitSpawnRegion(1, {5, 0, 5, 10});
-        for(int i = 0; i < 20; ++i) {
-            tt->SetTile(i, 12, 2, 1);
-            tt->SetTile(i, 13, 2, 1);
-            tt->SetTile(i, 14, 2, 1);
-            tt->SetTile(i, 15, 2, 1);
-            tt->SetTile(i, 16, 2, 1);
-            tt->SetTile(i, 17, 2, 1);
-            tt->SetTile(i, 18, 2, 1);
-            tt->SetTile(i, 19, 2, 1);
-        }
-        Manager()->SetState(gs);
-    }
-    else if(IsKeyPressed(KEY_E)) {
+    if(IsKeyPressed(KEY_E)) {
         Manager()->SetState(new EditorState);
     }
     m_widgets->Update();
