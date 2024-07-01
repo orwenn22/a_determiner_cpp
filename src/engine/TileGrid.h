@@ -9,6 +9,7 @@ class Tileset;
 class TileGrid {
 public:
     TileGrid(int grid_width, int grid_height);
+    ~TileGrid();
 
     unsigned char GetTile(int x, int y);
     inline unsigned char UnsafeGetTile(int x, int y) { return m_data[x + y*m_grid_width]; }

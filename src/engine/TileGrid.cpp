@@ -17,6 +17,11 @@ TileGrid::TileGrid(int grid_width, int grid_height) {
     for(size_t i = 0; i < i_stop; ++i) m_data[i] = 0;
 }
 
+TileGrid::~TileGrid() {
+    free(m_data);
+}
+
+
 unsigned char TileGrid::GetTile(int x, int y) {
     if(x < 0 || y < 0 || x >= m_grid_width || y >= m_grid_height) return 0;
     return UnsafeGetTile(x, y);

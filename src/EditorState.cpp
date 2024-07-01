@@ -73,6 +73,8 @@ EditorState::~EditorState() {
     delete m_level;
     delete m_camera;
     delete m_widgets;
+    delete m_window_manager;
+    delete m_bg;
 }
 
 void EditorState::Update(float dt) {
