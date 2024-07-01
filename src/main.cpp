@@ -10,7 +10,7 @@
 #include "engine/Globals.h"
 #include "engine/state/StateManager.h"
 #include "engine/util/DebugOverlay.h"
-#include "engine/util/IDBFS.h"
+#include "engine/util/WasmFS.h"
 #include "engine/util/Paths.h"
 #include "engine/util/Trace.h"
 #include "engine/KeyBinds.h"

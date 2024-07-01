@@ -126,7 +126,7 @@ add_executable(UI_framework src/main.cpp
         src/engine/tooltip/TooltipImage.cpp
         src/engine/tooltip/TooltipText.cpp
         src/Config.cpp
-        src/engine/util/IDBFS.cpp
+        src/engine/util/WasmFS.cpp
         src/engine/util/String.cpp
         src/Ext.cpp
         src/Ext.h

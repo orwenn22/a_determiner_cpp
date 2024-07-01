@@ -1,4 +1,4 @@
-#include "IDBFS.h"
+#include "WasmFS.h"
 
 #ifdef __EMSCRIPTEN__
 
@@ -29,6 +29,12 @@ void SyncIDBFS() {
     );
 }
 
+void DownloadFromFS(const char *path) {
+    EM_ASM({
+        downloadFromFS(UTF8ToString($0));
+    }, path);
+}
+
 #else
 
 void MountIDBFS() {
@@ -37,6 +43,10 @@ void MountIDBFS() {
 
 void SyncIDBFS() {
     //Nothing to do if we are not using emscripten
+}
+
+void DownloadFromFS(const char *path) {
+    (void) path;    //Nothing to do if we are not using emscripten
 }
 
 #endif

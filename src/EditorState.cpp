@@ -25,6 +25,10 @@
 #include "windows/ErrorWindow.h"
 #include "GlobalResources.h"
 
+#ifdef __EMSCRIPTEN__
+#include "engine/util/WasmFS.h"
+#endif
+
 
 EditorState::EditorState() {
     m_preview_hovered_tile = false;
@@ -145,9 +149,18 @@ void EditorState::Resize(int grid_w, int grid_h, Vector2 size_m) {
 void EditorState::Save(std::string file_name) {
     if(m_level == nullptr) return;
 
+#ifdef __EMSCRIPTEN__
+    file_name = "/editor_out.lev";          //overwrite filename
+    if(!m_level->Save(file_name)) {
+        m_window_manager->AddWindow(new ErrorWindow(15, 15, "Failed to save level :^("));
+        return;
+    }
+    DownloadFromFS(file_name.c_str());
+#else
     if(!m_level->Save(file_name)) {
         m_window_manager->AddWindow(new ErrorWindow(15, 15, "Failed to save level :^("));
     }
+#endif
 }
 
 

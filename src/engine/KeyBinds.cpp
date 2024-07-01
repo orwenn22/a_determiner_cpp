@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 
-#include "util/IDBFS.h"
+#include "util/WasmFS.h"
 #include "util/String.h"
 #include "util/Trace.h"
 
