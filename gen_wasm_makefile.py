@@ -52,8 +52,8 @@ def build_shell_html(source_path: str, dest_path: str):
 #################################
 # CONFIGURATION
 
-git_branch = subprocess.run(["git",  "rev-parse", "HEAD"], stdout=subprocess.PIPE).stdout.decode().strip()
-git_commit = subprocess.run(["git",  "rev-parse", "--abbrev-ref", "HEAD"], stdout=subprocess.PIPE).stdout.decode().strip()
+git_commit = subprocess.run(["git",  "rev-parse", "HEAD"], stdout=subprocess.PIPE).stdout.decode().strip()
+git_branch = subprocess.run(["git",  "rev-parse", "--abbrev-ref", "HEAD"], stdout=subprocess.PIPE).stdout.decode().strip()
 
 source_dir = "./src"
 preload_dirs = ["./res", "./maps"]
