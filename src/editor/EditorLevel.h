@@ -33,7 +33,7 @@ public:
     Layer *GetLayer(std::string name);
     void AddLayer(Layer *l);
 
-    void Save(std::string file_name);
+    bool Save(std::string file_name);
     static EditorLevel *Load(std::string file_name);
 
 

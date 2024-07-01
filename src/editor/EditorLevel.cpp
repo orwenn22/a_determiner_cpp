@@ -100,13 +100,18 @@ void EditorLevel::AddLayer(Layer *l) {
 }
 
 
-void EditorLevel::Save(std::string file_name) {
-    //TODO : perform checks to ensure all layers are savable here
+bool EditorLevel::Save(std::string file_name) {
+    for(int i = 0; i < m_layers.size(); ++i) {
+        if(!m_layers[i]->Savable()) {
+            TRACE("Layer %i named '%s' is not savable\n", i, m_layers[i]->Name().c_str());
+            return false;
+        }
+    }
 
     FILE *out_file = fopen(file_name.c_str(), "w");
     if(out_file == nullptr) {
         TRACE("Failed to create/open file %s\n", file_name.c_str());
-        return;     //TODO : return false ?
+        return false;
     }
 
     fputs("lev", out_file);
@@ -124,7 +129,11 @@ void EditorLevel::Save(std::string file_name) {
 
     //Save layers
     for(int i = 0; i < m_layers.size(); ++i) {
-        m_layers[i]->Save(out_file);
+        if(m_layers[i]->Save(out_file)) continue;
+
+        //If we reach this it means that we failed to save the layer
+        fclose(out_file);
+        TRACE("Failed to save layer %i named '%s'", i, m_layers[i]->Name().c_str());
     }
 
     //End signature
@@ -132,6 +141,7 @@ void EditorLevel::Save(std::string file_name) {
 
     fclose(out_file);
     TRACE("Successfully saved as %s\n", file_name.c_str());
+    return true;
 }
 
 

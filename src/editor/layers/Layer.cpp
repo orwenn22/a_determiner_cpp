@@ -19,11 +19,16 @@ void Layer::PreDraw(EditorState *editor) { }
 void Layer::Draw(EditorState *editor) { }
 void Layer::HandleFileDrag(EditorState *editor, std::string file_name) { }
 
-void Layer::Save(FILE *out_file) {
+bool Layer::Savable() {
+    return true;        //Make a layer savable by default
+}
+
+bool Layer::Save(FILE *out_file) {
     fputs("lay", out_file);             //signature
     fputs(m_name.c_str(), out_file);    //layer name
     fputc(0, out_file);                 //layer name (end of string)
     WriteU32(m_layer_type, out_file);      //layer type;
+    return true;        //success
 }
 
 

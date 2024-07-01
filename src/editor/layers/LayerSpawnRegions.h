@@ -19,7 +19,7 @@ public:
 
     void AddSpawnRegion(EditorSpawnRegion region);
 
-    void Save(FILE *out_file) override;
+    bool Save(FILE *out_file) override;
     static LayerSpawnRegions *Load(EditorLevel *level, FILE *in_file);
 
 private:

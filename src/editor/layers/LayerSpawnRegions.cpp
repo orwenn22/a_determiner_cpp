@@ -39,9 +39,9 @@ void LayerSpawnRegions::AddSpawnRegion(EditorSpawnRegion region) {
     m_spawn_regions.push_back(region);
 }
 
-void LayerSpawnRegions::Save(FILE *out_file) {
+bool LayerSpawnRegions::Save(FILE *out_file) {
     //Save the layer header
-    Layer::Save(out_file);
+    (void) Layer::Save(out_file);
 
     //First signature
     fputs("reg", out_file);
@@ -56,6 +56,7 @@ void LayerSpawnRegions::Save(FILE *out_file) {
 
     //End signature
     fputs("ger", out_file);
+    return true;
 }
 
 //This should be called by Layer::Load

@@ -22,6 +22,7 @@
 #include "engine/TileGrid.h"
 #include "terrain/TilemapTerrain.h"
 #include "utils/TiledBackground.h"
+#include "windows/ErrorWindow.h"
 #include "GlobalResources.h"
 
 
@@ -136,13 +137,17 @@ void EditorState::ResizeTerrain(Vector2 size_m) {
 }
 
 void EditorState::Resize(int grid_w, int grid_h, Vector2 size_m) {
+    //TODO : error message for invalid sizes ?
     if(m_level != nullptr) m_level->Resize(grid_w, grid_h, size_m);
 }
 
 
 void EditorState::Save(std::string file_name) {
     if(m_level == nullptr) return;
-    m_level->Save(file_name);
+
+    if(!m_level->Save(file_name)) {
+        m_window_manager->AddWindow(new ErrorWindow(15, 15, "Failed to save level :^("));
+    }
 }
 
 

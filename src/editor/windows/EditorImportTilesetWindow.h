@@ -8,10 +8,11 @@ class LayerTilemap;
 
 class EditorImportTilesetWindow : public Window {
 public:
-    EditorImportTilesetWindow(LayerTilemap *layer, std::string file_path);
+    EditorImportTilesetWindow(EditorState *editor, LayerTilemap *layer, std::string file_path);
     ~EditorImportTilesetWindow() override;
 
 private:
+    EditorState *m_editor;
     LayerTilemap *m_layer;
     std::string m_file_path;
 

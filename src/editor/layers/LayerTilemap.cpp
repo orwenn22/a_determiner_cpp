@@ -57,7 +57,7 @@ void LayerTilemap::Draw(EditorState *editor) {
 
 void LayerTilemap::HandleFileDrag(EditorState *editor, std::string file_name) {
     if(m_tileset_lock) return;      //TODO : display error ?
-    editor->GetWindowManager()->AddWindow(new EditorImportTilesetWindow(this, file_name));
+    editor->GetWindowManager()->AddWindow(new EditorImportTilesetWindow(editor, this, file_name));
 }
 
 void LayerTilemap::SetTileset(Tileset *tileset, bool lock) {
@@ -82,15 +82,19 @@ void LayerTilemap::SetPaletteScroll(int scroll) {
 }
 
 
+bool LayerTilemap::Savable() {
+    return (m_tileset != nullptr && m_tileset->Usable());
+}
+
 //NOTE : this does not save the size of the grid because it is stored in the EditorLevel
-void LayerTilemap::Save(FILE *out_file) {
-    if(!m_tileset->Usable()) {
+bool LayerTilemap::Save(FILE *out_file) {
+    if(m_tileset == nullptr || !m_tileset->Usable()) {
         TRACE("Can't save unusable tileset :(\n");
-        return;     //TODO : return false ?
+        return false;
     }
 
     //Save layer header
-    Layer::Save(out_file);
+    (void) Layer::Save(out_file);
 
     //First signature
     fputs("til", out_file);
@@ -114,6 +118,7 @@ void LayerTilemap::Save(FILE *out_file) {
 
     //End signature
     fputs("lit", out_file);
+    return true;
 }
 
 //This should be called by Layer::Load

@@ -18,7 +18,8 @@ public:
     void Draw(EditorState *editor) override;
     void HandleFileDrag(EditorState *editor, std::string file_name) override;
 
-    void Save(FILE *out_file) override;
+    bool Savable() override;
+    bool Save(FILE *out_file) override;
     static LayerTilemap *Load(EditorLevel *level, FILE *in_file);
 
     //The layer will have ownership ot the tileset object passed here. It should be allocated on the heap.
