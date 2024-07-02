@@ -58,7 +58,7 @@ void EditorSpawnRegion::Update(EditorState *editor) {
     if(m_w < 1.f) m_w = 1.f;
     if(m_h < 1.f) m_h = 1.f;
 
-    if(IsMouseUsed() || editor->GetCurrentLayerIndex() != Layer_Teams) return;
+    if(IsMouseUsed()) return;
 
     if(!CheckCollisionPointRec(mouse_m, {m_x, m_y, m_w, m_h})) return;
     UseMouse();

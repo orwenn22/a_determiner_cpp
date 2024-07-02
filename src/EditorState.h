@@ -47,6 +47,7 @@ public:
     inline EditorLevel *GetLevel() { return m_level; }
     inline int GetCurrentLayerIndex() { return m_current_layer; }
     inline void SetCurrentLayerIndex(int l) { m_current_layer = l; }
+    void SetCurrentLayer(Layer *l);
     Layer *GetCurrentLayer();
 
     inline int GetHoveredTileX() { return m_hovered_tile.x; }

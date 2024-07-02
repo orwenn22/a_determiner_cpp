@@ -18,7 +18,8 @@ LayerSpawnRegions::~LayerSpawnRegions() {
 
 void LayerSpawnRegions::UpdateIfSelected(EditorState *editor) {
     Layer::UpdateIfSelected(editor);
-    for(EditorSpawnRegion &r : m_spawn_regions) r.Update(editor);
+    //for(EditorSpawnRegion &r : m_spawn_regions) r.Update(editor);
+    for(auto it = m_spawn_regions.rbegin(); it < m_spawn_regions.rend(); it++) it->Update(editor);
 }
 
 void LayerSpawnRegions::Update(EditorState *editor) {
@@ -48,6 +49,10 @@ int LayerSpawnRegions::GetSpawnRegionCount() {
     return (int) m_spawn_regions.size();
 }
 
+//TODO : replace this by RemoveSpawnRegion eventually ?
+void LayerSpawnRegions::PopSpawnRegion() {
+    if(m_spawn_regions.size() > 0) m_spawn_regions.pop_back();
+}
 
 
 bool LayerSpawnRegions::Save(FILE *out_file) {

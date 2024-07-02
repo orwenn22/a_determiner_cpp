@@ -157,6 +157,10 @@ add_executable(UI_framework src/main.cpp
         src/maploaders/LevMapLoader.h
         src/editor/windows/LeaveEditorWindow.cpp
         src/editor/windows/LeaveEditorWindow.h
+        src/editor/widgets/TeamListWidget.cpp
+        src/editor/widgets/TeamListWidget.h
+        src/editor/windows/TeamListWindow.cpp
+        src/editor/windows/TeamListWindow.h
 )
 target_link_libraries(UI_framework PRIVATE raylib)
 target_include_directories(UI_framework PRIVATE ./src)

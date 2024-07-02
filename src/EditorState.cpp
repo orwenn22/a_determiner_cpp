@@ -8,6 +8,7 @@
 #include "editor/windows/LeaveEditorWindow.h"
 #include "editor/windows/NewLevelWindow.h"
 #include "editor/windows/ResizeLevelWindow.h"
+#include "editor/windows/TeamListWindow.h"
 #include "editor/EditorLevel.h"
 #include "editor/EditorSpawnRegion.h"
 #include "engine/metrics/Graphics.h"
@@ -207,6 +208,16 @@ Layer *EditorState::GetCurrentLayer() {
 }
 
 
+void EditorState::SetCurrentLayer(Layer *l) {
+    if(l == nullptr || m_level == nullptr) return;
+    for(int i = 0; i < m_level->GetLayerCount(); ++i) {
+        if(m_level->GetLayer(i) != l) continue;
+        SetCurrentLayerIndex(i);
+        return;
+    }
+}
+
+
 /////////////////////////////////////
 //// PRIVATE
 
@@ -239,10 +250,21 @@ void EditorState::SetupDefaultConfig() {
     m_camera->origin_y = 10.f;
     m_current_layer = 2;
 
+    if(m_level == nullptr) return;
+
     m_window_manager->Clear();
     m_widgets->Clear();
     m_window_manager->AddWindow(new EditorLayerWindow(this, 15, 15));
     m_window_manager->AddWindow(new EditorPaletteWindow(this, 30, 30, 250, 250));
+
+    LayerSpawnRegions *spawn_regions_layer = (LayerSpawnRegions *) m_level->GetLayer("Spawn regions");
+    if(spawn_regions_layer == nullptr || spawn_regions_layer->Type() != LayerType_SpawnRegions) {
+        m_window_manager->AddWindow(new ErrorWindow( 30, 30, "Could not find 'Spawn regions' layer"));
+    }
+    else {
+        m_window_manager->AddWindow(new TeamListWindow(this, spawn_regions_layer, 50, 50));
+    }
+
 }
 
 

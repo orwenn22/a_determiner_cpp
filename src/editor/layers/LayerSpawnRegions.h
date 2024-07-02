@@ -20,6 +20,7 @@ public:
     void AddSpawnRegion(EditorSpawnRegion region);
     EditorSpawnRegion *GetSpawnRegion(int index);
     int GetSpawnRegionCount();
+    void PopSpawnRegion();
 
     bool Save(FILE *out_file) override;
     static LayerSpawnRegions *Load(EditorLevel *level, FILE *in_file);
