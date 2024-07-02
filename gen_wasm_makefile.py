@@ -61,13 +61,8 @@ target_name = "adeterminer.html"
 build_dir = "build_wasm"
 makefile_name = "wasm_auto.Makefile"
 CXX_command = f"emcc -c [src] -o [obj] -Isrc -Iraylib/src -DGIT_COMMIT_HASH=\\\"{git_commit}\\\" -DGIT_BRANCH=\\\"{git_branch}\\\""
-LINK_command = "emcc [obj_list] ./raylib/src/libraylib.a -o [target] -lidbfs.js -s USE_GLFW=3 --shell-file shell.html -sGL_ENABLE_GET_PROC_ADDRESS [preloaded_files]"
+LINK_command = f"emcc [obj_list] ./raylib/src/libraylib.a -o [target] -lidbfs.js -s USE_GLFW=3 --shell-file {build_dir}/shell.html -sGL_ENABLE_GET_PROC_ADDRESS [preloaded_files]"
 
-
-#################################
-# GENERATING SHELL
-
-build_shell_html("web/shell.html", "./shell.html")
 
 #################################
 # GENERATING MAKEFILE
@@ -77,12 +72,15 @@ source_files: list[str] = []
 object_files = []
 preload_files = []
 
-# Main target
-out_file.write(f"main: {target_name}\n\techo done\n\n")
-
 # Create build dir
 if not os.path.exists(build_dir):
     os.mkdir(build_dir)
+
+# Generating shell
+build_shell_html("web/shell.html", f"{build_dir}/shell.html")
+
+# Main target
+out_file.write(f"main: {target_name}\n\techo done\n\n")
 
 # List all source files
 add_source_files_to_array(source_dir, source_files)
