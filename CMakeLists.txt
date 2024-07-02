@@ -21,7 +21,7 @@ execute_process(
         OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 
-add_executable(UI_framework src/main.cpp
+add_executable(a_determiner src/main.cpp
         src/engine/widgets/WidgetManager.cpp
         src/engine/widgets/Widget.cpp
         src/engine/Globals.cpp
