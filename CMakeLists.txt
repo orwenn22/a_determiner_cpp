@@ -162,12 +162,12 @@ add_executable(a_determiner src/main.cpp
         src/editor/windows/TeamListWindow.cpp
         src/editor/windows/TeamListWindow.h
 )
-target_link_libraries(UI_framework PRIVATE raylib)
-target_include_directories(UI_framework PRIVATE ./src)
+target_link_libraries(a_determiner PRIVATE raylib)
+target_include_directories(a_determiner PRIVATE ./src)
 
 # Expose branch and commit as #DEFINED preprocessor things
-target_compile_definitions(UI_framework PRIVATE
+target_compile_definitions(a_determiner PRIVATE
         "-DGIT_COMMIT_HASH=\"${GIT_COMMIT_HASH}\"")
-target_compile_definitions(UI_framework PRIVATE
+target_compile_definitions(a_determiner PRIVATE
         "-DGIT_BRANCH=\"${GIT_BRANCH}\"")
 
