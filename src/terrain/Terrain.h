@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_TERRAIN_H
-#define UI_FRAMEWORK_TERRAIN_H
+#ifndef A_DETERMINER_TERRAIN_H
+#define A_DETERMINER_TERRAIN_H
 
 #include <raylib.h>
 
@@ -28,4 +28,4 @@ protected:
 };
 
 
-#endif //UI_FRAMEWORK_TERRAIN_H
+#endif //A_DETERMINER_TERRAIN_H

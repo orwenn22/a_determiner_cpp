@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_PORTAL_H
-#define UI_FRAMEWORK_PORTAL_H
+#ifndef A_DETERMINER_PORTAL_H
+#define A_DETERMINER_PORTAL_H
 
 #include "engine/object/EntityObject.h"
 
@@ -32,4 +32,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_PORTAL_H
+#endif //A_DETERMINER_PORTAL_H

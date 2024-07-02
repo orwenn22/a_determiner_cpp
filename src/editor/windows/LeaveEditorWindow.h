@@ -1,5 +1,5 @@
-#ifndef LEAVEEDITORWINDOW_H
-#define LEAVEEDITORWINDOW_H
+#ifndef A_DETERMINER_LEAVEEDITORWINDOW_H
+#define A_DETERMINER_LEAVEEDITORWINDOW_H
 
 #include "engine/windows/Window.h"
 
@@ -17,4 +17,4 @@ private:
 
 
 
-#endif //LEAVEEDITORWINDOW_H
+#endif //A_DETERMINER_LEAVEEDITORWINDOW_H

@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_TROWEL_H
-#define UI_FRAMEWORK_TROWEL_H
+#ifndef A_DETERMINER_TROWEL_H
+#define A_DETERMINER_TROWEL_H
 
 #include "Collectible.h"
 
@@ -14,4 +14,4 @@ public:
 };
 
 
-#endif //UI_FRAMEWORK_TROWEL_H
+#endif //A_DETERMINER_TROWEL_H

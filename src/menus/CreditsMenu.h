@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_CREDITSMENU_H
-#define UI_FRAMEWORK_CREDITSMENU_H
+#ifndef A_DETERMINER_CREDITSMENU_H
+#define A_DETERMINER_CREDITSMENU_H
 
 #include "engine/state/State.h"
 
@@ -22,4 +22,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_CREDITSMENU_H
+#endif //A_DETERMINER_CREDITSMENU_H

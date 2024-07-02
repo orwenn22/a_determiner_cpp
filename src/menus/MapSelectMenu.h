@@ -1,14 +1,10 @@
-#ifndef UI_FRAMEWORK_MAPSELECTMENU_H
-#define UI_FRAMEWORK_MAPSELECTMENU_H
+#ifndef A_DETERMINER_MAPSELECTMENU_H
+#define A_DETERMINER_MAPSELECTMENU_H
 
 #include <string>
 #include <vector>
 
 #include "engine/state/State.h"
-
-//TODO : drag and drop to load map.
-//       This should detect if the dragged file is a map or an image. If it is an image, it should put it in ext/res,
-//       if it is a map, it should put it in ext/maps. If it is a map, we should reload the menu and go to the last page
 
 class Label;
 class MapLoader;
@@ -60,4 +56,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_MAPSELECTMENU_H
+#endif //A_DETERMINER_MAPSELECTMENU_H

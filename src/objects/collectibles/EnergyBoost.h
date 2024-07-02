@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_ENERGYBOOST_H
-#define UI_FRAMEWORK_ENERGYBOOST_H
+#ifndef A_DETERMINER_ENERGYBOOST_H
+#define A_DETERMINER_ENERGYBOOST_H
 
 #include "Collectible.h"
 
@@ -17,4 +17,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_ENERGYBOOST_H
+#endif //A_DETERMINER_ENERGYBOOST_H

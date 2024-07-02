@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_PLAYER_H
-#define UI_FRAMEWORK_PLAYER_H
+#ifndef A_DETERMINER_PLAYER_H
+#define A_DETERMINER_PLAYER_H
 
 #include "engine/object/KinematicObject.h"
 
@@ -81,4 +81,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_PLAYER_H
+#endif //A_DETERMINER_PLAYER_H

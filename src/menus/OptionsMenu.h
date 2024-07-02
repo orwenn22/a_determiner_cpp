@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_OPTIONSMENU_H
-#define UI_FRAMEWORK_OPTIONSMENU_H
+#ifndef A_DETERMINER_OPTIONSMENU_H
+#define A_DETERMINER_OPTIONSMENU_H
 
 #include "engine/state/State.h"
 
@@ -32,4 +32,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_OPTIONSMENU_H
+#endif //A_DETERMINER_OPTIONSMENU_H

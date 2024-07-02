@@ -1,5 +1,5 @@
-#ifndef TEAMLISTWIDGET_H
-#define TEAMLISTWIDGET_H
+#ifndef A_DETERMINER_TEAMLISTWIDGET_H
+#define A_DETERMINER_TEAMLISTWIDGET_H
 
 #include "engine/widgets/Widget.h"
 
@@ -20,4 +20,4 @@ private:
 };
 
 
-#endif //TEAMLISTWIDGET_H
+#endif //A_DETERMINER_TEAMLISTWIDGET_H

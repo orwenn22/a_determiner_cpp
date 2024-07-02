@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_TEAMS_H
-#define UI_FRAMEWORK_TEAMS_H
+#ifndef A_DETERMINER_TEAMS_H
+#define A_DETERMINER_TEAMS_H
 
 #include <raylib.h>
 
@@ -25,4 +25,4 @@ static const char *s_team_names[] = {
 
 static constexpr int s_team_count = sizeof(s_team_colors) / sizeof(Color);
 
-#endif //UI_FRAMEWORK_TEAMS_H
+#endif //A_DETERMINER_TEAMS_H

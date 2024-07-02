@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_EXT_H
-#define UI_FRAMEWORK_EXT_H
+#ifndef A_DETERMINER_EXT_H
+#define A_DETERMINER_EXT_H
 
 #include <string>
 
@@ -9,4 +9,4 @@ namespace Ext {
 };
 
 
-#endif //UI_FRAMEWORK_EXT_H
+#endif //A_DETERMINER_EXT_H

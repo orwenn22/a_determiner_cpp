@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_ACTION_H
-#define UI_FRAMEWORK_ACTION_H
+#ifndef A_DETERMINER_ACTION_H
+#define A_DETERMINER_ACTION_H
 
 #include <raylib.h>
 
@@ -53,4 +53,4 @@ protected:
 };
 
 
-#endif //UI_FRAMEWORK_ACTION_H
+#endif //A_DETERMINER_ACTION_H

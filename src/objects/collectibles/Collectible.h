@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_COLLECTIBLE_H
-#define UI_FRAMEWORK_COLLECTIBLE_H
+#ifndef A_DETERMINER_COLLECTIBLE_H
+#define A_DETERMINER_COLLECTIBLE_H
 
 #include "engine/object/EntityObject.h"
 
@@ -23,4 +23,4 @@ public:
 typedef Collectible* (*CollectibleConstructor)(Vector2);
 
 
-#endif //UI_FRAMEWORK_COLLECTIBLE_H
+#endif //A_DETERMINER_COLLECTIBLE_H

@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_POTATO_H
-#define UI_FRAMEWORK_POTATO_H
+#ifndef A_DETERMINER_POTATO_H
+#define A_DETERMINER_POTATO_H
 
 #include "Collectible.h"
 
@@ -13,4 +13,4 @@ public:
 };
 
 
-#endif //UI_FRAMEWORK_POTATO_H
+#endif //A_DETERMINER_POTATO_H

@@ -1,5 +1,5 @@
-#ifndef TEAMLISTWINDOW_H
-#define TEAMLISTWINDOW_H
+#ifndef A_DETERMINER_TEAMLISTWINDOW_H
+#define A_DETERMINER_TEAMLISTWINDOW_H
 
 #include "engine/windows/Window.h"
 
@@ -19,4 +19,4 @@ private:
 
 
 
-#endif //TEAMLISTWINDOW_H
+#endif //A_DETERMINER_TEAMLISTWINDOW_H

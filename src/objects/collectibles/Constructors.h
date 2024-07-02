@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_CONSTRUCTORS_H
-#define UI_FRAMEWORK_CONSTRUCTORS_H
+#ifndef A_DETERMINER_CONSTRUCTORS_H
+#define A_DETERMINER_CONSTRUCTORS_H
 
 #include "objects/collectibles/EnergyBoost.h"
 #include "objects/collectibles/Portalgun.h"
@@ -17,4 +17,4 @@ static const CollectibleConstructor s_item_constructors[] = {
 };
 static const size_t s_item_count = sizeof(s_item_constructors) / sizeof(CollectibleConstructor);
 
-#endif //UI_FRAMEWORK_CONSTRUCTORS_H
+#endif //A_DETERMINER_CONSTRUCTORS_H

@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_ERRORWINDOW_H
-#define UI_FRAMEWORK_ERRORWINDOW_H
+#ifndef A_DETERMINER_ERRORWINDOW_H
+#define A_DETERMINER_ERRORWINDOW_H
 
 #include "engine/windows/Window.h"
 
@@ -10,4 +10,4 @@ public:
 };
 
 
-#endif //UI_FRAMEWORK_ERRORWINDOW_H
+#endif //A_DETERMINER_ERRORWINDOW_H

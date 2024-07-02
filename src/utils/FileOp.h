@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_FILEOP_H
-#define UI_FRAMEWORK_FILEOP_H
+#ifndef A_DETERMINER_FILEOP_H
+#define A_DETERMINER_FILEOP_H
 
 #include <cstdio>
 #include <cstdint>
@@ -16,4 +16,4 @@ Texture ReadTexture(FILE *f);
 
 bool CheckSignature(const char *signature, int length, FILE *f);
 
-#endif //UI_FRAMEWORK_FILEOP_H
+#endif //A_DETERMINER_FILEOP_H

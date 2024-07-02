@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_TILEMAPTERRAIN_H
-#define UI_FRAMEWORK_TILEMAPTERRAIN_H
+#ifndef A_DETERMINER_TILEMAPTERRAIN_H
+#define A_DETERMINER_TILEMAPTERRAIN_H
 
 #include "engine/util/Math.h"
 #include "Terrain.h"
@@ -70,4 +70,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_TILEMAPTERRAIN_H
+#endif //A_DETERMINER_TILEMAPTERRAIN_H

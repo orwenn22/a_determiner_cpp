@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_LAYER_H
-#define UI_FRAMEWORK_LAYER_H
+#ifndef A_DETERMINER_LAYER_H
+#define A_DETERMINER_LAYER_H
 
 #include <string>
 
@@ -39,4 +39,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_LAYER_H
+#endif //A_DETERMINER_LAYER_H

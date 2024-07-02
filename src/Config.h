@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_CONFIG_H
-#define UI_FRAMEWORK_CONFIG_H
+#ifndef A_DETERMINER_CONFIG_H
+#define A_DETERMINER_CONFIG_H
 
 #include <string>
 
@@ -11,4 +11,4 @@ namespace Config {
 
 };  //namespace Config
 
-#endif //UI_FRAMEWORK_CONFIG_H
+#endif //A_DETERMINER_CONFIG_H

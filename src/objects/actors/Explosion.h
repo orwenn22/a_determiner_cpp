@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_EXPLOSION_H
-#define UI_FRAMEWORK_EXPLOSION_H
+#ifndef A_DETERMINER_EXPLOSION_H
+#define A_DETERMINER_EXPLOSION_H
 
 #include "engine/object/EntityObject.h"
 
@@ -31,4 +31,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_EXPLOSION_H
+#endif //A_DETERMINER_EXPLOSION_H

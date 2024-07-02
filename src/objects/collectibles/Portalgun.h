@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_PORTALGUN_H
-#define UI_FRAMEWORK_PORTALGUN_H
+#ifndef A_DETERMINER_PORTALGUN_H
+#define A_DETERMINER_PORTALGUN_H
 
 #include "Collectible.h"
 
@@ -13,4 +13,4 @@ public:
 };
 
 
-#endif //UI_FRAMEWORK_PORTALGUN_H
+#endif //A_DETERMINER_PORTALGUN_H

@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_JUMPACTION_H
-#define UI_FRAMEWORK_JUMPACTION_H
+#ifndef A_DETERMINER_JUMPACTION_H
+#define A_DETERMINER_JUMPACTION_H
 
 #include "Action.h"
 
@@ -12,4 +12,4 @@ public:
 };
 
 
-#endif //UI_FRAMEWORK_JUMPACTION_H
+#endif //A_DETERMINER_JUMPACTION_H

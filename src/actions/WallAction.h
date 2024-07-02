@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_WALLACTION_H
-#define UI_FRAMEWORK_WALLACTION_H
+#ifndef A_DETERMINER_WALLACTION_H
+#define A_DETERMINER_WALLACTION_H
 
 #include "Action.h"
 
@@ -24,4 +24,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_WALLACTION_H
+#endif //A_DETERMINER_WALLACTION_H

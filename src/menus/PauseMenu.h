@@ -1,5 +1,5 @@
-#ifndef UI_FRAMEWORK_PAUSEMENU_H
-#define UI_FRAMEWORK_PAUSEMENU_H
+#ifndef A_DETERMINER_PAUSEMENU_H
+#define A_DETERMINER_PAUSEMENU_H
 
 #include "engine/state/State.h"
 
@@ -26,4 +26,4 @@ private:
 };
 
 
-#endif //UI_FRAMEWORK_PAUSEMENU_H
+#endif //A_DETERMINER_PAUSEMENU_H
