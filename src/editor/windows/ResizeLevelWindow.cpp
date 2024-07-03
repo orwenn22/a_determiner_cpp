@@ -1,12 +1,12 @@
 #include "ResizeLevelWindow.h"
 
+#include "editor/EditorState.h"
 #include "engine/widgets/Button.h"
 #include "engine/widgets/HLine.h"
 #include "engine/widgets/IntField.h"
 #include "engine/widgets/Label.h"
 #include "engine/widgets/WidgetManager.h"
 #include "engine/windows/WindowManager.h"
-#include "EditorState.h"
 
 // TODO / FIXME : this is literally a copy-paste from NewLevelWindow
 

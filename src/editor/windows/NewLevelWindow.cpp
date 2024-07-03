@@ -1,11 +1,11 @@
 #include "NewLevelWindow.h"
 
+#include "editor/EditorState.h"
 #include "engine/widgets/Button.h"
 #include "engine/widgets/HLine.h"
 #include "engine/widgets/IntField.h"
 #include "engine/widgets/Label.h"
 #include "engine/widgets/WidgetManager.h"
-#include "EditorState.h"
 
 
 NewLevelWindow::NewLevelWindow(EditorState *editor) : Window(50, 50, 250, 140) {

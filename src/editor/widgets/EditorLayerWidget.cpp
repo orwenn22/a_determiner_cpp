@@ -4,8 +4,8 @@
 
 #include "editor/layers/Layer.h"
 #include "editor/EditorLevel.h"
+#include "editor/EditorState.h"
 #include "engine/Globals.h"
-#include "EditorState.h"
 
 
 //recommended : w = 157 at least

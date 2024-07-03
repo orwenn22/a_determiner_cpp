@@ -1,9 +1,9 @@
 #include "LayerSpawnRegions.h"
 
-#include "../EditorLevel.h"
+#include "editor/EditorLevel.h"
+#include "editor/EditorState.h"
 #include "utils/FileOp.h"
 #include "engine/util/Trace.h"
-#include "EditorState.h"
 
 LayerSpawnRegions::LayerSpawnRegions(EditorLevel *level) : Layer(level, "Spawn regions", LayerType_SpawnRegions) {
     m_selected = false;

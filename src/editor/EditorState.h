@@ -53,6 +53,8 @@ public:
     inline int GetHoveredTileX() { return m_hovered_tile.x; }
     inline int GetHoveredTileY() { return m_hovered_tile.y; }
 
+    inline const char *GetIdentifier() override { return "EditorState"; }
+
 private:
     void UpdateHoveredTilePreview();
 

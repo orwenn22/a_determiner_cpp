@@ -1,7 +1,6 @@
 #include "LeaveEditorWindow.h"
 
-#include <EditorState.h>
-
+#include "editor/EditorState.h"
 #include "engine/state/StateManager.h"
 #include "engine/widgets/Button.h"
 #include "engine/widgets/Label.h"

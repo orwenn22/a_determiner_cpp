@@ -132,7 +132,7 @@ add_executable(a_determiner src/main.cpp
         src/Ext.h
         src/terrain/Terrain.cpp
         src/terrain/TilemapTerrain.cpp
-        src/EditorState.cpp
+        src/editor/EditorState.cpp
         src/engine/Tileset.cpp
         src/engine/TileGrid.cpp
         src/editor/windows/NewLevelWindow.cpp

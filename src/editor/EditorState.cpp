@@ -9,8 +9,6 @@
 #include "editor/windows/NewLevelWindow.h"
 #include "editor/windows/ResizeLevelWindow.h"
 #include "editor/windows/TeamListWindow.h"
-#include "editor/EditorLevel.h"
-#include "editor/EditorSpawnRegion.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
 #include "engine/state/StateManager.h"
@@ -27,6 +25,8 @@
 #include "terrain/TilemapTerrain.h"
 #include "utils/TiledBackground.h"
 #include "windows/ErrorWindow.h"
+#include "EditorLevel.h"
+#include "EditorSpawnRegion.h"
 #include "GlobalResources.h"
 
 #ifdef __EMSCRIPTEN__

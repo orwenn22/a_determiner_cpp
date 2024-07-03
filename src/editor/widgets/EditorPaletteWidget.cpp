@@ -4,10 +4,10 @@
 
 #include "editor/layers/Layer.h"
 #include "editor/layers/LayerTilemap.h"
+#include "editor/EditorState.h"
 #include "engine/util/Trace.h"
 #include "engine/Globals.h"
 #include "engine/Tileset.h"
-#include "EditorState.h"
 
 
 EditorPaletteWidget::EditorPaletteWidget(EditorState *editor, int x, int y, int w, int h) : Widget(x, y, w, h) {

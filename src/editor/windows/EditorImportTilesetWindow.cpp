@@ -1,13 +1,13 @@
 #include "EditorImportTilesetWindow.h"
 
 #include "editor/layers/LayerTilemap.h"
+#include "editor/EditorState.h"
 #include "engine/widgets/Button.h"
 #include "engine/widgets/IntField.h"
 #include "engine/widgets/Label.h"
 #include "engine/widgets/WidgetManager.h"
 #include "engine/windows/WindowManager.h"
 #include "engine/Tileset.h"
-#include "EditorState.h"
 #include "windows/ErrorWindow.h"
 
 

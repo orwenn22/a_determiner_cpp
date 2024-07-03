@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "editor/windows/EditorImportTilesetWindow.h"
+#include "editor/EditorState.h"
 #include "engine/windows/WindowManager.h"
 #include "engine/util/Trace.h"
 #include "engine/Globals.h"
@@ -10,7 +11,6 @@
 #include "engine/Tileset.h"
 #include "utils/FileOp.h"
 #include "../EditorLevel.h"
-#include "EditorState.h"
 #include "GlobalResources.h"
 
 

@@ -2,9 +2,9 @@
 
 #include "editor/layers/LayerSpawnRegions.h"
 #include "editor/widgets/TeamListWidget.h"
+#include "editor/EditorState.h"
 #include "engine/widgets/Button.h"
 #include "engine/widgets/WidgetManager.h"
-#include "EditorState.h"
 #include "Teams.h"
 
 

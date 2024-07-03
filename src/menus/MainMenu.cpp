@@ -1,5 +1,6 @@
 #include "MainMenu.h"
 
+#include "editor/EditorState.h"
 #include "engine/Globals.h"
 #include "engine/state/StateManager.h"
 #include "engine/util/Trace.h"
@@ -8,7 +9,6 @@
 #include "engine/widgets/WidgetManager.h"
 #include "utils/TiledBackground.h"
 #include "CreditsMenu.h"
-#include "EditorState.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "MapSelectMenu.h"
