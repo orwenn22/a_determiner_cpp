@@ -56,7 +56,7 @@ git_commit = subprocess.run(["git",  "rev-parse", "HEAD"], stdout=subprocess.PIP
 git_branch = subprocess.run(["git",  "rev-parse", "--abbrev-ref", "HEAD"], stdout=subprocess.PIPE).stdout.decode().strip()
 
 source_dir = "./src"
-preload_dirs = ["./res", "./maps"]
+preload_dirs = ["./res", "./maps", "./maps/old"]
 target_name = "adeterminer.html"
 build_dir = "build_wasm"
 makefile_name = "wasm_auto.Makefile"
