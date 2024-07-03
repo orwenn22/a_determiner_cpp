@@ -39,7 +39,7 @@ private:
     void SetError(std::string error_message);
 
     void HandleFilesDragAndDrop();
-    static bool HandleFileDragAndDrop(std::string dragged_path);
+    bool HandleFileDragAndDrop(std::string dragged_path);
 
 
     TiledBackground *m_bg;

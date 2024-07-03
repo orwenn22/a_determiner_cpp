@@ -311,19 +311,34 @@ bool MapSelectMenu::HandleFileDragAndDrop(std::string dragged_path) {
     //TODO : use a map to match extensions to ext directories more efficiently ?
     //TODO : check if it is a regular file ?
     if(file_extension == "leg" || file_extension == "lev") {
+        std::string dest = Config::GetExternalFolderPath() + "/maps/" + GetFileFromPath(dragged_path);
+        if(std::filesystem::exists(dest)) {
+            //std::filesystem::remove(dest);            //i'm not doing this because i don't want to delete stuff unintentionally
+            SetError("File already exist");
+            return false;
+        }
         if(std::filesystem::copy_file(dragged_path, Config::GetExternalFolderPath() + "/maps/" + GetFileFromPath(dragged_path))) {
             return true;        //Reload pages
         }
         else {
+            SetError("Could not import file (copy failed)");
             TRACE("Could not import file (copy failed) : %s\n", dragged_path.c_str());
         }
     }
     else if(file_extension == "png") {
-        if(!std::filesystem::copy_file(dragged_path, Config::GetExternalFolderPath() + "/res/" + GetFileFromPath(dragged_path))) {
+        std::string dest = Config::GetExternalFolderPath() + "/res/" + GetFileFromPath(dragged_path);
+        if(std::filesystem::exists(dest)) {
+            //std::filesystem::remove(dest);            //i'm not doing this because i don't want to delete stuff unintentionally
+            SetError("File already exist");
+            return false;
+        }
+        if(!std::filesystem::copy_file(dragged_path, dest)) {
+            SetError("Could not import file (copy failed)");
             TRACE("Could not import file (copy failed) : %s\n", dragged_path.c_str());
         }
     }
     else {
+        SetError("Could not import file (unknown type)");
         TRACE("Could not import file (unknown type) : %s\n", dragged_path.c_str());
     }
 
