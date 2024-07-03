@@ -22,7 +22,7 @@
 
 
 static StateManager *state_manager = nullptr;
-static bool display_debug_overlay = true;
+static bool display_debug_overlay = false;
 
 
 #if !defined(__EMSCRIPTEN__)
