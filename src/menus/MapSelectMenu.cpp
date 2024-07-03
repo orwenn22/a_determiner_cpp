@@ -56,7 +56,9 @@ MapSelectMenu::MapSelectMenu() : State() {
     back_button->SetFontSize(20);
     back_button->CenterLabel();
     back_button->SetCallback([=]() {
-        this->Manager()->SetState(new MainMenu, true);
+        MainMenu *main_menu = new MainMenu;
+        main_menu->BG()->SetScroll(m_bg->GetScroll());
+        Manager()->SetState(main_menu);
     });
     m_permanent_widgets->AddWidget(back_button);
 
@@ -123,6 +125,11 @@ MapSelectMenu::~MapSelectMenu() {
 
 void MapSelectMenu::Update(float dt) {
     HandleFilesDragAndDrop();
+    if(IsKeyPressed(KEY_ESCAPE)) {
+        MainMenu *main_menu = new MainMenu;
+        main_menu->BG()->SetScroll(m_bg->GetScroll());
+        Manager()->SetState(main_menu);
+    }
 
     if(m_cwd_label != nullptr) {
         if(IsKeyPressed(KEY_F)) m_cwd_label->SetLabel("Map folder : " + GetCWD() + "/maps");

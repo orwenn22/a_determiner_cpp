@@ -11,6 +11,8 @@ public:
     void Draw();
 
     void SetColor(Color c);
+    void SetScroll(Vector2 scroll);
+    inline Vector2 GetScroll() { return m_scroll; }
 
 private:
     Texture *m_texture;

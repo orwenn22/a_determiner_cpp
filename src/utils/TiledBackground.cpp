@@ -51,3 +51,7 @@ void TiledBackground::Draw() {
 void TiledBackground::SetColor(Color c) {
     m_color = c;
 }
+
+void TiledBackground::SetScroll(Vector2 scroll) {
+    m_scroll = scroll;
+}

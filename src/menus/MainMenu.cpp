@@ -54,8 +54,10 @@ MainMenu::MainMenu() : State() {
     play_button->SetFontSize(20);
     play_button->CenterLabel();
     play_button->SetAlignment(WidgetAlignment_Center);
-    play_button->SetCallback([=]() {
-        this->Manager()->SetState(new MapSelectMenu, true);
+    play_button->SetCallback([this]() {
+        MapSelectMenu *map_select_menu = new MapSelectMenu;
+        map_select_menu->BG()->SetScroll(m_bg->GetScroll());
+        Manager()->SetState(map_select_menu, true);
     });
     m_widgets->AddWidget(play_button);
 

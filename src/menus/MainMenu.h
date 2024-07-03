@@ -15,6 +15,7 @@ public:
     void Draw() override;
 
     inline const char *GetIdentifier() override { return "MainMenu"; }
+    inline TiledBackground *BG() { return m_bg; }
 
 
 private:

@@ -28,6 +28,9 @@ public:
     void Update(float dt) override;
     void Draw() override;
 
+    inline const char *GetIdentifier() override { return "MapSelectMenu"; }
+    inline TiledBackground *BG() { return m_bg; }
+
 
 private:
     void UpdateMapNames();
