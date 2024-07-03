@@ -7,12 +7,14 @@
 #include "engine/widgets/Label.h"
 #include "engine/widgets/TiledButton.h"
 #include "engine/widgets/WidgetManager.h"
+#include "utils/KeyboardCode.h"
 #include "utils/TiledBackground.h"
 #include "CreditsMenu.h"
 #include "GameplayState.h"
 #include "GlobalResources.h"
 #include "MapSelectMenu.h"
 #include "OptionsMenu.h"
+#include "maploaders/LevMapLoader.h"
 
 
 #ifdef GIT_COMMIT_HASH
@@ -112,11 +114,20 @@ MainMenu::MainMenu() : State() {
     version_label->SetAlignment(WidgetAlignment_Bottom);
     version_label->SetOutline(true);
     m_widgets->AddWidget(version_label);
+
+
+    m_silly = new KeyboardCode("SILLY", [this]() {
+        LevMapLoader map_loader;
+        ErrorOr<GameplayState *> gs = map_loader.LoadMap("maps/old/silly.lev");
+        if(gs.GetError() != nullptr) return;
+        Manager()->SetState(gs.GetValue());
+    });
 }
 
 MainMenu::~MainMenu() {
     delete m_widgets;
     delete m_bg;
+    delete m_silly;
 }
 
 void MainMenu::Update(float dt) {
@@ -125,6 +136,7 @@ void MainMenu::Update(float dt) {
     }
     m_widgets->Update();
     m_bg->Update(dt);
+    m_silly->Update();
 }
 
 void MainMenu::Draw() {

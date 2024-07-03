@@ -3,6 +3,7 @@
 
 #include "engine/state/State.h"
 
+class KeyboardCode;
 class TiledBackground;
 class WidgetManager;
 
@@ -21,6 +22,7 @@ public:
 private:
     TiledBackground *m_bg;
     WidgetManager *m_widgets;
+    KeyboardCode *m_silly;
 };
 
 
