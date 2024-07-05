@@ -27,6 +27,11 @@ void KinematicObject::ApplyForce(Vector2 force) {
     m_acceleration = m_acceleration + new_acceleration;
 }
 
+void KinematicObject::ApplyPropulsion(Vector2 propultion) {
+    Vector2 weighted_vec = propultion / m_mass;
+    m_velocity = m_velocity + weighted_vec;
+}
+
 void KinematicObject::DrawHitbox() {
     EntityObject::DrawHitbox();
 

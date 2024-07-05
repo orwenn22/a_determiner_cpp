@@ -30,7 +30,7 @@ void ShootAction::OnUpdate(Player *player, float dt) {
 
         Vector2 direction = {(float)cos((double)player->GetThrowAngle()), (float)sin((double)player->GetThrowAngle())};
         Vector2 force = direction * player->GetStrength();
-        b->ApplyForce(force / dt);      //Dividing by dt is necessary to bypass the *dt of the acceleration
+        b->ApplyPropulsion(force);
 
         player->Manager()->AddObject(b);
         player->SetEnergy(player->GetEnergy() - m_action_cost);
@@ -44,7 +44,7 @@ void ShootAction::OnDraw(Player *player) {
 
     Vector2 direction = {(float)cos((double)player->GetThrowAngle()), (float)sin((double)player->GetThrowAngle())};
     Vector2 force = direction * player->GetStrength();
-    a.ApplyForce(force / 0.01f);        // 0.01 is the virtual daltatime
+    a.ApplyPropulsion(force);
     a.DrawSimulation(10);
 
     player->BlockDefaultSprite();

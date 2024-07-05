@@ -8,7 +8,8 @@ public:
     KinematicObject(Vector2 position, float width, float height, float mass);
     ~KinematicObject() override;
 
-    void ApplyForce(Vector2 force);
+    void ApplyForce(Vector2 force);                     //Better for continuous forces (applied on multiple frames)
+    void ApplyPropulsion(Vector2 propultion);           //Better for instant (1 frame) forces
 
     void DrawHitbox() override;
 

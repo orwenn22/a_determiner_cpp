@@ -19,7 +19,7 @@ private:
     void ExplodeTerrain();
     int GetCurrentAnimationFrame();
 
-    void ApplyForceToOther(KinematicObject *obj, float dt);
+    void ApplyPropulsionToOther(KinematicObject *obj, float dt);
 
     GameplayState *m_gameplay_state;
     float m_radius;

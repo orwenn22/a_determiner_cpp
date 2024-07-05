@@ -58,7 +58,7 @@ void Explosion::ExplodeNearbyEnemies(float dt) {
 
     for(EntityObject *obj : *(Manager()->RawVector())) {
         if(obj->IsOfType(TypeID_KinematicObject)) {
-            ApplyForceToOther((KinematicObject *) obj, dt);
+            ApplyPropulsionToOther((KinematicObject *) obj, dt);
         }
     }
 }
@@ -73,7 +73,7 @@ int Explosion::GetCurrentAnimationFrame() {
     return (int)((m_anim_timer/m_anim_duraton)*16.f);       //16 frames in explosion animation
 }
 
-void Explosion::ApplyForceToOther(KinematicObject *obj, float dt) {
+void Explosion::ApplyPropulsionToOther(KinematicObject *obj, float dt) {
     Vector2 obj_pos = obj->GetPosition();
     Vector2 relative_position = obj_pos - m_position;       //Relative position of the other object from the explosion
     float distance = sqrt(relative_position.x*relative_position.x + relative_position.y*relative_position.y);
@@ -87,10 +87,10 @@ void Explosion::ApplyForceToOther(KinematicObject *obj, float dt) {
 
     // Calculate the vector of the force
     Vector2 normalised_vector = Vector2Normalize(relative_position);
-    Vector2 total_force = normalised_vector * (total_coefficient/dt);
+    Vector2 total_propultion = normalised_vector * total_coefficient;
 
-    TRACE("Explosion::ApplyForceToOther : Applying force %f %f\n", total_force.x, total_force.y);
-    obj->ApplyForce(total_force);
+    TRACE("Applying propultion %f %f\n", total_propultion.x, total_propultion.y);
+    obj->ApplyPropulsion(total_propultion);
 
     // If the player is grounded, then its physics is disabled, which mean that if we don't enable it again,
     // the force will be processed when the ground is destroyed, which would cause the player to make a huuuge jump.

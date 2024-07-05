@@ -29,7 +29,7 @@ void JumpAction::OnUpdate(Player *player, float dt) {
 
         Vector2 direction = {(float)cos((double)player->GetThrowAngle()), (float)sin((double)player->GetThrowAngle())};
         Vector2 force = direction * player->GetStrength();
-        player->ApplyForce(force / dt);     //Dividing by dt is necessary to bypass the *dt of the acceleration
+        player->ApplyPropulsion(force);
         player->EnablePhysics();
         player->SetUseSmallHitbox(true);
         player->SetCurrentAction(-1);
@@ -43,7 +43,7 @@ void JumpAction::OnDraw(Player *player) {
 
     Vector2 direction = {(float)cos((double)player->GetThrowAngle()), (float)sin((double)player->GetThrowAngle())};
     Vector2 force = direction * player->GetStrength();
-    prediction.ApplyForce(force / 0.01f);      // 0.01 is the virtual daltatime
+    prediction.ApplyPropulsion(force);
     prediction.DrawSimulation(10);
 
     player->BlockDefaultSprite();
