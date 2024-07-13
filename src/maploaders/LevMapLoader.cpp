@@ -42,11 +42,11 @@ ErrorOr<GameplayState *> LevMapLoader::LoadMap(std::string path) {
             {editor_level->GetTerrainWidth(), editor_level->GetTerrainHeight()},
             grid_width, grid_height);
 
-    Tileset *tileset = tilemap_layer->GetTileset()->StrongClone();      //Ownership transfer
-    if(tileset == nullptr) {
+    Tileset *tileset = tilemap_layer->GetTileset()->Clone();
+    if(!tileset->Usable()) {
         delete editor_level;
         delete terrain;
-        return Error("Failed to get tileset");
+        return Error("Tileset of tilemap layer is unusable\n");
     }
     terrain->SetTileset(tileset);
 

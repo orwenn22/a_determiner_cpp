@@ -3,15 +3,17 @@
 
 #include <raylib.h>
 
+#include "TextureRef.h"
+
 class Tileset {
 public:
-    Tileset(Texture *texture, int tile_width, int tile_height, bool ownership);
+    Tileset(TextureRef texture, int tile_width, int tile_height);
     ~Tileset();
 
-    Tileset *WeakCopy();
-    Tileset *StrongClone();
+    Tileset *Clone();
 
-    inline Texture* GetTexture() { return m_texture; }
+    inline Texture* GetTexture() { return m_texture.GetTexturePtr(); }
+    inline TextureRef GetTextureRef() { return m_texture; }
     inline int GetTileWidth() { return m_tile_width; }
     inline int GetTileHeight() { return m_tile_height; }
 
@@ -22,14 +24,12 @@ public:
 
     bool Usable();
 
-    void SetTexture(Texture *new_texture, bool new_ownership);
+    void SetTexture(TextureRef texture);
 
 private:
-    Texture *m_texture;
+    TextureRef m_texture;
     int m_tile_width, m_tile_height;
     int m_tile_count_x, m_tile_count_y;
-
-    bool m_ownership;
 };
 
 

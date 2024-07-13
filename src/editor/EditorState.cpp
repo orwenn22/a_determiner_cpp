@@ -148,7 +148,7 @@ void EditorState::CreateNew(int grid_w, int grid_h, Vector2 size_m) {
     //Add default layers
     m_level->AddLayer(new LayerSpawnRegions(m_level));
     LayerTilemap *collisions = new LayerTilemap(m_level, "Collisions");
-    collisions->SetTileset(Res::collisions_tileset->WeakCopy(), true);
+    collisions->SetTileset(new Tileset(Res::collisions_sprite, 16, 16), true);
     m_level->AddLayer(collisions);
     m_level->AddLayer(new LayerTilemap(m_level, "Tilemap"));
 

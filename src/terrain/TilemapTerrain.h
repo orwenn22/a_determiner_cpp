@@ -62,6 +62,7 @@ private:
 
 
     Tileset *m_tileset;
+    Tileset *m_collisions_tileset;
     float m_tile_width_m, m_tile_height_m;      //Size of a tile in meter
     Vector2 m_size;                             //Size of the terrain in meter
 

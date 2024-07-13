@@ -6,6 +6,7 @@
 
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
+#include "engine/TextureRef.h"
 #include "engine/TileGrid.h"
 #include "engine/Tileset.h"
 #include "GlobalResources.h"
@@ -22,9 +23,11 @@ TilemapTerrain *TilemapTerrain::construct(const char *tileset_path, Vector2 size
 }
 
 TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_width, int tile_height, int grid_width, int grid_height) {
+    m_collisions_tileset = new Tileset(Res::collisions_sprite, 16, 16);
+
     m_origin = {0.f, 0.f};
-    Texture tileset_texture = LoadTexture(tileset_path);
-    m_tileset = new Tileset(&tileset_texture, tile_width, tile_height, true);
+    TextureRef tileset_texture = TextureRef::construct(tileset_path);
+    m_tileset = new Tileset(tileset_texture, tile_width, tile_height);
 
     m_tilemap_data = nullptr;
     m_collision_mask = nullptr;
@@ -32,6 +35,8 @@ TilemapTerrain::TilemapTerrain(const char *tileset_path, Vector2 size, int tile_
 }
 
 TilemapTerrain::TilemapTerrain(Vector2 size, int grid_width, int grid_height) {
+    m_collisions_tileset = new Tileset(Res::collisions_sprite, 16, 16);
+
     m_origin = {0.f, 0.f};
     m_tileset = nullptr;
     m_tilemap_data = nullptr;
@@ -43,6 +48,7 @@ TilemapTerrain::~TilemapTerrain() {
     delete m_tileset;
     delete m_tilemap_data;
     delete m_collision_mask;
+    delete m_collisions_tileset;
 }
 
 
@@ -81,7 +87,7 @@ void TilemapTerrain::Draw() {
 void TilemapTerrain::DrawCollisions() {
     MetricsCamera *cam = Metrics::GetGraphicsCam();
     if(cam == nullptr || m_tilemap_data == nullptr) return;
-    m_collision_mask->MDraw(Res::collisions_tileset, {m_origin.x, m_origin.y, m_size.x, m_size.y});
+    m_collision_mask->MDraw(m_collisions_tileset, {m_origin.x, m_origin.y, m_size.x, m_size.y});
 }
 
 
@@ -250,5 +256,4 @@ void TilemapTerrain::SetGridSize(int w, int h, Vector2 size_m) {
     delete m_collision_mask;
     m_tilemap_data = new_tilemap_data;
     m_collision_mask = new_collision_mask;
-
 }

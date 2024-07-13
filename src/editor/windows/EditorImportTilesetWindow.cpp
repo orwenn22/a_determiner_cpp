@@ -26,22 +26,22 @@ EditorImportTilesetWindow::EditorImportTilesetWindow(EditorState *editor, LayerT
     Button *confirm_button = new Button(5, 50, 150, 20, "Confirm", [this]() {
         //TODO : check if the layer still exists ?
 
-        Texture texture = LoadTexture(m_file_path.c_str());
+        TextureRef texture = TextureRef::construct(m_file_path);
 
         //Check if texture loaded correctly
-        if(texture.id == 0) {
+        if(!texture.IsValid()) {
             m_editor->GetWindowManager()->AddWindow(new ErrorWindow(X()+15, Y()+15, "Failed to import dragged file\nas texture"));
             m_editor->GetWindowManager()->CloseWindowByPtr(this);
             return;
         }
 
         //Check tile size
-        if(m_tile_width_px <= 0 || m_tile_height_px <= 0 || m_tile_width_px > texture.width || m_tile_height_px > texture.height) {
+        if(m_tile_width_px <= 0 || m_tile_height_px <= 0 || m_tile_width_px > texture.GetTexturePtr()->width || m_tile_height_px > texture.GetTexturePtr()->height) {
             m_editor->GetWindowManager()->AddWindow(new ErrorWindow(X()+15, Y()+15, "Invalid tile size"));
             return;
         }
 
-        m_layer->SetTileset(new Tileset(&texture, m_tile_width_px, m_tile_height_px, true));
+        m_layer->SetTileset(new Tileset(texture, m_tile_width_px, m_tile_height_px));
         GetWindowManager()->CloseWindowByPtr(this);
     });
     confirm_button->CenterLabel();

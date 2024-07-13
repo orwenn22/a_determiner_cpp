@@ -38,8 +38,7 @@ Texture menubg_options_sprite;
 Texture menubg_credits_sprite;
 Texture menubg_grayscale;
 
-Texture collisions_sprite;
-Tileset *collisions_tileset = nullptr;
+TextureRef collisions_sprite;
 
 
 void LoadAll() {
@@ -77,13 +76,11 @@ void LoadAll() {
     menubg_credits_sprite = LoadTexture("res/menubg_credits_alt.png");
     menubg_grayscale = LoadTexture("res/menubg_grayscale.png");
 
-    collisions_sprite = LoadTexture("res/collisions.png");
-    collisions_tileset = new Tileset(&collisions_sprite, 16, 16, false);
+    collisions_sprite = TextureRef::construct("res/collisions.png");
 }
 
 void UnloadAll() {
-    delete collisions_tileset;
-    UnloadTexture(collisions_sprite);
+    collisions_sprite = TextureRef();       //This is necessary to unload the texture before CloseWindow() is called
 
     UnloadTexture(menubg_grayscale);
     UnloadTexture(menubg_credits_sprite);

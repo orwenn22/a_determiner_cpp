@@ -2,43 +2,29 @@
 
 #include "metrics/Graphics.h"
 
-Tileset::Tileset(Texture *texture, int tile_width, int tile_height, bool ownership) {
-    m_ownership = ownership;
+Tileset::Tileset(TextureRef texture, int tile_width, int tile_height) {
     m_tile_width = tile_width;
     if(m_tile_width <= 0) m_tile_width = 1;
     m_tile_height = tile_height;
     if(m_tile_height <= 0) m_tile_height = 1;
 
-    if(texture == nullptr) {
-        m_texture = nullptr;
+    m_texture = texture;
+
+    if(!m_texture.IsValid()) {
         m_tile_count_x = 0;
         m_tile_count_y = 0;
     }
     else {
-        m_texture = new Texture(*texture);
-        m_tile_count_x = m_texture->width/m_tile_width;
-        m_tile_count_y = m_texture->height/m_tile_height;
+        m_tile_count_x = m_texture.GetTexturePtr()->width/m_tile_width;
+        m_tile_count_y = m_texture.GetTexturePtr()->height/m_tile_height;
     }
 }
 
-Tileset::~Tileset() {
-    if(m_ownership && m_texture != nullptr) {
-        UnloadTexture(*m_texture);
-    }
-    delete m_texture;
-}
+Tileset::~Tileset() = default;
 
-//TODO : keep track of week copies, and invalidate all of them if the texture of the main one is unloaded ?
-//TODO 2 : prevent week copies on tilesets that don't have the ownership of the texture ?
-Tileset *Tileset::WeakCopy() {
-    return new Tileset(m_texture, m_tile_width, m_tile_height, false);
-}
-
-//TODO : find a better name for this
-Tileset *Tileset::StrongClone() {
-    if(!m_ownership) return nullptr;
-    m_ownership = false;
-    return new Tileset(m_texture, m_tile_width, m_tile_height, true);
+Tileset *Tileset::Clone() {
+    Tileset *r = new Tileset(m_texture, m_tile_width, m_tile_height);
+    return r;
 }
 
 void Tileset::SetTileSize(int tile_width, int tile_height) {
@@ -47,8 +33,8 @@ void Tileset::SetTileSize(int tile_width, int tile_height) {
     m_tile_height = tile_height;
     if(m_tile_height <= 0) m_tile_height = 1;
 
-    m_tile_count_x = m_texture->width/m_tile_width;
-    m_tile_count_y = m_texture->height/m_tile_height;
+    m_tile_count_x = m_texture.GetTexturePtr()->width/m_tile_width;
+    m_tile_count_y = m_texture.GetTexturePtr()->height/m_tile_height;
 }
 
 
@@ -57,39 +43,39 @@ void Tileset::Draw(int index, Rectangle dest) {
     float x = (float)(index%m_tile_count_x * m_tile_width);
     float y = (float)(index/m_tile_count_x * m_tile_height);
 
-    DrawTexturePro(*m_texture, {x, y, (float)m_tile_width, (float)m_tile_height},
+    //TODO : This is probably SUUUUUUUUPER slow, because the texture is copied to stack memory each time we draw a tile.
+    //       Maybe it could be a good idea to make the m_texture of a TextureRef public to speed things up ?
+    DrawTexturePro(m_texture.GetTexture(), {x, y, (float)m_tile_width, (float)m_tile_height},
                    dest,
                    {0.f, 0.f}, 0.f,
                    WHITE);
 }
 
 void Tileset::MDraw(int index, Rectangle dest) {
-    //if(index < m_tile_count_x*m_tile_count_y) return;
+    //if(index >= m_tile_count_x*m_tile_count_y) return;
     float x = (float)(index%m_tile_count_x * m_tile_width);
     float y = (float)(index/m_tile_count_x * m_tile_height);
 
-    Metrics::DrawSpriteScaleEx(*m_texture, {x, y, (float)m_tile_width, (float)m_tile_height},
+    //TODO : This is probably SUUUUUUUUPER slow, because the texture is copied to stack memory each time we draw a tile.
+    //       Maybe it could be a good idea to make the m_texture of a TextureRef public to speed things up ?
+    Metrics::DrawSpriteScaleEx(m_texture.GetTexture(), {x, y, (float)m_tile_width, (float)m_tile_height},
                    dest,
                    WHITE);
 }
 
 bool Tileset::Usable() {
-    return (m_texture != nullptr && m_tile_count_x != 0);
+    return (m_texture.IsValid() && m_tile_count_x != 0);
 }
 
-void Tileset::SetTexture(Texture *new_texture, bool new_ownership) {
-    if(m_ownership && m_texture != nullptr) UnloadTexture(*m_texture);
-    delete m_texture;
+void Tileset::SetTexture(TextureRef texture) {
+    m_texture = texture;
 
-    m_ownership = new_ownership;
-    if(new_texture == nullptr) {
-        m_texture = nullptr;
+    if(!m_texture.IsValid()) {
         m_tile_count_x = 0;
         m_tile_count_y = 0;
     }
     else {
-        m_texture = new Texture(*new_texture);
-        m_tile_count_x = m_texture->width/m_tile_width;
-        m_tile_count_y = m_texture->height/m_tile_height;
+        m_tile_count_x = m_texture.GetTexturePtr()->width/m_tile_width;
+        m_tile_count_y = m_texture.GetTexturePtr()->height/m_tile_height;
     }
 }

@@ -148,7 +148,7 @@ LayerTilemap *LayerTilemap::Load(EditorLevel *level, FILE *in_file) {
     r = new LayerTilemap(level, "temp lmao");       //The name is set when we return to Layer::Load
     if(lock) {
         //In this case we don't need to load the bitmap, we just use the collision tileset
-         r->SetTileset(Res::collisions_tileset->WeakCopy(), true);
+        r->SetTileset(new Tileset(Res::collisions_sprite, 16, 16));
     }
     else {
         //Load bitmap
@@ -158,7 +158,16 @@ LayerTilemap *LayerTilemap::Load(EditorLevel *level, FILE *in_file) {
             delete r;
             return nullptr;
         }
-        r->SetTileset(new Tileset(&tileset_texture, tile_width, tile_height, true));
+
+        //Make TextureRef from bitmap
+        TextureRef tileset_textureref = TextureRef::construct(tileset_texture);
+        if(!tileset_textureref.IsValid()) {
+            TRACE("Failed to make TextureRef, this should NEVER get reached !!!! :(\n");
+            //UnloadTexture(tileset_texture);
+            delete r;
+            return nullptr;
+        }
+        r->SetTileset(new Tileset(tileset_textureref, tile_width, tile_height));
     }
 
     //Load tilemap

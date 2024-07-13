@@ -163,6 +163,8 @@ add_executable(a_determiner src/main.cpp
         src/editor/windows/TeamListWindow.h
         src/utils/KeyboardCode.cpp
         src/utils/KeyboardCode.h
+        src/engine/TextureRef.cpp
+        src/engine/TextureRef.h
 )
 target_link_libraries(a_determiner PRIVATE raylib)
 target_include_directories(a_determiner PRIVATE ./src)

@@ -2,6 +2,7 @@
 #define A_DETERMINER_GLOBALRESOURCES_H
 
 #include <raylib.h>
+#include "engine/TextureRef.h"
 
 class Tileset;
 
@@ -40,8 +41,7 @@ namespace Res {
     extern Texture menubg_credits_sprite;
     extern Texture menubg_grayscale;
 
-    extern Texture collisions_sprite;
-    extern Tileset *collisions_tileset;
+    extern TextureRef collisions_sprite;
 
 
     void LoadAll();
