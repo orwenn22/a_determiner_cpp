@@ -20,7 +20,7 @@ public:
             m_data.error = new Error(*other.GetError());
         } else {
             m_is_error = false;
-            m_data.value = new T(*other.GetValue());
+            m_data.value = new T(other.GetValue());
         }
     }
 

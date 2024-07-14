@@ -21,12 +21,14 @@
 #include "engine/Globals.h"
 #include "engine/Tileset.h"
 #include "engine/TileGrid.h"
+#include "maploaders/LevMapLoader.h"
 #include "menus/MainMenu.h"
 #include "terrain/TilemapTerrain.h"
 #include "utils/TiledBackground.h"
 #include "windows/ErrorWindow.h"
 #include "EditorLevel.h"
 #include "EditorSpawnRegion.h"
+#include "GameplayState.h"
 #include "GlobalResources.h"
 
 #ifdef __EMSCRIPTEN__
@@ -82,30 +84,7 @@ void EditorState::Update(float dt) {
     m_bg->Update(dt);
 
     HandleFilesDragAndDrop();
-
-    if(IsKeyDown(KEY_LEFT_CONTROL)) {
-        if (IsKeyPressed(KEY_N)) {
-            //TODO : check if windows is already opened ?
-            m_window_manager->AddWindow(new NewLevelWindow(this));
-        }
-        else if(IsKeyPressed(KEY_R)) {
-            m_window_manager->AddWindow(new ResizeLevelWindow(this));
-        }
-        else if(IsKeyPressed(KEY_S)) {
-            if(m_level != nullptr) Save("out.lev");
-        }
-    }
-
-    if(IsKeyDown(KEY_ESCAPE)) {
-        m_escape_timer += dt;
-    }
-    else {
-        if(m_escape_timer < .2f && IsKeyReleased(KEY_ESCAPE)) {
-            m_window_manager->AddWindow(new LeaveEditorWindow(this, 15, 15));        //TODO : check if window exist
-        }
-        m_escape_timer = 0.f;
-    }
-    if(m_escape_timer >= ESCAPE_TIMER_DURATION) Manager()->SetState(new MainMenu);
+    HandleKeyCombos(dt);
 
     m_window_manager->Update();
     m_widgets->Update();
@@ -220,6 +199,44 @@ void EditorState::SetCurrentLayer(Layer *l) {
 
 /////////////////////////////////////
 //// PRIVATE
+
+void EditorState::HandleKeyCombos(float dt) {
+    if(IsKeyDown(KEY_LEFT_CONTROL)) {
+        if (IsKeyPressed(KEY_N)) {
+            //TODO : check if windows is already opened ?
+            m_window_manager->AddWindow(new NewLevelWindow(this));
+        }
+        else if(IsKeyPressed(KEY_R)) {
+            m_window_manager->AddWindow(new ResizeLevelWindow(this));
+        }
+        else if(IsKeyPressed(KEY_S)) {
+            if(m_level != nullptr) Save("out.lev");
+        }
+    }
+
+    if(IsKeyDown(KEY_ESCAPE)) {
+        m_escape_timer += dt;
+    }
+    else {
+        if(m_escape_timer < .2f && IsKeyReleased(KEY_ESCAPE)) {
+            m_window_manager->AddWindow(new LeaveEditorWindow(this, 15, 15));        //TODO : check if window exist
+        }
+        m_escape_timer = 0.f;
+    }
+    if(m_escape_timer >= ESCAPE_TIMER_DURATION) Manager()->SetState(new MainMenu);
+
+    if(IsKeyPressed(KEY_F5)) {
+        LevMapLoader map_loader;
+        ErrorOr<GameplayState *> gs = map_loader.LoadMap(m_level);
+        if(gs.GetError() != nullptr) {
+            m_window_manager->AddWindow(new ErrorWindow(50, 50, gs.GetError()->m_error_message));
+        }
+        else {
+            gs.GetValue()->SetEditor(this);
+            Manager()->SetState(gs.GetValue(), false);
+        }
+    }
+}
 
 void EditorState::UpdateHoveredTilePreview() {
     if(m_level == nullptr) return;

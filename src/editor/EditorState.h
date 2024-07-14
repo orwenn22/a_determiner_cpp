@@ -56,6 +56,7 @@ public:
     inline const char *GetIdentifier() override { return "EditorState"; }
 
 private:
+    void HandleKeyCombos(float dt);
     void UpdateHoveredTilePreview();
 
     void DrawHoveredTilePreview();

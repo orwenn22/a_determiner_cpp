@@ -13,7 +13,7 @@ public:
 
     void ResizeGrid(int grid_w, int grid_h);
 
-    //void Update(EditorState *editor) override;
+    void Update(EditorState *editor) override;
     void UpdateIfSelected(EditorState *editor) override;
     void Draw(EditorState *editor) override;
     void HandleFileDrag(EditorState *editor, std::string file_name) override;
@@ -43,6 +43,8 @@ private:
     int m_palette_index;
     int m_palette_widget_scroll;
     bool m_tileset_lock;
+
+    bool m_painting;
 };
 
 

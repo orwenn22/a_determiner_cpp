@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 
+#include "editor/EditorState.h"
 #include "engine/Globals.h"
 #include "engine/state/StateManager.h"
 #include "engine/widgets/Label.h"
@@ -28,16 +29,26 @@ PauseMenu::PauseMenu(GameplayState *gameplay_state) {
     continue_button->SetAlignment(WidgetAlignment_Center);
     continue_button->SetFontSize(20);
     continue_button->CenterLabel();
-    continue_button->SetCallback([=]() { ExitPause(); });
+    continue_button->SetCallback([this]() { ExitPause(); });
     m_widgets->AddWidget(continue_button);
 
-    TiledButton *main_menu_button = new TiledButton(0, 40, 150, 40, &Res::tiled_button_sprite, 8, 2, "Main menu");
-    main_menu_button->SetAlignment(WidgetAlignment_Center);
-    main_menu_button->SetFontSize(20);
-    main_menu_button->CenterLabel();
-    main_menu_button->SetHoverColor(RED);
-    main_menu_button->SetCallback([=]() { Manager()->SetState(new MainMenu, true); });
-    m_widgets->AddWidget(main_menu_button);
+    bool have_editor = m_gameplay_state->GetEditor();
+    std::string quit_button_label = (have_editor) ? "Editor" : "Main menu";
+    TiledButton *quit_button = new TiledButton(0, 40, 150, 40, &Res::tiled_button_sprite, 8, 2, quit_button_label);
+    quit_button->SetAlignment(WidgetAlignment_Center);
+    quit_button->SetFontSize(20);
+    quit_button->CenterLabel();
+    quit_button->SetHoverColor(have_editor ? BLUE : RED);
+    quit_button->SetCallback([this]() {
+        if(m_gameplay_state->GetEditor() == nullptr) {
+            Manager()->SetState(new MainMenu, true);
+        }
+        else {
+            Manager()->SetState(m_gameplay_state->GetEditor(), true);
+            m_gameplay_state->SetEditor(nullptr);
+        }
+    });
+    m_widgets->AddWidget(quit_button);
 }
 
 PauseMenu::~PauseMenu() {

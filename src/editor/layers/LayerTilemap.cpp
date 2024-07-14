@@ -20,6 +20,7 @@ LayerTilemap::LayerTilemap(EditorLevel *level, std::string name) : Layer(level, 
     m_tilegrid = new TileGrid(level->GridWidth(), level->GridHeight());
     m_tileset = nullptr;
     m_palette_index = 1;
+    m_painting = false;
 }
 
 LayerTilemap::~LayerTilemap() {
@@ -41,11 +42,26 @@ void LayerTilemap::ResizeGrid(int grid_w, int grid_h) {
 }
 
 
+void LayerTilemap::Update(EditorState *editor) {
+    if(editor->GetCurrentLayer() != this) m_painting = false;
+}
+
 void LayerTilemap::UpdateIfSelected(EditorState *editor) {
     Layer::UpdateIfSelected(editor);
-    if(IsMouseUsed() || IsMouseButtonUp(MOUSE_BUTTON_LEFT)) return;
-    m_tilegrid->SetTile(editor->GetHoveredTileX(), editor->GetHoveredTileY(), m_palette_index);
-    //TRACE("painting on %i %i with %i\n", Editor()->GetHoveredTileX(), Editor()->GetHoveredTileY(), m_palette_index);
+
+    if(m_painting) {
+        m_tilegrid->SetTile(editor->GetHoveredTileX(), editor->GetHoveredTileY(), m_palette_index);
+        //TRACE("painting on %i %i with %i\n", Editor()->GetHoveredTileX(), Editor()->GetHoveredTileY(), m_palette_index);
+    }
+
+    if(IsMouseButtonUp(MOUSE_BUTTON_LEFT)) {
+        m_painting = false;
+        return;
+    }
+
+    if(IsMouseUsed()) return;
+
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) m_painting = true;
     UseMouse();
 }
 

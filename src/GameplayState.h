@@ -7,6 +7,7 @@
 #include <vector>
 
 
+class EditorState;
 class EntityObject;
 class MetricsCamera;
 class Label;
@@ -49,6 +50,8 @@ public:
     inline Tooltip *GetTooltip() { return m_tooltip; }
     inline bool PlacingPlayers() { return m_current_player == -1; }      //Return true if we are still placing players, false otherwise
     inline bool IsShowingActions() { return m_show_action_widgets; }
+    inline void SetEditor(EditorState *editor) { m_editor = editor; }
+    inline EditorState *GetEditor() { return m_editor; }
 
     void SetSpawnedObject(EntityObject *spawned_object);
 
@@ -86,6 +89,8 @@ private:
     bool m_preview_spawned_object;
 
     Tooltip *m_tooltip;
+
+    EditorState *m_editor;
 };
 
 

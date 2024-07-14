@@ -3,6 +3,8 @@
 
 #include "MapLoader.h"
 
+class EditorLevel;
+
 class LevMapLoader : public MapLoader {
 public:
     LevMapLoader();
@@ -10,6 +12,7 @@ public:
 
     bool IsCorrectFormat(std::string path) override;
     ErrorOr<GameplayState *> LoadMap(std::string path) override;
+    ErrorOr<GameplayState *> LoadMap(EditorLevel *editor_level);
 };
 
 

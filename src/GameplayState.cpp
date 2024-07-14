@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 
+#include "editor/EditorState.h"
 #include "engine/Globals.h"
 #include "engine/metrics/Graphics.h"
 #include "engine/metrics/MetricsCamera.h"
@@ -56,9 +57,15 @@ GameplayState::GameplayState() {
     m_preview_spawned_object = false;
 
     m_tooltip = new Tooltip;
+
+    m_editor = nullptr;
 }
 
 GameplayState::~GameplayState() {
+    if(m_editor != nullptr) {
+        delete m_editor;
+        m_editor = nullptr;
+    }
     delete m_tooltip;
 
     delete m_spawned_object;
@@ -394,7 +401,13 @@ void GameplayState::CheckForVictory() {
     if(winning_team == -1) return;
 
     TRACE("team %s won\n", s_team_names[winning_team]);
-    Manager()->SetState(new PostGameMenu(winning_team), true);
+    if(m_editor != nullptr) {
+        Manager()->SetState(m_editor, true);
+        m_editor = nullptr;     //Do this so the editor don't get deallocated
+    }
+    else {
+        Manager()->SetState(new PostGameMenu(winning_team), true);
+    }
 }
 
 
