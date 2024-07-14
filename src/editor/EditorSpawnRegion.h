@@ -27,6 +27,7 @@ private:
     float m_x, m_y, m_w, m_h;
     int m_team_index;
 
+    bool m_hovered;
     bool m_follow_mouse;
     bool m_resized;
     float m_mouse_offset_x, m_mouse_offset_y;

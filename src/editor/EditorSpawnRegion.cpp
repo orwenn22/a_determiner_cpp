@@ -19,6 +19,7 @@ EditorSpawnRegion::EditorSpawnRegion(EditorLevel *level, float x, float y, float
 
     m_mouse_offset_x = 0;
     m_mouse_offset_y = 0;
+    m_hovered = false;
     m_follow_mouse = false;
     m_resized = false;
 }
@@ -52,15 +53,19 @@ void EditorSpawnRegion::Update(EditorState *editor) {
             m_w = mouse_m.x-m_x;
             m_h = mouse_m.y-m_y;
         }
+        UseMouse();     //Should be fine ?
     }
 
     //Enforce minimum size
     if(m_w < 1.f) m_w = 1.f;
     if(m_h < 1.f) m_h = 1.f;
 
+    //Reset hovered state, and check if we are hoverring the region
+    m_hovered = false;
     if(IsMouseUsed()) return;
-
     if(!CheckCollisionPointRec(mouse_m, {m_x, m_y, m_w, m_h})) return;
+
+    m_hovered = true;
     UseMouse();
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -86,6 +91,11 @@ void EditorSpawnRegion::Draw(EditorState *editor) {
     Metrics::DrawRectangle(m_x, m_y, m_w, m_h, c, true);
     if(m_follow_mouse || m_resized) {
         Metrics::DrawRectangle(m_x, m_y, m_w, m_h, GREEN, false);
+        Metrics::DrawRectangle(m_x+m_w-.5f, m_y+m_h-.5f, .5f, .5f, GREEN, false);
+    }
+    else if(m_hovered) {
+        Metrics::DrawRectangle(m_x, m_y, m_w, m_h, GRAY, false);
+        Metrics::DrawRectangle(m_x+m_w-.5f, m_y+m_h-.5f, .5f, .5f, GRAY, false);
     }
 }
 
