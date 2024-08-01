@@ -226,7 +226,8 @@ void Player::UpdatePhysics(float dt) {
     Terrain *t = m_gameplay_state->GetTerrain();
     if(t == nullptr) return;
 
-    bool collided = false;
+    bool collided = false;              //Unused now, but keeping it just in case
+    bool collided_with_floor = false;
     bool going_down = (sign<float, int>(m_velocity.x) == sign<float, int>(m_down_vector.x)
             || sign<float, int>(m_velocity.y) == sign<float, int>(m_down_vector.y));
 
@@ -248,6 +249,7 @@ void Player::UpdatePhysics(float dt) {
     if(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {    // && m_velocity.y != 0.f ?
         m_use_small_hitbox = false;
         collided = true;
+        collided_with_floor = going_down;
         int safe_count = 0;
         while(t->CheckCollisionRec(GetRectangle(), true) || CollideWithSolidObject()) {
             m_position.y -= 0.01f * sign<float,float>(m_velocity.y);
@@ -256,7 +258,7 @@ void Player::UpdatePhysics(float dt) {
         m_velocity.y = 0;
     }
 
-    if(collided && going_down) {
+    if(collided_with_floor) {
         m_velocity = {0.f, 0.f};
         m_enable_physics = false;
         if(IsPlaying()) {
