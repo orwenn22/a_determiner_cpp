@@ -249,12 +249,13 @@ void GameplayState::KillPlayer(Player *p) {
 void GameplayState::ShowActionWidgets() {
     m_action_widgets->Clear();
     m_show_action_widgets = true;
-    int marge = 10;
+    const int marge = 10;
 
     Player *current_player = GetCurrentPlayer();
     if(current_player == nullptr) return;
 
-    auto widgets = current_player->GetActionWidgets();
+    auto widgets = std::vector<Widget *>();
+    current_player->GetActionWidgets(widgets);
     if(widgets.empty()) return;
 
     int widgets_width = 0;      // Get width of all widget combined

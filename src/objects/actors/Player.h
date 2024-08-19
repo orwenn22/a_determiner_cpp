@@ -26,7 +26,7 @@ public:
     void AddAction(Action *action);
     void RemoveAction(Action *action);
 
-    std::vector<Widget *> GetActionWidgets();
+    void GetActionWidgets(std::vector<Widget *> &result);
 
     Rectangle GetRectangle() override;
 

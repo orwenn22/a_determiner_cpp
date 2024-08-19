@@ -152,21 +152,16 @@ void Player::RemoveAction(Action *action) {
     m_current_action = -1;
 }
 
-std::vector<Widget *> Player::GetActionWidgets() {
-    std::vector<Widget *> r;
-
+void Player::GetActionWidgets(std::vector<Widget *> &result) {
     for(int i = 0; i < m_actions.size(); ++i) {
-        Action *a = m_actions[i];
-        //Button *b = new Button(0, 0, 70, 70, a->GetName(), [=]() {
         ActionWidget *action_button = new ActionWidget(this, i);
-        r.push_back(action_button);
+        result.push_back(action_button);
     }
 
     FakeActionWidget *skip_button = new FakeActionWidget("Skip", "(+10)", [=]() {
         SkipTurn();
     });
-    r.push_back(skip_button);
-    return r;
+    result.push_back(skip_button);
 }
 
 Rectangle Player::GetRectangle() {
